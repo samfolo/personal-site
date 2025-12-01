@@ -20,6 +20,10 @@ FROM node:22-alpine AS runtime
 
 WORKDIR /app
 
+# Copy package files and install production dependencies
+COPY package*.json ./
+RUN npm ci --omit=dev
+
 # Copy built output from build stage
 COPY --from=build /app/dist ./dist
 
