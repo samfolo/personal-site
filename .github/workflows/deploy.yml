@@ -3,7 +3,7 @@ name: Deploy to Cloud Run
 on:
   push:
     branches:
-      - main
+      - '**'
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
@@ -18,6 +18,24 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Set deployment variables
+        id: vars
+        run: |
+          BRANCH_NAME="${GITHUB_REF#refs/heads/}"
+          if [ "$BRANCH_NAME" = "main" ]; then
+            echo "is_preview=false" >> $GITHUB_OUTPUT
+            echo "tag=" >> $GITHUB_OUTPUT
+          else
+            # Sanitise branch name for Cloud Run tag (lowercase, alphanumeric + hyphens, max 63 chars)
+            TAG=$(echo "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | sed 's/^-//' | sed 's/-$//' | cut -c1-63)
+            # Ensure tag starts with a letter
+            if [[ ! "$TAG" =~ ^[a-z] ]]; then
+              TAG="br-$TAG"
+            fi
+            echo "is_preview=true" >> $GITHUB_OUTPUT
+            echo "tag=$TAG" >> $GITHUB_OUTPUT
+          fi
 
       - name: Authenticate to Google Cloud
         uses: google-github-actions/auth@v2
@@ -41,7 +59,9 @@ jobs:
           docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/personal-site/${{ env.SERVICE_NAME }}:${{ github.sha }}
           docker push ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/personal-site/${{ env.SERVICE_NAME }}:latest
 
-      - name: Deploy to Cloud Run
+      - name: Deploy to Cloud Run (Production)
+        id: deploy-prod
+        if: steps.vars.outputs.is_preview == 'false'
         uses: google-github-actions/deploy-cloudrun@v2
         with:
           service: ${{ env.SERVICE_NAME }}
@@ -54,7 +74,33 @@ jobs:
             --allow-unauthenticated
             --port=4321
 
-      - name: Output Cloud Run URL
+      - name: Deploy to Cloud Run (Preview)
+        id: deploy-preview
+        if: steps.vars.outputs.is_preview == 'true'
+        uses: google-github-actions/deploy-cloudrun@v2
+        with:
+          service: ${{ env.SERVICE_NAME }}
+          region: ${{ env.REGION }}
+          image: ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/personal-site/${{ env.SERVICE_NAME }}:${{ github.sha }}
+          tag: ${{ steps.vars.outputs.tag }}
+          no_traffic: true
+          flags: |
+            --min-instances=0
+            --max-instances=2
+            --memory=256Mi
+            --allow-unauthenticated
+            --port=4321
+
+      - name: Output Production URL
+        if: steps.vars.outputs.is_preview == 'false'
         run: |
-          echo "🧘🏾‍♂️ Service deployed successfully."
-          echo "URL: $(gcloud run services describe ${{ env.SERVICE_NAME }} --region=${{ env.REGION }} --format='value(status.url)')"
+          echo "🧘🏾‍♂️ Production deployment successful."
+          echo "URL: ${{ steps.deploy-prod.outputs.url }}"
+
+      - name: Output Preview URL
+        if: steps.vars.outputs.is_preview == 'true'
+        run: |
+          echo "🔍 Preview deployment successful."
+          echo "Preview URL: ${{ steps.deploy-preview.outputs.url }}"
+          echo "Branch: ${GITHUB_REF#refs/heads/}"
+          echo "Tag: ${{ steps.vars.outputs.tag }}"
