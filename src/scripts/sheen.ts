@@ -64,11 +64,9 @@ function applyFrame(chars: HTMLSpanElement[], frame: number): void {
       // Centre character: full highlight
       chars[i].style.color = 'var(--highlight)';
     } else if (distance === 1) {
-      // Adjacent characters (±1): 50% highlight
-      chars[i].style.color = 'color-mix(in srgb, var(--highlight) 50%, var(--fg))';
+      chars[i].style.color = 'color-mix(in srgb, var(--highlight) 100%, var(--fg))';
     } else if (distance === 2) {
-      // Outer characters (±2): 30% highlight
-      chars[i].style.color = 'color-mix(in srgb, var(--highlight) 30%, var(--fg))';
+      chars[i].style.color = 'color-mix(in srgb, var(--highlight) 90%, var(--fg))';
     } else {
       // All other characters: default
       chars[i].style.color = '';
@@ -98,7 +96,7 @@ function startAnimation(element: HTMLElement): void {
     state.frame++;
 
     // Stop after the sheen has fully exited to the right
-    if (state.frame > state.chars.length + 1) {
+    if (state.frame > state.chars.length + 2) {
       if (state.animationId !== null) {
         clearInterval(state.animationId);
         state.animationId = null;
