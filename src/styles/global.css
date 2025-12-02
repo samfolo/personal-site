@@ -120,6 +120,7 @@ body {
   line-height: var(--leading-normal);
   letter-spacing: var(--tracking-body);
   color: var(--fg);
+  transition: background 0.3s ease, color 0.3s ease;
   background-color: var(--bg);
 }
 

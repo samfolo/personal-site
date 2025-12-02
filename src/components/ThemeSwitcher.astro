@@ -43,14 +43,11 @@ const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
     width: var(--buttonSize);
     height: var(--buttonSize);
     border: 2px solid var(--fg);
-    border-radius: 4px;
     cursor: pointer;
     background: linear-gradient(135deg, var(--bg) 50%, var(--fg) 50%);
-    transition:
-      transform 0.15s ease,
-      outline-offset 0.15s ease;
+    transition: transform 0.15s ease;
     outline: 2px solid transparent;
-    outline-offset: 0;
+    outline-offset: 2px;
   }
 
   .theme-button:hover {
