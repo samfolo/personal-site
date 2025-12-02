@@ -19,6 +19,9 @@ const {
 } = Astro.props;
 
 import '../styles/global.css';
+import FixedHeader from '../components/FixedHeader.astro';
+import FixedFooter from '../components/FixedFooter.astro';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 ---
 
 <!doctype html>
@@ -52,6 +55,33 @@ import '../styles/global.css';
         }
       })();
     </script>
+
+    <!-- Initial theme switcher (visible when hero wordmark is in view) -->
+    <div id="initial-theme-switcher" class="initial-theme-switcher">
+      <ThemeSwitcher />
+    </div>
+
+    <FixedHeader />
     <slot />
+    <FixedFooter />
+
+    <script>
+      import '../scripts/scroll-header.ts';
+    </script>
   </body>
 </html>
+
+<style>
+  .initial-theme-switcher {
+    position: fixed;
+    top: var(--space-5);
+    right: var(--space-5);
+    z-index: 90;
+    transition: opacity 0.3s ease;
+  }
+
+  .initial-theme-switcher.hidden {
+    opacity: 0;
+    pointer-events: none;
+  }
+</style>

@@ -1,16 +1,55 @@
 ---
 import Base from '../layouts/Base.astro';
-import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 ---
 
-<Base title="Personal Site">
-  <div class="fixed top-5 right-5">
-    <ThemeSwitcher />
-  </div>
-  <div class="fixed top-4 left-4">
-    <ThemeSwitcher size="sm" />
-  </div>
-  <main class="min-h-screen flex items-center justify-center">
-    <h1 class="text-xl font-bold tracking-display">Hello World</h1>
+<Base title="Sam Folorunsho">
+  <main>
+    <!-- Hero section with observed wordmark -->
+    <section class="hero">
+      <h1 id="hero-wordmark" class="hero-wordmark">
+        Sam Folorunsho.
+      </h1>
+      <p class="hero-tagline">
+        Software Engineer
+      </p>
+    </section>
+
+    <!-- Placeholder content for scroll testing -->
+    <section class="content">
+      <p>Scroll down to see the fixed header appear.</p>
+    </section>
   </main>
 </Base>
+
+<style>
+  main {
+    min-height: 300vh;
+  }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-5);
+  }
+
+  .hero-wordmark {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .hero-tagline {
+    font-size: var(--text-md);
+    color: var(--muted);
+    margin-top: var(--space-2);
+  }
+
+  .content {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-5) var(--container-px);
+  }
+</style>
