@@ -1,0 +1,40 @@
+---
+/**
+ * SheenText Component
+ *
+ * Displays text with a left-to-right colour sweep animation on hover.
+ * The sheen highlights the centre character with the highlight colour
+ * and blends adjacent characters.
+ */
+
+interface Props {
+  text: string;
+  tag?: keyof HTMLElementTagNameMap;
+  class?: string;
+  interval?: number;
+}
+
+const {
+  text,
+  tag: Tag = 'span',
+  class: className,
+  interval = 15,
+} = Astro.props;
+---
+
+<Tag
+  class:list={['sheen-text', className]}
+  data-sheen-text={text}
+  data-sheen-interval={interval}
+>
+  {text}
+</Tag>
+
+<script src="../scripts/sheen.ts"></script>
+
+<style>
+  .sheen-text :global(.sheen-char) {
+    display: inline-block;
+    transition: color 0.05s ease;
+  }
+</style>
