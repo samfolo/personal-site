@@ -1,0 +1,160 @@
+---
+/**
+ * Hero Component
+ *
+ * Full viewport hero section with wordmark, navigation, tagline,
+ * and scroll hint. The wordmark element is observed by scroll-header.ts
+ * to toggle the fixed header visibility.
+ */
+
+import SheenText from './SheenText.astro';
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+
+const navLinks = [
+  { href: '#', label: 'Blog' },
+  { href: '#', label: 'About' },
+  { href: '#', label: 'Uses' },
+] as const;
+---
+
+<section class:list={['hero', className]}>
+  <div class="hero-content">
+    <!-- Overline Navigation -->
+    <nav class="hero-nav" aria-label="Primary navigation">
+      {navLinks.map((link) => (
+        <a href={link.href} class="hero-nav-link">
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <!-- Wordmark (observed by scroll-header.ts) -->
+    <h1 id="hero-wordmark" class="hero-wordmark">
+      <span class="wordmark-line">
+        <SheenText text="Sam" tag="span" interval={30} />
+      </span>
+      <span class="wordmark-line">
+        <SheenText text="Folorunsho." tag="span" interval={20} />
+      </span>
+    </h1>
+
+    <!-- Tagline -->
+    <p class="hero-tagline">
+      Software engineer exploring AI agents, creative coding, and the intersection of technology and craft.
+    </p>
+  </div>
+
+  <!-- Scroll Hint -->
+  <div class="scroll-hint">
+    <span class="scroll-hint-label">Recent Writing</span>
+    <span class="scroll-hint-line" aria-hidden="true"></span>
+  </div>
+</section>
+
+<style>
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    position: relative;
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-5) var(--container-px);
+  }
+
+  .hero-content {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
+
+  /* Overline Navigation */
+  .hero-nav {
+    display: flex;
+    gap: var(--space-5);
+    align-self: flex-end;
+    margin-bottom: var(--space-6);
+  }
+
+  .hero-nav-link {
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-labels);
+    color: var(--muted);
+    transition: color 0.15s ease;
+  }
+
+  .hero-nav-link:hover {
+    color: var(--fg);
+  }
+
+  .hero-nav-link:focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 4px;
+  }
+
+  /* Wordmark */
+  .hero-wordmark {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(48px, 12vw, 96px);
+    font-weight: var(--font-extrabold);
+    line-height: 0.95;
+    letter-spacing: var(--tracking-display);
+    margin-bottom: var(--space-4);
+  }
+
+  .wordmark-line {
+    display: block;
+  }
+
+  /* Tagline */
+  .hero-tagline {
+    font-size: var(--text-base);
+    color: var(--muted);
+    max-width: 500px;
+    line-height: 1.7;
+  }
+
+  /* Scroll Hint */
+  .scroll-hint {
+    position: absolute;
+    bottom: var(--space-7);
+    left: var(--container-px);
+    right: var(--container-px);
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+  }
+
+  .scroll-hint-label {
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-labels);
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  .scroll-hint-line {
+    flex: 1;
+    height: 1px;
+    background-color: var(--rule);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .hero-nav-link {
+      transition: none;
+    }
+  }
+</style>

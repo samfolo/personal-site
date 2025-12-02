@@ -1,0 +1,164 @@
+---
+/**
+ * BlogList Component
+ *
+ * Displays a list of blog posts grouped by month.
+ * Posts are shown in reverse chronological order.
+ */
+
+import SheenText from './SheenText.astro';
+
+interface Post {
+  title: string;
+  date: string;
+  slug: string;
+}
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+
+/**
+ * Formats a date string as "December 2024" for month labels
+ */
+function formatMonthLabel(dateString: string): string {
+  const date = new Date(dateString);
+  return new Intl.DateTimeFormat('en-GB', {
+    month: 'long',
+    year: 'numeric',
+  }).format(date);
+}
+
+/**
+ * Formats a date string as "12 Dec" for post dates
+ */
+function formatPostDate(dateString: string): string {
+  const date = new Date(dateString);
+  const day = date.getDate();
+  const month = new Intl.DateTimeFormat('en-GB', { month: 'short' }).format(date);
+  return `${day} ${month}`;
+}
+
+/**
+ * Groups posts by month-year and returns in reverse chronological order
+ */
+function groupPostsByMonth(posts: Post[]): Map<string, Post[]> {
+  // Sort posts by date (newest first)
+  const sortedPosts = [...posts].sort(
+    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+  );
+
+  // Group by YYYY-MM key
+  const groups = new Map<string, Post[]>();
+
+  for (const post of sortedPosts) {
+    const date = new Date(post.date);
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+
+    if (!groups.has(key)) {
+      groups.set(key, []);
+    }
+    groups.get(key)!.push(post);
+  }
+
+  return groups;
+}
+
+const groupedPosts = groupPostsByMonth(posts);
+---
+
+<div class="blog-list">
+  {Array.from(groupedPosts.entries()).map(([_key, monthPosts]) => (
+    <section class="blog-month-group">
+      <h2 class="month-label">{formatMonthLabel(monthPosts[0].date)}</h2>
+      <ul class="post-list">
+        {monthPosts.map((post) => (
+          <li class="post-item">
+            <a href={`/blog/${post.slug}`} class="post-link">
+              <span class="post-title">
+                <SheenText text={post.title} tag="span" interval={8} />
+              </span>
+              <span class="post-date">{formatPostDate(post.date)}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</div>
+
+<style>
+  .blog-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-7);
+  }
+
+  .blog-month-group {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .month-label {
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-labels);
+    color: var(--muted);
+    margin-bottom: var(--space-4);
+  }
+
+  .post-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .post-item {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .post-item:last-child {
+    border-bottom: none;
+  }
+
+  .post-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: var(--space-3) 0;
+    padding-left: 0;
+    transition: padding-left 0.2s ease;
+  }
+
+  .post-link:hover {
+    padding-left: var(--space-2);
+  }
+
+  .post-link:focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 4px;
+  }
+
+  .post-title {
+    font-size: var(--text-md);
+    font-weight: var(--font-medium);
+    color: var(--fg);
+  }
+
+  .post-date {
+    font-size: var(--text-sm);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+    margin-left: var(--space-4);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .post-link {
+      transition: none;
+    }
+  }
+</style>

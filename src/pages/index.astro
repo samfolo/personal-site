@@ -1,87 +1,32 @@
 ---
 import Base from '../layouts/Base.astro';
-import SheenText from '../components/SheenText.astro';
+import Hero from '../components/Hero.astro';
+import BlogList from '../components/BlogList.astro';
+
+// Placeholder posts - will be replaced with actual content collection data
+const posts = [
+  { title: 'Building a dual-agent system for semantic parsing', date: '2024-12-12', slug: 'dual-agent-system' },
+  { title: 'Notes on structured outputs with Claude', date: '2024-12-08', slug: 'structured-outputs' },
+  { title: 'Why intermediate representations matter', date: '2024-12-03', slug: 'intermediate-representations' },
+  { title: 'Genuary prep: exploring p5.js patterns', date: '2024-11-28', slug: 'genuary-prep' },
+  { title: 'Design systems in enterprise: lessons learned', date: '2024-11-15', slug: 'design-systems' },
+];
 ---
 
 <Base title="Sam Folorunsho">
   <main>
-    <!-- Hero section with observed wordmark -->
-    <section class="hero">
-      <h1 id="hero-wordmark" class="hero-wordmark">
-        <SheenText text="Sam Folorunsho." />
-      </h1>
-      <p class="hero-tagline">
-        Software Engineer
-      </p>
-    </section>
+    <Hero />
 
-    <!-- Placeholder content for scroll testing -->
-    <section class="content">
-      <p>Scroll down to see the fixed header appear.</p>
-
-      <!-- SheenText test examples -->
-      <div class="sheen-tests">
-        <h2>SheenText Examples</h2>
-        <p><SheenText text="Default interval (15ms)" /></p>
-        <p><SheenText text="Slower animation" interval={30} /></p>
-        <p><SheenText tag="h3" text="As a heading element" class="test-heading" /></p>
-        <p><SheenText text="With multiple words and spaces" /></p>
-      </div>
+    <section class="blog-section">
+      <BlogList posts={posts} />
     </section>
   </main>
 </Base>
 
 <style>
-  main {
-    min-height: 300vh;
-  }
-
-  .hero {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: var(--space-5);
-  }
-
-  .hero-wordmark {
-    font-size: var(--text-xl);
-    font-weight: var(--font-bold);
-    letter-spacing: var(--tracking-display);
-  }
-
-  .hero-tagline {
-    font-size: var(--text-md);
-    color: var(--muted);
-    margin-top: var(--space-2);
-  }
-
-  .content {
+  .blog-section {
     max-width: var(--container-max);
     margin: 0 auto;
-    padding: var(--space-5) var(--container-px);
-  }
-
-  .sheen-tests {
-    margin-top: var(--space-8);
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-4);
-  }
-
-  .sheen-tests h2 {
-    font-size: var(--text-lg);
-    font-weight: var(--font-semibold);
-    margin-bottom: var(--space-2);
-  }
-
-  .sheen-tests p {
-    font-size: var(--text-md);
-  }
-
-  .test-heading {
-    font-size: var(--text-lg);
-    font-weight: var(--font-bold);
+    padding: var(--space-7) var(--container-px) var(--space-9);
   }
 </style>
