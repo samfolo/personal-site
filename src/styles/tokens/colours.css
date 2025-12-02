@@ -18,36 +18,36 @@
 
 /* Theme: Steel (blue-grey) */
 .theme-steel {
-  --bg: oklch(0.18 0.01 250);
-  --fg: oklch(0.95 0.01 90);
-  --muted: oklch(0.55 0.01 250);
-  --rule: oklch(0.30 0.01 250);
+  --bg: oklch(0.2293 0.009 255.6);
+  --fg: oklch(0.9615 0.0098 87.47);
+  --muted: oklch(0.6334 0 0);
+  --rule: oklch(0.359 0.0095 260.72);
   --highlight: oklch(0.75 0.02 250);
 }
 
 /* Theme: Purple */
 .theme-purple {
-  --bg: oklch(0.17 0.03 300);
-  --fg: oklch(0.92 0.04 85);
-  --muted: oklch(0.50 0.03 300);
-  --rule: oklch(0.28 0.03 300);
-  --highlight: oklch(0.97 0.02 85);
+  --bg: oklch(0.227 0.0199 303.08);
+  --fg: oklch(0.9251 0.041 91.72);
+  --muted: oklch(0.6432 0.0302 67.25);
+  --rule: oklch(0.3369 0.0255 304.52);
+  --highlight: oklch(0.9783 0.0322 93.51);
 }
 
 /* Theme: Charcoal (neutral) */
 .theme-charcoal {
-  --bg: oklch(0.20 0.00 0);
-  --fg: oklch(0.98 0.00 0);
-  --muted: oklch(0.55 0.00 0);
-  --rule: oklch(0.32 0.00 0);
+  --bg: oklch(0.2478 0 0);
+  --fg: oklch(0.9851 0 0);
+  --muted: oklch(0.6268 0 0);
+  --rule: oklch(0.3715 0 0);
   --highlight: oklch(0.85 0.00 0);
 }
 
 /* Theme: Teal (with coral foreground exception) */
 .theme-teal {
-  --bg: oklch(0.17 0.04 180);
-  --fg: oklch(0.72 0.18 35); /* Coral - intentional hue shift */
-  --muted: oklch(0.45 0.04 180);
-  --rule: oklch(0.26 0.04 180);
-  --highlight: oklch(0.85 0.15 35);
+  --bg: oklch(0.2239 0.0239 195.58);
+  --fg: oklch(0.7294 0.1687 34.05); /* Coral - intentional hue shift */
+  --muted: oklch(0.555 0.0365 196.15);
+  --rule: oklch(0.3243 0.0378 195.45);
+  --highlight: oklch(0.8447 0.0861 33.1);
 }
