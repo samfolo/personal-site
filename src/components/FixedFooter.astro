@@ -1,0 +1,103 @@
+---
+/**
+ * FixedFooter Component
+ *
+ * Fixed footer displaying the current theme name in uppercase.
+ * Updates dynamically when theme changes.
+ */
+
+const themeLabels: Record<string, string> = {
+  steel: 'STEEL GREY + WARM CREAM',
+  purple: 'DARK PURPLE + GOLD',
+  charcoal: 'WARM CHARCOAL + OFF-WHITE',
+  teal: 'DARK TEAL + CORAL',
+};
+---
+
+<footer class="fixed-footer">
+  <div class="footer-inner">
+    <span id="theme-name" class="theme-name">STEEL GREY + WARM CREAM</span>
+  </div>
+</footer>
+
+<script define:vars={{ themeLabels }}>
+  window.__themeLabels = themeLabels;
+</script>
+
+<style>
+  .fixed-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: linear-gradient(to bottom, transparent, var(--bg));
+    pointer-events: none;
+  }
+
+  .footer-inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-4) var(--container-px);
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .theme-name {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-labels);
+    color: var(--muted);
+    font-weight: var(--font-medium);
+    pointer-events: auto;
+  }
+</style>
+
+<script>
+  declare global {
+    interface Window {
+      __themeLabels: Record<string, string>;
+    }
+  }
+
+  function getThemeLabel(): string {
+    for (const cls of document.body.classList) {
+      if (cls.startsWith('theme-')) {
+        const themeId = cls.replace('theme-', '');
+        return window.__themeLabels[themeId] || 'STEEL GREY + WARM CREAM';
+      }
+    }
+    return 'STEEL GREY + WARM CREAM';
+  }
+
+  function updateThemeName(): void {
+    const themeNameEl = document.getElementById('theme-name');
+    if (themeNameEl) {
+      themeNameEl.textContent = getThemeLabel();
+    }
+  }
+
+  // Observe body class changes for theme updates
+  function observeThemeChanges(): void {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === 'class') {
+          updateThemeName();
+        }
+      });
+    });
+
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ['class'],
+    });
+  }
+
+  function init(): void {
+    updateThemeName();
+    observeThemeChanges();
+  }
+
+  init();
+  document.addEventListener('astro:after-swap', init);
+</script>

@@ -1,0 +1,126 @@
+---
+/**
+ * FixedHeader Component
+ *
+ * Fixed header that appears when hero wordmark scrolls out of view.
+ * Contains wordmark, navigation, and theme switcher.
+ */
+
+import ThemeSwitcher from './ThemeSwitcher.astro';
+
+const navLinks = [
+  { href: '#', label: 'Blog' },
+  { href: '#', label: 'About' },
+  { href: '#', label: 'Uses' },
+] as const;
+---
+
+<header id="fixed-header" class="fixed-header">
+  <div class="header-inner">
+    <div class="header-left">
+      <a href="#top" class="wordmark" aria-label="Scroll to top">
+        Sam Folorunsho.
+      </a>
+      <nav class="nav" aria-label="Main navigation">
+        {navLinks.map((link) => (
+          <a href={link.href} class="nav-link">
+            {link.label}
+          </a>
+        ))}
+      </nav>
+    </div>
+    <div class="header-right">
+      <ThemeSwitcher size="sm" />
+    </div>
+  </div>
+</header>
+
+<style>
+  .fixed-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    background: var(--bg);
+
+    /* Hidden by default */
+    opacity: 0;
+    transform: translateY(-100%);
+    pointer-events: none;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease;
+  }
+
+  .fixed-header.visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .header-inner {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-4) var(--container-px);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .wordmark {
+    font-weight: var(--font-semibold);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-display);
+    color: var(--fg);
+    transition: opacity 0.15s ease;
+  }
+
+  .wordmark:hover {
+    opacity: 0.8;
+  }
+
+  .wordmark:focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 4px;
+  }
+
+  .nav {
+    display: flex;
+    gap: var(--space-5);
+  }
+
+  .nav-link {
+    font-size: var(--text-xs);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-labels);
+    color: var(--muted);
+    transition: color 0.15s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--fg);
+  }
+
+  .nav-link:focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 4px;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fixed-header {
+      transition: none;
+    }
+  }
+</style>
