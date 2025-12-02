@@ -1,8 +1,15 @@
 ---
 import Base from '../layouts/Base.astro';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 ---
 
 <Base title="Personal Site">
+  <div class="fixed top-4 right-4">
+    <ThemeSwitcher />
+  </div>
+  <div class="fixed top-4 left-4">
+    <ThemeSwitcher size="sm" />
+  </div>
   <main class="min-h-screen flex items-center justify-center">
     <h1 class="text-xl font-bold tracking-display">Hello World</h1>
   </main>

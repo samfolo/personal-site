@@ -41,6 +41,17 @@ import '../styles/global.css';
     />
   </head>
   <body class={`theme-${theme}`}>
+    <script is:inline>
+      (function () {
+        var THEME_KEY = 'theme';
+        var THEME_CLASSES = ['theme-steel', 'theme-purple', 'theme-charcoal', 'theme-teal'];
+        var saved = localStorage.getItem(THEME_KEY);
+        if (saved && THEME_CLASSES.indexOf('theme-' + saved) !== -1) {
+          document.body.classList.remove.apply(document.body.classList, THEME_CLASSES);
+          document.body.classList.add('theme-' + saved);
+        }
+      })();
+    </script>
     <slot />
   </body>
 </html>

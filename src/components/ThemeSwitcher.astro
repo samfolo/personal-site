@@ -1,0 +1,115 @@
+---
+/**
+ * ThemeSwitcher Component
+ *
+ * Four-button theme selector with diagonal colour preview.
+ * Persists selection to localStorage and updates body class.
+ */
+
+interface Props {
+  size?: 'sm' | 'md';
+}
+
+const { size = 'md' } = Astro.props;
+
+const themes = [
+  { id: 'steel', label: 'Steel grey + warm cream' },
+  { id: 'purple', label: 'Dark purple + gold' },
+  { id: 'charcoal', label: 'Warm charcoal + off-white' },
+  { id: 'teal', label: 'Dark teal + coral' },
+] as const;
+
+const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
+---
+
+<div class="theme-switcher" data-size={size}>
+  {themes.map((theme) => (
+    <button
+      type="button"
+      class={`theme-button theme-${theme.id}`}
+      data-theme={theme.id}
+      aria-label={theme.label}
+    />
+  ))}
+</div>
+
+<style define:vars={{ buttonSize }}>
+  .theme-switcher {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .theme-button {
+    width: var(--buttonSize);
+    height: var(--buttonSize);
+    border: 2px solid var(--fg);
+    border-radius: 4px;
+    cursor: pointer;
+    background: linear-gradient(135deg, var(--bg) 50%, var(--fg) 50%);
+    transition:
+      transform 0.15s ease,
+      outline-offset 0.15s ease;
+    outline: 2px solid transparent;
+    outline-offset: 0;
+  }
+
+  .theme-button:hover {
+    transform: scale(1.1);
+  }
+
+  .theme-button:focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+  }
+
+  .theme-button[data-active='true'] {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+  }
+</style>
+
+<script>
+  const THEME_KEY = 'theme';
+  const THEME_CLASSES = ['theme-steel', 'theme-purple', 'theme-charcoal', 'theme-teal'];
+
+  function setTheme(themeId: string): void {
+    document.body.classList.remove(...THEME_CLASSES);
+    document.body.classList.add(`theme-${themeId}`);
+    localStorage.setItem(THEME_KEY, themeId);
+    updateActiveStates(themeId);
+  }
+
+  function updateActiveStates(activeTheme: string): void {
+    document.querySelectorAll('.theme-button').forEach((button) => {
+      const isActive = button.getAttribute('data-theme') === activeTheme;
+      button.setAttribute('data-active', String(isActive));
+    });
+  }
+
+  function getCurrentTheme(): string {
+    for (const cls of document.body.classList) {
+      if (cls.startsWith('theme-')) {
+        return cls.replace('theme-', '');
+      }
+    }
+    return 'steel';
+  }
+
+  function init(): void {
+    const currentTheme = getCurrentTheme();
+    updateActiveStates(currentTheme);
+
+    document.querySelectorAll('.theme-button').forEach((button) => {
+      button.addEventListener('click', () => {
+        const themeId = button.getAttribute('data-theme');
+        if (themeId) {
+          setTheme(themeId);
+        }
+      });
+    });
+  }
+
+  // Initialise on DOM ready and after Astro page transitions
+  init();
+  document.addEventListener('astro:after-swap', init);
+</script>
