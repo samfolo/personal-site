@@ -1,0 +1,83 @@
+/**
+ * Typography Tokens
+ *
+ * Font families: Switzer (variable), CommitMono
+ * Type scale: Minor Third (1.2 ratio)
+ * Line heights: Aligned to 8px grid
+ */
+
+/* ==========================================================================
+   Font Face Declarations
+   ========================================================================== */
+
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/Switzer-Variable.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Switzer';
+  src: url('/fonts/Switzer-VariableItalic.woff2') format('woff2-variations');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CommitMono';
+  src: url('/fonts/CommitMono-PersonalSite-400-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'CommitMono';
+  src: url('/fonts/CommitMono-PersonalSite-700-Regular.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ==========================================================================
+   Typography Tokens
+   ========================================================================== */
+
+:root {
+  /* Font families */
+  --font-sans: 'Switzer', system-ui, -apple-system, sans-serif;
+  --font-mono: 'CommitMono', 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Type scale - Minor Third (1.2 ratio)
+     Base: 16px
+     Scale: 11 → 13 → 16 → 19 → 23 → 24 (capped per spec) */
+  --text-xs: 0.6875rem;   /* 11px */
+  --text-sm: 0.8125rem;   /* 13px */
+  --text-base: 1rem;      /* 16px */
+  --text-md: 1.1875rem;   /* 19px */
+  --text-lg: 1.4375rem;   /* 23px */
+  --text-xl: 1.5rem;      /* 24px */
+
+  /* Font weights */
+  --font-regular: 400;
+  --font-medium: 500;
+  --font-semibold: 600;
+  --font-bold: 700;
+  --font-extrabold: 800;
+
+  /* Letter spacing */
+  --tracking-display: -0.03em;  /* Headings, large text */
+  --tracking-labels: 0.1em;     /* Uppercase labels, small caps */
+  --tracking-body: 0.01em;      /* Body text */
+
+  /* Line heights - aligned to 8px grid at base 16px */
+  --leading-none: 1;        /* 16px at base */
+  --leading-tight: 1.25;    /* 20px at base - close to 24px grid */
+  --leading-snug: 1.375;    /* 22px at base */
+  --leading-normal: 1.5;    /* 24px at base - 3× grid unit */
+  --leading-relaxed: 1.75;  /* 28px at base */
+  --leading-loose: 2;       /* 32px at base - 4× grid unit */
+}

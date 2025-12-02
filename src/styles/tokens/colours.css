@@ -1,0 +1,53 @@
+/**
+ * Colour Tokens
+ *
+ * Using OKLCH colour space for perceptually uniform colour manipulation.
+ * Each theme defines: bg, fg, muted, rule, highlight
+ *
+ * Theme switching: Apply class to <body> (e.g., .theme-steel)
+ */
+
+:root {
+  /* Steel theme - default */
+  --bg: oklch(0.18 0.01 250);
+  --fg: oklch(0.95 0.01 90);
+  --muted: oklch(0.55 0.01 250);
+  --rule: oklch(0.30 0.01 250);
+  --highlight: oklch(0.60 0.12 220);
+}
+
+/* Theme: Steel (blue-grey) */
+.theme-steel {
+  --bg: oklch(0.18 0.01 250);
+  --fg: oklch(0.95 0.01 90);
+  --muted: oklch(0.55 0.01 250);
+  --rule: oklch(0.30 0.01 250);
+  --highlight: oklch(0.60 0.12 220);
+}
+
+/* Theme: Purple */
+.theme-purple {
+  --bg: oklch(0.17 0.03 300);
+  --fg: oklch(0.92 0.04 85);
+  --muted: oklch(0.50 0.03 300);
+  --rule: oklch(0.28 0.03 300);
+  --highlight: oklch(0.65 0.15 300);
+}
+
+/* Theme: Charcoal (neutral) */
+.theme-charcoal {
+  --bg: oklch(0.20 0.00 0);
+  --fg: oklch(0.98 0.00 0);
+  --muted: oklch(0.55 0.00 0);
+  --rule: oklch(0.32 0.00 0);
+  --highlight: oklch(0.70 0.00 0);
+}
+
+/* Theme: Teal (with coral foreground exception) */
+.theme-teal {
+  --bg: oklch(0.17 0.04 180);
+  --fg: oklch(0.72 0.18 35); /* Coral - intentional hue shift */
+  --muted: oklch(0.45 0.04 180);
+  --rule: oklch(0.26 0.04 180);
+  --highlight: oklch(0.55 0.12 180);
+}
