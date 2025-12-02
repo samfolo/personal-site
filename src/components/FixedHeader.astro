@@ -97,11 +97,17 @@ const navLinks = [
   }
 
   .nav-link {
-    font-size: var(--text-xs);
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
     text-transform: uppercase;
     letter-spacing: var(--tracking-labels);
     color: var(--muted);
     transition: color 0.15s ease;
+    /* Touch target: 44px minimum */
+    padding: 14px 0;
+    margin: -14px 0;
+    display: inline-flex;
+    align-items: center;
   }
 
   .nav-link:hover {
