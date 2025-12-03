@@ -1,0 +1,29 @@
+---
+/**
+ * Boids Component
+ *
+ * Animated background canvas using p5.js boids simulation.
+ * Fixed position at z-index 0, behind all content.
+ * Responds to theme changes and scroll position.
+ */
+---
+
+<div id="boids-canvas" class="boids-canvas"></div>
+
+<script src="../scripts/boids.ts"></script>
+
+<style>
+  .boids-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Ensure canvas inside fills container */
+  .boids-canvas :global(canvas) {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>

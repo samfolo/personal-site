@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Hero from '../components/Hero.astro';
 import BlogList from '../components/BlogList.astro';
+import Boids from '../components/Boids.astro';
 
 // Placeholder posts - will be replaced with actual content collection data
 const posts = [
@@ -14,7 +15,8 @@ const posts = [
 ---
 
 <Base title="Sam Folorunsho">
-  <main>
+  <Boids />
+  <main class="main-content">
     <Hero />
 
     <section class="blog-section">
@@ -24,6 +26,11 @@ const posts = [
 </Base>
 
 <style>
+  .main-content {
+    position: relative;
+    z-index: 1;
+  }
+
   .blog-section {
     max-width: var(--container-max);
     margin: 0 auto;
