@@ -4,7 +4,8 @@
  * Uses Intersection Observer to toggle fixed header visibility
  * when the scroll trigger element scrolls out of view.
  *
- * Any element can become a scroll trigger by adding data-scroll-trigger.
+ * On the home page (with scroll trigger): header appears when hero scrolls out
+ * On other pages (no scroll trigger): header is always visible
  */
 
 const HEADER_ID = 'fixed-header';
@@ -16,10 +17,21 @@ function init(): void {
   const scrollTrigger = document.querySelector<HTMLElement>(SCROLL_TRIGGER_SELECTOR);
   const initialSwitcher = document.getElementById(INITIAL_SWITCHER_ID);
 
-  if (!header || !scrollTrigger) {
+  if (!header) {
     return;
   }
 
+  // Check if this is the home page (has hero with scroll trigger)
+  const isHomePage = scrollTrigger !== null;
+
+  if (!isHomePage) {
+    // Non-home pages: always show header, hide initial theme switcher
+    header.classList.add('visible');
+    initialSwitcher?.classList.add('hidden');
+    return;
+  }
+
+  // Home page: use intersection observer for scroll-based visibility
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {

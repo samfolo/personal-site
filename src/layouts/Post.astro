@@ -27,7 +27,7 @@ const { title, description, publishDate, updatedDate, tags } = post.data;
     <article class="post">
       <!-- Post Header -->
       <header class="post-header">
-        <SheenText text={title} tag="h1" class="post-title" id="post-title" data-scroll-trigger />
+        <SheenText text={title} tag="h1" class="post-title" id="post-title" spread={3} />
 
         <div class="post-meta">
           <time datetime={publishDate.toISOString()}>
@@ -89,7 +89,7 @@ const { title, description, publishDate, updatedDate, tags } = post.data;
   .post-container {
     max-width: var(--container-max);
     margin: 0 auto;
-    padding: var(--space-8) var(--container-px) var(--space-9);
+    padding: calc(var(--header-height) + var(--space-8)) var(--container-px) var(--space-9);
   }
 
   .post-header {
@@ -98,7 +98,7 @@ const { title, description, publishDate, updatedDate, tags } = post.data;
 
   /* :global() required as SheenText renders the h1 in its own scope */
   :global(.post-title) {
-    font-size: clamp(var(--text-lg), 5vw, var(--text-xl));
+    font-size: clamp(var(--text-xl), 5vw, var(--text-3xl));
     font-weight: var(--font-bold);
     letter-spacing: var(--tracking-display);
     line-height: var(--leading-tight);
@@ -193,4 +193,6 @@ const { title, description, publishDate, updatedDate, tags } = post.data;
 
 <script>
   import '../scripts/heading-anchors.ts';
+  import '../scripts/sheen-links.ts';
+  import '../scripts/sheen-headings.ts';
 </script>

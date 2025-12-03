@@ -14,6 +14,7 @@
   --muted: oklch(0.55 0.01 250);
   --rule: oklch(0.30 0.01 250);
   --highlight: oklch(0.60 0.12 220);
+  --emphasis: oklch(0.98 0.02 90);
 }
 
 /* Theme: Steel (blue-grey) */
@@ -23,6 +24,7 @@
   --muted: oklch(0.6334 0 0);
   --rule: oklch(0.359 0.0095 260.72);
   --highlight: oklch(0.75 0.02 250);
+  --emphasis: oklch(0.99 0.015 87.47);
 }
 
 /* Theme: Purple */
@@ -32,6 +34,7 @@
   --muted: oklch(0.6432 0.0302 67.25);
   --rule: oklch(0.3369 0.0255 304.52);
   --highlight: oklch(0.9783 0.0322 93.51);
+  --emphasis: oklch(0.97 0.06 91.72);
 }
 
 /* Theme: Charcoal (neutral) */
@@ -41,6 +44,7 @@
   --muted: oklch(0.6268 0 0);
   --rule: oklch(0.3715 0 0);
   --highlight: oklch(0.85 0.00 0);
+  --emphasis: oklch(1 0 0);
 }
 
 /* Theme: Teal (with coral foreground exception) */
@@ -50,4 +54,5 @@
   --muted: oklch(0.555 0.0365 196.15);
   --rule: oklch(0.3243 0.0378 195.45);
   --highlight: oklch(0.8447 0.0861 33.1);
+  --emphasis: oklch(0.85 0.19 34.05);
 }

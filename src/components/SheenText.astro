@@ -7,12 +7,18 @@
  * and blends adjacent characters.
  *
  * Supports spreading additional attributes (data-*, aria-*, etc.)
+ *
+ * @param text - The text to display
+ * @param tag - The HTML tag to render (default: 'span')
+ * @param interval - Animation speed in ms per character (default: 15)
+ * @param spread - Number of characters to highlight on each side (default: 2)
  */
 
 interface Props extends astroHTML.JSX.HTMLAttributes {
   text: string;
   tag?: keyof HTMLElementTagNameMap;
   interval?: number;
+  spread?: number;
 }
 
 const {
@@ -20,6 +26,7 @@ const {
   tag: Tag = 'span',
   class: className,
   interval = 15,
+  spread = 2,
   ...attrs
 } = Astro.props;
 ---
@@ -28,6 +35,7 @@ const {
   class:list={['sheen-text', className]}
   data-sheen-text={text}
   data-sheen-interval={interval}
+  data-sheen-spread={spread}
   {...attrs}
 >
   {text}
@@ -36,6 +44,11 @@ const {
 <script src="../scripts/sheen.ts"></script>
 
 <style>
+  .sheen-text :global(.sheen-word) {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
   .sheen-text :global(.sheen-char) {
     display: inline-block;
     transition: color var(--transition-instant);

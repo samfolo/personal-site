@@ -12,7 +12,7 @@ import SheenText from '../components/SheenText.astro';
 <Base title="Uses | Sam Folorunsho" description="Tools, gear, and setup.">
   <main class="uses-page">
     <header class="page-header">
-      <h1 id="page-title" class="page-title" data-scroll-trigger>
+      <h1 id="page-title" class="page-title">
         <SheenText text="Uses" interval={30} />
       </h1>
     </header>
@@ -27,7 +27,7 @@ import SheenText from '../components/SheenText.astro';
   .uses-page {
     max-width: var(--container-max);
     margin: 0 auto;
-    padding: var(--space-8) var(--container-px) var(--space-9);
+    padding: calc(var(--header-height) + var(--space-8)) var(--container-px) var(--space-9);
   }
 
   .page-header {
