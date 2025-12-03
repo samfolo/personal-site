@@ -1,0 +1,46 @@
+---
+/**
+ * About Page
+ *
+ * Placeholder page for the About section.
+ */
+
+import Base from '../layouts/Base.astro';
+import SheenText from '../components/SheenText.astro';
+---
+
+<Base title="About | Sam Folorunsho" description="About Sam Folorunsho.">
+  <main class="about-page">
+    <header class="page-header">
+      <h1 id="page-title" class="page-title" data-scroll-trigger>
+        <SheenText text="About" interval={30} />
+      </h1>
+    </header>
+
+    <section class="page-content">
+      <p class="coming-soon">Coming soon.</p>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .about-page {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-8) var(--container-px) var(--space-9);
+  }
+
+  .page-header {
+    margin-bottom: var(--space-7);
+  }
+
+  .page-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .coming-soon {
+    color: var(--muted);
+  }
+</style>

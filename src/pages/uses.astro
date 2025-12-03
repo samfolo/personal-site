@@ -1,0 +1,46 @@
+---
+/**
+ * Uses Page
+ *
+ * Placeholder page for tools, gear, and setup details.
+ */
+
+import Base from '../layouts/Base.astro';
+import SheenText from '../components/SheenText.astro';
+---
+
+<Base title="Uses | Sam Folorunsho" description="Tools, gear, and setup.">
+  <main class="uses-page">
+    <header class="page-header">
+      <h1 id="page-title" class="page-title" data-scroll-trigger>
+        <SheenText text="Uses" interval={30} />
+      </h1>
+    </header>
+
+    <section class="page-content">
+      <p class="coming-soon">Coming soon.</p>
+    </section>
+  </main>
+</Base>
+
+<style>
+  .uses-page {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: var(--space-8) var(--container-px) var(--space-9);
+  }
+
+  .page-header {
+    margin-bottom: var(--space-7);
+  }
+
+  .page-title {
+    font-size: var(--text-xl);
+    font-weight: var(--font-bold);
+    letter-spacing: var(--tracking-display);
+  }
+
+  .coming-soon {
+    color: var(--muted);
+  }
+</style>
