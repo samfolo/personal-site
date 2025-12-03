@@ -1,0 +1,50 @@
+---
+/**
+ * NavLink Component
+ *
+ * Reusable navigation link with proper 44px touch targets (WCAG AA).
+ * Styled as uppercase label text with muted colour.
+ */
+
+interface Props {
+  href: string;
+  class?: string;
+}
+
+const { href, class: className } = Astro.props;
+---
+
+<a href={href} class:list={['nav-link', className]}>
+  <slot />
+</a>
+
+<style>
+  .nav-link {
+    font-size: var(--text-sm);
+    font-weight: var(--font-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-labels);
+    color: var(--muted);
+    transition: color var(--transition-fast);
+    /* 44px touch target (WCAG AA) */
+    min-height: var(--size-touch-target);
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .nav-link:hover {
+    color: var(--fg);
+  }
+
+  .nav-link:focus-visible {
+    outline: var(--outline-width) solid var(--fg);
+    outline-offset: var(--outline-offset);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .nav-link {
+      transition: none;
+    }
+  }
+</style>

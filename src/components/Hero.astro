@@ -8,6 +8,7 @@
  */
 
 import SheenText from './SheenText.astro';
+import NavLink from './NavLink.astro';
 
 interface Props {
   class?: string;
@@ -27,9 +28,9 @@ const navLinks = [
     <!-- Overline Navigation -->
     <nav class="hero-nav" aria-label="Primary navigation">
       {navLinks.map((link) => (
-        <a href={link.href} class="hero-nav-link">
+        <NavLink href={link.href}>
           {link.label}
-        </a>
+        </NavLink>
       ))}
     </nav>
 
@@ -82,29 +83,6 @@ const navLinks = [
     gap: var(--space-5);
     align-self: flex-end;
     margin-bottom: var(--space-6);
-  }
-
-  .hero-nav-link {
-    font-size: var(--text-sm);
-    font-weight: var(--font-medium);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-labels);
-    color: var(--muted);
-    transition: color 0.15s ease;
-    /* Touch target: 44px minimum */
-    padding: 14px 0;
-    margin: -14px 0;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .hero-nav-link:hover {
-    color: var(--fg);
-  }
-
-  .hero-nav-link:focus-visible {
-    outline: 2px solid var(--fg);
-    outline-offset: 4px;
   }
 
   /* Wordmark */
