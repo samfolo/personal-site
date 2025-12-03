@@ -91,7 +91,7 @@ const navLinks = [
     flex-direction: column;
     font-size: clamp(48px, 12vw, 96px);
     font-weight: var(--font-extrabold);
-    line-height: 0.95;
+    line-height: var(--leading-tighter);
     letter-spacing: var(--tracking-display);
     margin-bottom: var(--space-4);
   }
@@ -104,8 +104,8 @@ const navLinks = [
   .hero-tagline {
     font-size: var(--text-base);
     color: var(--muted);
-    max-width: 500px;
-    line-height: 1.7;
+    max-width: var(--size-64);
+    line-height: var(--leading-normal);
   }
 
   /* Scroll Hint */
@@ -117,7 +117,7 @@ const navLinks = [
     display: flex;
     align-items: center;
     gap: var(--space-4);
-    z-index: 60; /* Above FixedFooter (50), below FixedHeader (100) */
+    z-index: var(--z-overlay);
   }
 
   .scroll-hint-label {
@@ -131,14 +131,8 @@ const navLinks = [
 
   .scroll-hint-line {
     flex: 1;
-    height: 1px;
+    height: var(--size-px);
     background-color: var(--rule);
   }
 
-  /* Reduced motion */
-  @media (prefers-reduced-motion: reduce) {
-    .hero-nav-link {
-      transition: none;
-    }
-  }
 </style>

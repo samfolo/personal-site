@@ -7,6 +7,7 @@
  */
 
 import ThemeSwitcher from './ThemeSwitcher.astro';
+import NavLink from './NavLink.astro';
 
 const navLinks = [
   { href: '#', label: 'Blog' },
@@ -23,9 +24,9 @@ const navLinks = [
       </a>
       <nav class="nav" aria-label="Main navigation">
         {navLinks.map((link) => (
-          <a href={link.href} class="nav-link">
+          <NavLink href={link.href}>
             {link.label}
-          </a>
+          </NavLink>
         ))}
       </nav>
     </div>
@@ -41,7 +42,7 @@ const navLinks = [
     top: 0;
     left: 0;
     right: 0;
-    z-index: 100;
+    z-index: var(--z-header);
     background: var(--bg);
 
     /* Hidden by default */
@@ -49,8 +50,8 @@ const navLinks = [
     transform: translateY(-100%);
     pointer-events: none;
     transition:
-      opacity 0.3s ease,
-      transform 0.3s ease;
+      opacity var(--transition-slow),
+      transform var(--transition-slow);
   }
 
   .fixed-header.visible {
@@ -79,7 +80,7 @@ const navLinks = [
     font-size: var(--text-sm);
     letter-spacing: var(--tracking-display);
     color: var(--fg);
-    transition: opacity 0.15s ease;
+    transition: opacity var(--transition-fast);
   }
 
   .wordmark:hover {
@@ -87,36 +88,13 @@ const navLinks = [
   }
 
   .wordmark:focus-visible {
-    outline: 2px solid var(--fg);
-    outline-offset: 4px;
+    outline: var(--outline-width) solid var(--fg);
+    outline-offset: var(--outline-offset);
   }
 
   .nav {
     display: flex;
     gap: var(--space-5);
-  }
-
-  .nav-link {
-    font-size: var(--text-sm);
-    font-weight: var(--font-medium);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-labels);
-    color: var(--muted);
-    transition: color 0.15s ease;
-    /* Touch target: 44px minimum */
-    padding: 14px 0;
-    margin: -14px 0;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .nav-link:hover {
-    color: var(--fg);
-  }
-
-  .nav-link:focus-visible {
-    outline: 2px solid var(--fg);
-    outline-offset: 4px;
   }
 
   .header-right {
@@ -125,7 +103,8 @@ const navLinks = [
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .fixed-header {
+    .fixed-header,
+    .wordmark {
       transition: none;
     }
   }
