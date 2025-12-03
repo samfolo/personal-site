@@ -1,9 +1,13 @@
 /**
  * Design Token Index
  *
- * Import order matters: colours first (themes), then typography, then spacing.
+ * Import order matters: colours first (themes), then typography, then layout tokens.
  */
 
 @import './colours.css';
 @import './typography.css';
 @import './spacing.css';
+@import './sizing.css';
+@import './z-index.css';
+@import './transitions.css';
+@import './borders.css';

@@ -74,10 +74,11 @@
   --tracking-body: 0.01em;      /* Body text */
 
   /* Line heights - aligned to 8px grid at base 16px */
-  --leading-none: 1;        /* 16px at base */
-  --leading-tight: 1.25;    /* 20px at base - close to 24px grid */
-  --leading-snug: 1.375;    /* 22px at base */
-  --leading-normal: 1.5;    /* 24px at base - 3× grid unit */
-  --leading-relaxed: 1.75;  /* 28px at base */
-  --leading-loose: 2;       /* 32px at base - 4× grid unit */
+  --leading-tighter: 0.833;  /* 5/6 - tight display type, on 8px grid at 48/96px */
+  --leading-none: 1;         /* 16px at base */
+  --leading-tight: 1.25;     /* 20px at base - close to 24px grid */
+  --leading-snug: 1.375;     /* 22px at base */
+  --leading-normal: 1.5;     /* 24px at base - 3× grid unit */
+  --leading-relaxed: 1.75;   /* 28px at base */
+  --leading-loose: 2;        /* 32px at base - 4× grid unit */
 }

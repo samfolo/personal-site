@@ -1,0 +1,17 @@
+/**
+ * Border Tokens
+ *
+ * Border widths and focus outline system.
+ */
+
+:root {
+  /* Border widths */
+  --border-hairline: 1px;
+  --border-thin: 2px;
+  --border-thick: 4px;
+
+  /* Focus outline system */
+  --outline-width: 2px;
+  --outline-offset-tight: 2px;
+  --outline-offset: 4px;
+}

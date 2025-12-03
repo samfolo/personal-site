@@ -1,0 +1,20 @@
+/**
+ * Z-Index Tokens
+ *
+ * Stacking scale from 0-1000 in increments of 100.
+ * Provides room for intermediate values if needed.
+ */
+
+:root {
+  --z-behind: -100;     /* Hidden layers */
+  --z-base: 0;          /* Default stacking (Boids canvas) */
+  --z-raised: 100;      /* Slightly elevated */
+  --z-dropdown: 200;    /* Dropdown menus */
+  --z-sticky: 300;      /* Sticky elements (FixedFooter fade) */
+  --z-overlay: 400;     /* Overlays, scroll hints */
+  --z-modal: 500;       /* Modal dialogs */
+  --z-popover: 600;     /* Popovers */
+  --z-tooltip: 700;     /* Tooltips */
+  --z-header: 800;      /* Fixed header */
+  --z-max: 1000;        /* Emergency override */
+}

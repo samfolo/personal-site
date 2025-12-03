@@ -12,19 +12,19 @@ import p5 from 'p5';
 // =============================================================================
 
 // Behaviour
-const POPULATION = 100;
+const POPULATION = 80;
 const POPULATION_MOBILE = 50;
-const SEPARATION = 2.8;
+const SEPARATION = 3.8;
 const ALIGNMENT = 1.6;
-const COHESION = 0.9;
-const PERCEPTION_RADIUS = 65;
+const COHESION = 0.8;
+const PERCEPTION_RADIUS = 70;
 const MAX_SPEED = 3.2;
 const MAX_FORCE = 0.12;
 
 // Theme colour mapping for boids and network lines (RGB values)
 const THEME_COLOURS: Record<string, RGBColour> = {
   steel: { r: 58, g: 64, b: 74 },
-  purple: { r: 70, g: 55, b: 80 },
+  purple: { r: 41, g: 32, b: 54 },
   charcoal: { r: 75, g: 75, b: 75 },
   teal: { r: 45, g: 65, b: 65 },
 };
@@ -33,20 +33,26 @@ const THEME_COLOURS: Record<string, RGBColour> = {
 const DEFAULT_BOID_COLOUR: RGBColour = { r: 60, g: 60, b: 60 };
 
 // Appearance
-const BOID_SIZE = 4.5;
+const BOID_SIZE = 6.5;
 const BOID_WIDTH = 1.15;
 const BOID_LENGTH = 1.7;
 const BOID_INDENT = 0.2;
 const NETWORK_OPACITY = 84;
-const NETWORK_MAX_CONNECTIONS = 5;
+const NETWORK_MAX_CONNECTIONS = 3;
 const NETWORK_RANGE_MULTIPLIER = 2.5;
 
+// Centre fade (to keep content column readable)
+const CENTRE_CLEAR_ZONE = 360; // Half-width of content column (720px / 2)
+const CENTRE_MIN_OPACITY = 0.1; // Minimum opacity at centre
+
 // Scatter
-const SCATTER_SPEED = 6;
-const SCATTER_FADE_DISTANCE = 100;
+const SCATTER_INTENSITY = 0.5; // 0 = no edge seeking, 1 = full override
+const SCATTER_FORCE = 0.7; // Strength of edge-seeking force
+const SCATTER_SPEED_BOOST = 4.5; // Multiplier on MAX_SPEED during scatter
+const SCATTER_FADE_DISTANCE = 300;
 
 // Respawn
-const RESPAWN_FADE_DURATION = 500;
+const RESPAWN_FADE_DURATION = 5000;
 
 // Canvas
 const FRAME_RATE = 30;
@@ -123,6 +129,29 @@ function adjustColour(colour: RGBColour, amount: number): RGBColour {
   }
 }
 
+/**
+ * Calculate opacity factor based on distance from centre vertical axis
+ * Returns CENTRE_MIN_OPACITY within the clear zone, scaling to 1.0 at screen edges
+ */
+function getCentreOpacityFactor(x: number, screenWidth: number): number {
+  const centreX = screenWidth / 2;
+  const distanceFromCentre = Math.abs(x - centreX);
+
+  // Within the clear zone: minimum opacity
+  if (distanceFromCentre <= CENTRE_CLEAR_ZONE) {
+    return CENTRE_MIN_OPACITY;
+  }
+
+  // Outside clear zone: scale from min opacity to 1.0
+  const distanceBeyondZone = distanceFromCentre - CENTRE_CLEAR_ZONE;
+  const maxDistanceBeyondZone = centreX - CENTRE_CLEAR_ZONE;
+
+  if (maxDistanceBeyondZone <= 0) return 1; // Screen narrower than clear zone
+
+  const factor = distanceBeyondZone / maxDistanceBeyondZone;
+  return CENTRE_MIN_OPACITY + factor * (1 - CENTRE_MIN_OPACITY);
+}
+
 // =============================================================================
 // Boid Class
 // =============================================================================
@@ -134,7 +163,7 @@ class Boid {
   acceleration: p5.Vector;
   opacity: number;
   isScattering: boolean;
-  private targetEdge: { x: number; y: number } | null;
+  private targetEdge: { x: number; y: number; d: number } | null;
   private hasExited: boolean;
 
   constructor(p: p5) {
@@ -152,8 +181,7 @@ class Boid {
    * Apply flocking forces: separation, alignment, cohesion
    */
   flock(boids: Boid[]): void {
-    if (this.isScattering) return;
-
+    // Apply normal flocking forces
     const separation = this.separate(boids).mult(SEPARATION);
     const alignment = this.align(boids).mult(ALIGNMENT);
     const cohesion = this.cohere(boids).mult(COHESION);
@@ -161,6 +189,14 @@ class Boid {
     this.acceleration.add(separation);
     this.acceleration.add(alignment);
     this.acceleration.add(cohesion);
+
+    // When scattering, blend edge-seeking with flocking
+    if (this.isScattering) {
+      const scatterForce = this.getScatterForce();
+      // Reduce flocking forces and add scatter force
+      this.acceleration.mult(1 - SCATTER_INTENSITY);
+      this.acceleration.add(scatterForce.mult(SCATTER_INTENSITY));
+    }
   }
 
   /**
@@ -252,46 +288,58 @@ class Boid {
   }
 
   /**
-   * Begin scatter behaviour - find nearest edge and accelerate towards it
+   * Begin scatter behaviour - find nearest edge
    */
   startScatter(): void {
     if (this.isScattering) return;
     this.isScattering = true;
     this.hasExited = false;
 
-    // Calculate distance to each edge
-    const distTop = this.position.y;
-    const distBottom = this.p.height - this.position.y;
-    const distLeft = this.position.x;
-    const distRight = this.p.width - this.position.x;
-
     // Find nearest edge and set target position beyond it
-    const minDist = Math.min(distTop, distBottom, distLeft, distRight);
-    if (minDist === distTop) {
-      this.targetEdge = { x: this.position.x, y: -50 };
-    } else if (minDist === distBottom) {
-      this.targetEdge = { x: this.position.x, y: this.p.height + 50 };
-    } else if (minDist === distLeft) {
-      this.targetEdge = { x: -50, y: this.position.y };
-    } else {
-      this.targetEdge = { x: this.p.width + 50, y: this.position.y };
-    }
+    const edges = [
+      { x: this.position.x, y: -50 },
+      { x: this.position.x, y: this.p.height + 50 },
+      { x: -50, y: this.position.y },
+      { x: this.p.width + 50, y: this.position.y },
+    ];
+
+    this.targetEdge = edges.reduce(
+      (nearest, edge) => {
+        const d = this.p.dist(this.position.x, this.position.y, edge.x, edge.y);
+        return d < nearest.d ? { x: edge.x, y: edge.y, d } : nearest;
+      },
+      { x: 0, y: 0, d: Infinity }
+    );
   }
 
   /**
-   * Apply scatter force towards target edge
+   * Apply scatter steering force (blends with existing flocking)
+   * Returns the edge-seeking steering force
    */
-  private scatter(): void {
-    if (!this.targetEdge || this.hasExited) return;
+  private getScatterForce(): p5.Vector {
+    if (!this.targetEdge || this.hasExited) {
+      return this.p.createVector(0, 0);
+    }
 
     const target = this.p.createVector(this.targetEdge.x, this.targetEdge.y);
 
-    // Strong seek towards edge
+    // Calculate steering toward edge
     const desired = p5.Vector.sub(target, this.position);
-    desired.setMag(SCATTER_SPEED);
-    this.velocity.lerp(desired, 0.1);
+    desired.setMag(MAX_SPEED * SCATTER_SPEED_BOOST);
 
-    // Calculate distance to edge for fade
+    const steer = p5.Vector.sub(desired, this.velocity);
+    steer.limit(SCATTER_FORCE);
+
+    return steer;
+  }
+
+  /**
+   * Update opacity and exit state during scatter
+   */
+  private updateScatterState(): void {
+    if (!this.isScattering || this.hasExited) return;
+
+    // Calculate distance to nearest edge for fade
     const distToEdge = Math.min(
       this.position.x,
       this.p.width - this.position.x,
@@ -340,14 +388,19 @@ class Boid {
    * Update position and velocity
    */
   update(): void {
-    if (this.isScattering) {
-      this.scatter();
-    }
-
     this.velocity.add(this.acceleration);
-    this.velocity.limit(MAX_SPEED);
+
+    // Allow faster movement during scatter
+    const speedLimit = this.isScattering ? MAX_SPEED * SCATTER_SPEED_BOOST : MAX_SPEED;
+    this.velocity.limit(speedLimit);
+
     this.position.add(this.velocity);
     this.acceleration.mult(0);
+
+    // Update scatter state (opacity, exit detection)
+    if (this.isScattering) {
+      this.updateScatterState();
+    }
   }
 
   /**
@@ -370,6 +423,12 @@ class Boid {
     if (this.opacity <= 0) return;
 
     const p = this.p;
+
+    // Calculate opacity reduction based on proximity to centre vertical axis
+    const centreOpacityFactor = getCentreOpacityFactor(this.position.x, p.width);
+    const finalOpacity = this.opacity * centreOpacityFactor;
+    if (finalOpacity <= 0) return;
+
     p.push();
     p.translate(this.position.x, this.position.y);
     p.rotate(this.velocity.heading());
@@ -379,7 +438,7 @@ class Boid {
     const length = size * BOID_LENGTH;
     const indent = size * BOID_INDENT;
 
-    p.fill(colour.r, colour.g, colour.b, this.opacity * 255);
+    p.fill(colour.r, colour.g, colour.b, finalOpacity * 255);
     p.noStroke();
     p.beginShape();
     // Nose
@@ -482,10 +541,13 @@ function drawNetworkLines(p: p5, boids: Boid[], colour: RGBColour): void {
     nearby.sort((a, b) => a.distance - b.distance);
     const connections = nearby.slice(0, NETWORK_MAX_CONNECTIONS);
 
-    // Draw lines with opacity based on distance
+    // Draw lines with opacity based on distance and centre proximity
+    const boidCentreFactor = getCentreOpacityFactor(boid.position.x, p.width);
+
     for (const conn of connections) {
+      const connCentreFactor = getCentreOpacityFactor(conn.boid.position.x, p.width);
       const opacity = p.map(conn.distance, 0, maxRange, NETWORK_OPACITY, 0);
-      const finalOpacity = opacity * boid.opacity * conn.boid.opacity;
+      const finalOpacity = opacity * boid.opacity * conn.boid.opacity * boidCentreFactor * connCentreFactor;
 
       p.stroke(colour.r, colour.g, colour.b, finalOpacity);
       p.strokeWeight(0.5);

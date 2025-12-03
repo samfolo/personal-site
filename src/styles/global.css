@@ -57,12 +57,26 @@
   --tracking-body: var(--tracking-body);
 
   /* Line heights */
+  --leading-tighter: var(--leading-tighter);
   --leading-none: var(--leading-none);
   --leading-tight: var(--leading-tight);
   --leading-snug: var(--leading-snug);
   --leading-normal: var(--leading-normal);
   --leading-relaxed: var(--leading-relaxed);
   --leading-loose: var(--leading-loose);
+
+  /* Z-index scale */
+  --z-behind: var(--z-behind);
+  --z-base: var(--z-base);
+  --z-raised: var(--z-raised);
+  --z-dropdown: var(--z-dropdown);
+  --z-sticky: var(--z-sticky);
+  --z-overlay: var(--z-overlay);
+  --z-modal: var(--z-modal);
+  --z-popover: var(--z-popover);
+  --z-tooltip: var(--z-tooltip);
+  --z-header: var(--z-header);
+  --z-max: var(--z-max);
 }
 
 /* ==========================================================================
@@ -120,7 +134,7 @@ body {
   line-height: var(--leading-normal);
   letter-spacing: var(--tracking-body);
   color: var(--fg);
-  transition: background 0.3s ease, color 0.3s ease;
+  transition: background var(--transition-slow), color var(--transition-slow);
   background-color: var(--bg);
 }
 
