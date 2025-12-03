@@ -11,6 +11,7 @@
   "dependencies": {
     "@astrojs/mdx": "^4.3.12",
     "@astrojs/node": "^9.5.1",
+    "@shikijs/transformers": "^3.19.0",
     "@tailwindcss/typography": "^0.5.19",
     "@tailwindcss/vite": "^4.1.17",
     "@types/p5": "^1.7.7",
