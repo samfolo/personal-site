@@ -27,54 +27,59 @@
   --tw-prose-th-borders: var(--rule);
   --tw-prose-td-borders: var(--rule);
 
-  /* Typography settings */
+  /* Typography settings - grid-aligned */
   font-size: var(--text-base);
-  line-height: var(--leading-relaxed);
+  line-height: var(--leading-32);
   max-width: none;
 }
 
-/* Heading styles */
+/* Heading styles - all line-heights on 8px grid */
 .prose :where(h1):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
   font-size: var(--text-2xl);
   font-weight: var(--font-bold);
   letter-spacing: var(--tracking-display);
-  line-height: var(--leading-tight);
+  line-height: var(--leading-40);
   margin-top: var(--space-8);
   margin-bottom: var(--space-4);
+  color: var(--emphasis);
 }
 
 .prose :where(h2):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
   font-size: var(--text-xl);
   font-weight: var(--font-bold);
   letter-spacing: var(--tracking-display);
-  line-height: var(--leading-tight);
+  line-height: var(--leading-32);
   margin-top: var(--space-8);
   margin-bottom: var(--space-4);
+  color: var(--emphasis);
 }
 
 .prose :where(h3):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
   font-size: var(--text-lg);
   font-weight: var(--font-semibold);
   letter-spacing: var(--tracking-display);
-  line-height: var(--leading-snug);
+  line-height: var(--leading-32);
   margin-top: var(--space-6);
   margin-bottom: var(--space-3);
+  color: var(--emphasis);
 }
 
 .prose :where(h4):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
   font-size: var(--text-md);
   font-weight: var(--font-semibold);
-  line-height: var(--leading-snug);
+  line-height: var(--leading-24);
   margin-top: var(--space-5);
   margin-bottom: var(--space-2);
+  color: var(--emphasis);
 }
 
 .prose :where(h5):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
   font-size: var(--text-base);
   font-weight: var(--font-semibold);
-  line-height: var(--leading-normal);
+  line-height: var(--leading-24);
   margin-top: var(--space-4);
   margin-bottom: var(--space-2);
+  color: var(--emphasis);
 }
 
 .prose :where(h6):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
@@ -82,7 +87,7 @@
   font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: var(--tracking-labels);
-  line-height: var(--leading-normal);
+  line-height: var(--leading-16);
   margin-top: var(--space-4);
   margin-bottom: var(--space-2);
   color: var(--muted);

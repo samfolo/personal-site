@@ -101,7 +101,7 @@ const { title, description, publishDate, updatedDate, tags } = post.data;
     font-size: clamp(var(--text-xl), 5vw, var(--text-3xl));
     font-weight: var(--font-bold);
     letter-spacing: var(--tracking-display);
-    line-height: var(--leading-tight);
+    line-height: var(--leading-48);
     margin-bottom: var(--space-4);
   }
 
@@ -161,12 +161,14 @@ const { title, description, publishDate, updatedDate, tags } = post.data;
     font-weight: var(--font-medium);
     text-transform: uppercase;
     letter-spacing: var(--tracking-labels);
+    line-height: var(--leading-16);
     color: var(--muted);
   }
 
   .post-nav-link {
     font-size: var(--text-md);
     font-weight: var(--font-medium);
+    line-height: var(--leading-24);
     color: var(--fg);
     transition: color var(--transition-fast);
   }

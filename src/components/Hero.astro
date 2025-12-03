@@ -98,6 +98,14 @@ const navLinks = [
 
   .wordmark-line {
     display: block;
+    line-height: inherit;
+  }
+
+  /* Ensure sheen elements maintain tight line-height */
+  .hero-wordmark :global(.sheen-text),
+  .hero-wordmark :global(.sheen-word),
+  .hero-wordmark :global(.sheen-char) {
+    line-height: inherit;
   }
 
   /* Tagline */
