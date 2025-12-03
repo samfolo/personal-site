@@ -26,6 +26,7 @@
 @plugin "@tailwindcss/typography";
 
 @import './prose.css';
+@import './components/shiki.css';
 
 /* ==========================================================================
    View Transitions
