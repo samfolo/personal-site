@@ -16,6 +16,10 @@
 
 @import 'tailwindcss';
 
+@plugin "@tailwindcss/typography";
+
+@import './prose.css';
+
 /* ==========================================================================
    Tailwind v4 Theme Configuration
    ========================================================================== */
