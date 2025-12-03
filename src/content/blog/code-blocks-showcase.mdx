@@ -1,0 +1,343 @@
+---
+title: "Code blocks showcase"
+description: "A comprehensive display of syntax highlighting, diff notation, line highlighting, and other code block features."
+publishDate: 2024-01-02
+tags: ["design", "code"]
+draft: true
+---
+
+This article showcases all the code block features available in the site's typography system. It demonstrates syntax highlighting across multiple languages, transformer features like diff and focus mode, and the copy functionality.
+
+## Basic syntax highlighting
+
+Code blocks automatically receive syntax highlighting based on the specified language. The colours adapt to whichever theme you're using.
+
+### TypeScript
+
+```typescript
+interface User {
+  id: string;
+  name: string;
+  email: string;
+  createdAt: Date;
+}
+
+async function fetchUser(id: string): Promise<User | null> {
+  const response = await fetch(`/api/users/${id}`);
+
+  if (!response.ok) {
+    return null;
+  }
+
+  return response.json();
+}
+```
+
+### JavaScript
+
+```javascript
+const CONFIG = {
+  apiUrl: 'https://api.example.com',
+  timeout: 5000,
+  retries: 3,
+};
+
+function debounce(fn, delay) {
+  let timeoutId;
+  return (...args) => {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => fn(...args), delay);
+  };
+}
+```
+
+### CSS
+
+```css
+.card {
+  --card-padding: 1.5rem;
+  --card-radius: 0.5rem;
+
+  display: flex;
+  flex-direction: column;
+  padding: var(--card-padding);
+  border-radius: var(--card-radius);
+  background: oklch(0.98 0.01 250);
+  box-shadow: 0 4px 6px oklch(0 0 0 / 0.1);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 12px oklch(0 0 0 / 0.15);
+}
+```
+
+### Rust
+
+```rust
+use std::collections::HashMap;
+
+fn word_count(text: &str) -> HashMap<String, usize> {
+    let mut counts = HashMap::new();
+
+    for word in text.split_whitespace() {
+        let word = word.to_lowercase();
+        *counts.entry(word).or_insert(0) += 1;
+    }
+
+    counts
+}
+```
+
+### Python
+
+```python
+from dataclasses import dataclass
+from typing import Optional
+
+@dataclass
+class Article:
+    title: str
+    content: str
+    author: str
+    published: bool = False
+    views: int = 0
+
+    def publish(self) -> None:
+        self.published = True
+
+    def summary(self, length: int = 100) -> str:
+        return self.content[:length] + "..." if len(self.content) > length else self.content
+```
+
+### Bash
+
+```bash
+#!/bin/bash
+
+# Deploy script
+set -e
+
+echo "Building project..."
+npm run build
+
+echo "Running tests..."
+npm test
+
+echo "Deploying to production..."
+gcloud run deploy personal-site \
+  --source . \
+  --region europe-west1 \
+  --allow-unauthenticated
+
+echo "Deployment complete!"
+```
+
+### JSON
+
+```json
+{
+  "name": "personal-site",
+  "version": "1.0.0",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "dependencies": {
+    "astro": "^5.0.0"
+  }
+}
+```
+
+## Diff notation
+
+Use `// [!code ++]` and `// [!code --]` to show additions and removals. This is perfect for demonstrating changes in code.
+
+```typescript
+function greet(name: string) {
+  console.log('Hello, ' + name); // [!code --]
+  console.log(`Hello, ${name}!`); // [!code ++]
+}
+
+const config = {
+  theme: 'light', // [!code --]
+  theme: 'dark', // [!code ++]
+  fontSize: 14, // [!code --]
+  fontSize: 16, // [!code ++]
+};
+```
+
+## Line highlighting
+
+Use `// [!code highlight]` to draw attention to specific lines.
+
+```typescript
+async function processPayment(amount: number) {
+  const session = await createSession();
+
+  const payment = await stripe.charges.create({ // [!code highlight]
+    amount: amount * 100, // [!code highlight]
+    currency: 'gbp', // [!code highlight]
+  }); // [!code highlight]
+
+  await session.commit();
+  return payment.id;
+}
+```
+
+## Focus mode
+
+Use `// [!code focus]` to dim all lines except the focused ones. Hover over the code block to reveal the full context.
+
+```typescript
+interface DatabaseConfig {
+  host: string;
+  port: number;
+  username: string;
+  password: string;
+  database: string;
+}
+
+function createConnection(config: DatabaseConfig) { // [!code focus]
+  const { host, port, username, password, database } = config; // [!code focus]
+  return new Pool({ host, port, user: username, password, database }); // [!code focus]
+} // [!code focus]
+
+async function query<T>(sql: string, params: unknown[]): Promise<T[]> {
+  const client = await pool.connect();
+  try {
+    const result = await client.query(sql, params);
+    return result.rows;
+  } finally {
+    client.release();
+  }
+}
+```
+
+## Combining features
+
+You can combine diff and highlight in the same block:
+
+```typescript
+function calculateTotal(items: CartItem[]) {
+  let total = 0; // [!code --]
+  for (const item of items) { // [!code --]
+    total += item.price * item.quantity; // [!code --]
+  } // [!code --]
+  return total; // [!code --]
+
+  return items.reduce((sum, item) => { // [!code ++]
+    return sum + item.price * item.quantity; // [!code ++] [!code highlight]
+  }, 0); // [!code ++]
+}
+```
+
+## Minimal mode
+
+For simpler code snippets, use `{minimal}` to show only the copy button on hover, without the header bar.
+
+```typescript {minimal}
+const greeting = "Hello, World!";
+console.log(greeting);
+```
+
+Compare with the default header treatment:
+
+```typescript
+const greeting = "Hello, World!";
+console.log(greeting);
+```
+
+## Various languages
+
+### HTML
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Example</title>
+  </head>
+  <body>
+    <main class="container">
+      <h1>Welcome</h1>
+      <p>This is an example page.</p>
+    </main>
+  </body>
+</html>
+```
+
+### YAML
+
+```yaml
+name: Deploy
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run build
+```
+
+### Markdown
+
+```markdown
+# Heading
+
+This is a paragraph with **bold** and *italic* text.
+
+- List item one
+- List item two
+- List item three
+
+> This is a blockquote
+
+[Link text](https://example.com)
+```
+
+## Long lines and scrolling
+
+Code blocks handle long lines gracefully with horizontal scrolling:
+
+```typescript
+const veryLongVariableName = someFunction(firstArgument, secondArgument, thirdArgument, fourthArgument, fifthArgument, sixthArgument, seventhArgument);
+
+const anotherExampleWithManyChainedMethods = array.filter(item => item.active).map(item => item.value).reduce((acc, val) => acc + val, 0).toString().padStart(10, '0');
+```
+
+## Tables
+
+Tables are styled consistently with the code blocks:
+
+| Feature | Syntax | Description |
+|---------|--------|-------------|
+| Diff add | `// [!code ++]` | Highlights line as added |
+| Diff remove | `// [!code --]` | Highlights line as removed |
+| Highlight | `// [!code highlight]` | Highlights specific lines |
+| Focus | `// [!code focus]` | Dims unfocused lines |
+| Minimal | `{minimal}` | Shows overlay copy button only |
+
+## Plain text
+
+Code blocks without a language fall back to plain text styling:
+
+```
+This is plain text without any syntax highlighting.
+It still gets the same container treatment with
+the copy button and language label (showing "text").
+```
+
+---
+
+This showcase demonstrates the complete code block system. Each feature has been designed to work seamlessly across all four colour themes whilst maintaining readability and visual consistency.

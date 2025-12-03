@@ -1,10 +1,17 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
+import {
+  transformerNotationDiff,
+  transformerNotationHighlight,
+  transformerNotationFocus,
+  transformerNotationWordHighlight,
+} from '@shikijs/transformers';
 
 import node from '@astrojs/node';
 import mdx from '@astrojs/mdx';
 import tailwindcss from '@tailwindcss/vite';
 import rehypeHeadingAnchors from './src/plugins/rehype-heading-anchors';
+import rehypeCodeBlocks from './src/plugins/rehype-code-blocks';
 
 // https://astro.build/config
 export default defineConfig({
@@ -16,7 +23,20 @@ export default defineConfig({
   integrations: [mdx()],
 
   markdown: {
-    rehypePlugins: [rehypeHeadingAnchors],
+    rehypePlugins: [
+      rehypeHeadingAnchors,
+      rehypeCodeBlocks,
+    ],
+    shikiConfig: {
+      theme: 'css-variables',
+      wrap: true,
+      transformers: [
+        transformerNotationDiff(),
+        transformerNotationHighlight(),
+        transformerNotationFocus(),
+        transformerNotationWordHighlight(),
+      ],
+    },
   },
 
   vite: {

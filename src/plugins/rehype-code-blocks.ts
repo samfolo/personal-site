@@ -1,85 +1,55 @@
 /**
  * Rehype Code Blocks Plugin
  *
- * Wraps Shiki-rendered code blocks with:
+ * Wraps code blocks (pre > code) with:
  * - .code-block wrapper for positioning
- * - Header with language label and copy button
- * - Overlay copy button (hidden by default)
+ * - Floating language label (top-left)
+ * - Floating copy button (top-right)
  *
- * Respects minimal treatment when code block has {minimal} in meta.
+ * Note: This runs BEFORE Shiki adds its classes, so we detect code blocks
+ * by structure (pre > code) rather than by class name.
  */
 
 import { visit } from 'unist-util-visit';
 import type { Root, Element, ElementContent } from 'hast';
 
-interface CodeBlockMeta {
-  minimal?: boolean;
-}
+/**
+ * Check if a pre element contains a code element as its first child.
+ * This is the standard markdown code fence structure.
+ */
+function isCodeBlock(node: Element): boolean {
+  if (node.tagName !== 'pre') return false;
 
-function parseMeta(metaString: string | undefined): CodeBlockMeta {
-  const meta: CodeBlockMeta = {};
-
-  if (!metaString) return meta;
-
-  if (metaString.includes('minimal')) {
-    meta.minimal = true;
-  }
-
-  return meta;
+  const firstChild = node.children[0];
+  return (
+    firstChild?.type === 'element' &&
+    firstChild.tagName === 'code'
+  );
 }
 
 export default function rehypeCodeBlocks() {
   return (tree: Root) => {
     visit(tree, 'element', (node: Element, index, parent) => {
-      // Only process pre elements with astro-code class
-      if (node.tagName !== 'pre') return;
-
-      const classes = node.properties?.className;
-      const classArray = Array.isArray(classes) ? classes : [];
-
-      if (!classArray.includes('astro-code')) return;
+      // Only process pre elements containing code
+      if (!isCodeBlock(node)) return;
 
       if (typeof index !== 'number' || !parent) return;
 
-      // Get language from data-language attribute
-      const lang = (node.properties?.dataLanguage as string) || '';
-
-      // Check for meta string (Shiki stores this)
-      const metaString = node.properties?.dataMeta as string | undefined;
-      const meta = parseMeta(metaString);
-
-      // Create header element
-      const header: Element = {
+      // Create floating language label (populated by client-side script)
+      const langLabel: Element = {
         type: 'element',
-        tagName: 'div',
-        properties: { className: ['code-header'] },
-        children: [
-          {
-            type: 'element',
-            tagName: 'span',
-            properties: { className: ['code-lang'] },
-            children: lang ? [{ type: 'text', value: lang }] : [],
-          },
-          {
-            type: 'element',
-            tagName: 'button',
-            properties: {
-              type: 'button',
-              className: ['code-copy'],
-              'aria-label': 'Copy code to clipboard',
-            },
-            children: [{ type: 'text', value: 'Copy' }],
-          },
-        ],
+        tagName: 'span',
+        properties: { className: ['code-lang'] },
+        children: [],
       };
 
-      // Create overlay copy button
-      const overlayButton: Element = {
+      // Create floating copy button
+      const copyButton: Element = {
         type: 'element',
         tagName: 'button',
         properties: {
           type: 'button',
-          className: ['code-copy-overlay'],
+          className: ['code-copy'],
           'aria-label': 'Copy code to clipboard',
         },
         children: [{ type: 'text', value: 'Copy' }],
@@ -91,9 +61,8 @@ export default function rehypeCodeBlocks() {
         tagName: 'div',
         properties: {
           className: ['code-block'],
-          ...(meta.minimal ? { 'data-code-minimal': '' } : {}),
         },
-        children: [header, node as ElementContent, overlayButton],
+        children: [langLabel, node as ElementContent, copyButton],
       };
 
       // Replace the pre element with the wrapper
