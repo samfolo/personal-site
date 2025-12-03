@@ -78,7 +78,7 @@ const groupedPosts = groupPostsByMonth(posts);
           <li class="post-item">
             <a href={`/blog/${post.slug}`} class="post-link">
               <span class="post-title">
-                <SheenText text={post.title} tag="span" interval={8} />
+                <SheenText text={post.title} tag="span" interval={12} />
               </span>
               <span class="post-date">{formatPostDate(post.date)}</span>
             </a>
@@ -116,7 +116,7 @@ const groupedPosts = groupPostsByMonth(posts);
   }
 
   .post-item {
-    border-bottom: 1px solid var(--rule);
+    border-bottom: var(--border-hairline) solid var(--rule);
   }
 
   .post-item:last-child {
@@ -129,7 +129,7 @@ const groupedPosts = groupPostsByMonth(posts);
     align-items: baseline;
     padding: var(--space-3) 0;
     padding-left: 0;
-    transition: padding-left 0.2s ease;
+    transition: padding-left var(--transition-fast);
   }
 
   .post-link:hover {
@@ -137,8 +137,8 @@ const groupedPosts = groupPostsByMonth(posts);
   }
 
   .post-link:focus-visible {
-    outline: 2px solid var(--fg);
-    outline-offset: 4px;
+    outline: var(--outline-width) solid var(--fg);
+    outline-offset: var(--outline-offset);
   }
 
   .post-title {

@@ -36,18 +36,18 @@ const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
 <style define:vars={{ buttonSize }}>
   .theme-switcher {
     display: flex;
-    gap: 0.5rem;
+    gap: var(--space-2);
   }
 
   .theme-button {
     width: var(--buttonSize);
     height: var(--buttonSize);
-    border: 2px solid var(--fg);
+    border: var(--border-thin) solid var(--fg);
     cursor: pointer;
     background: linear-gradient(135deg, var(--bg) 50%, var(--fg) 50%);
-    transition: transform 0.15s ease;
-    outline: 2px solid transparent;
-    outline-offset: 2px;
+    transition: transform var(--transition-fast);
+    outline: var(--outline-width) solid transparent;
+    outline-offset: var(--outline-offset-tight);
   }
 
   .theme-button:hover {
@@ -55,13 +55,19 @@ const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
   }
 
   .theme-button:focus-visible {
-    outline: 2px solid var(--fg);
-    outline-offset: 2px;
+    outline: var(--outline-width) solid var(--fg);
+    outline-offset: var(--outline-offset-tight);
   }
 
   .theme-button[data-active='true'] {
-    outline: 2px solid var(--fg);
-    outline-offset: 2px;
+    outline: var(--outline-width) solid var(--fg);
+    outline-offset: var(--outline-offset-tight);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .theme-button {
+      transition: none;
+    }
   }
 </style>
 

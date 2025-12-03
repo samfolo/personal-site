@@ -35,6 +35,12 @@ const {
 <style>
   .sheen-text :global(.sheen-char) {
     display: inline-block;
-    transition: color 0.05s ease;
+    transition: color var(--transition-instant);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .sheen-text :global(.sheen-char) {
+      transition: none;
+    }
   }
 </style>
