@@ -6,6 +6,9 @@
  * The sheen highlights the centre character with the highlight colour
  * and blends adjacent characters.
  *
+ * Characters are split at build time for better performance — no DOM
+ * manipulation required at runtime.
+ *
  * Supports spreading additional attributes (data-*, aria-*, etc.)
  *
  * @param text - The text to display
@@ -29,16 +32,29 @@ const {
   spread = 2,
   ...attrs
 } = Astro.props;
+
+// Split text into words and spaces for server-side rendering
+const tokens = text.split(/( )/);
 ---
 
 <Tag
   class:list={['sheen-text', className]}
-  data-sheen-text={text}
   data-sheen-interval={interval}
   data-sheen-spread={spread}
+  data-sheen-ready
   {...attrs}
 >
-  {text}
+  {tokens.map((token) =>
+    token === ' ' ? (
+      <span class="sheen-char">&nbsp;</span>
+    ) : token.length > 0 ? (
+      <span class="sheen-word">
+        {[...token].map((char) => (
+          <span class="sheen-char">{char}</span>
+        ))}
+      </span>
+    ) : null
+  )}
 </Tag>
 
 <script src="../scripts/sheen.ts"></script>

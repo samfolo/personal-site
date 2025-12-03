@@ -4,6 +4,7 @@
  *
  * Reusable navigation link with proper 44px touch targets (WCAG AA).
  * Styled as uppercase label text with muted colour.
+ * Automatically highlights when on the current page using aria-current.
  */
 
 interface Props {
@@ -12,9 +13,18 @@ interface Props {
 }
 
 const { href, class: className } = Astro.props;
+const pathname = Astro.url.pathname;
+
+// Check if this link is the current page
+// Handle both exact matches and nested routes (e.g., /blog matches /blog/post-slug)
+const isActive = pathname === href || pathname.startsWith(`${href}/`);
 ---
 
-<a href={href} class:list={['nav-link', className]}>
+<a
+  href={href}
+  class:list={['nav-link', { active: isActive }, className]}
+  aria-current={isActive ? 'page' : undefined}
+>
   <slot />
 </a>
 
@@ -33,6 +43,11 @@ const { href, class: className } = Astro.props;
   }
 
   .nav-link:hover {
+    color: var(--fg);
+  }
+
+  .nav-link.active,
+  .nav-link[aria-current='page'] {
     color: var(--fg);
   }
 
