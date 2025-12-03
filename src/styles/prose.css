@@ -5,7 +5,7 @@
  * Applied to blog post content.
  */
 
-@layer utilities {
+@layer components {
   .prose {
     /* Map to design tokens */
     --tw-prose-body: var(--fg);

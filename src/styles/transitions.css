@@ -1,0 +1,41 @@
+/**
+ * View Transitions
+ *
+ * Custom animations for Astro View Transitions.
+ * Uses sequential fade (out then in) to prevent text overlap.
+ */
+
+@keyframes fadeOut {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+::view-transition-old(root) {
+  animation: fadeOut var(--duration-fast) var(--ease-default) forwards;
+}
+
+::view-transition-new(root) {
+  animation: fadeIn var(--duration-fast) var(--ease-default) var(--duration-fast) forwards;
+  opacity: 0;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}

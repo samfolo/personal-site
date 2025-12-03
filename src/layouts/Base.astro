@@ -52,11 +52,20 @@ import ThemeSwitcher from '../components/ThemeSwitcher.astro';
       (function () {
         var THEME_KEY = 'theme';
         var THEME_CLASSES = ['theme-steel', 'theme-purple', 'theme-charcoal', 'theme-teal'];
-        var saved = localStorage.getItem(THEME_KEY);
-        if (saved && THEME_CLASSES.indexOf('theme-' + saved) !== -1) {
-          document.body.classList.remove.apply(document.body.classList, THEME_CLASSES);
-          document.body.classList.add('theme-' + saved);
+
+        function applyStoredTheme() {
+          var saved = localStorage.getItem(THEME_KEY);
+          if (saved && THEME_CLASSES.indexOf('theme-' + saved) !== -1) {
+            document.body.classList.remove.apply(document.body.classList, THEME_CLASSES);
+            document.body.classList.add('theme-' + saved);
+          }
         }
+
+        // Apply on initial load
+        applyStoredTheme();
+
+        // Reapply after View Transition navigation
+        document.addEventListener('astro:after-swap', applyStoredTheme);
       })();
     </script>
 

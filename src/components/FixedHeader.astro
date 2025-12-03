@@ -10,16 +10,16 @@ import ThemeSwitcher from './ThemeSwitcher.astro';
 import NavLink from './NavLink.astro';
 
 const navLinks = [
-  { href: '#', label: 'Blog' },
-  { href: '#', label: 'About' },
-  { href: '#', label: 'Uses' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/about', label: 'About' },
+  { href: '/uses', label: 'Uses' },
 ] as const;
 ---
 
 <header id="fixed-header" class="fixed-header">
   <div class="header-inner">
     <div class="header-left">
-      <a href="#top" class="wordmark" aria-label="Scroll to top">
+      <a href="/" class="wordmark" aria-label="Go to home">
         Sam Folorunsho.
       </a>
       <nav class="nav" aria-label="Main navigation">
@@ -109,3 +109,19 @@ const navLinks = [
     }
   }
 </style>
+
+<script>
+  function initWordmark() {
+    const wordmark = document.querySelector('.fixed-header .wordmark');
+
+    wordmark?.addEventListener('click', (e) => {
+      if (window.location.pathname === '/') {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+  }
+
+  initWordmark();
+  document.addEventListener('astro:after-swap', initWordmark);
+</script>
