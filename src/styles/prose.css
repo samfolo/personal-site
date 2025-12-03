@@ -43,11 +43,11 @@
 
   .prose :where(h2):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
     font-size: var(--text-lg);
-    font-weight: var(--font-semibold);
+    font-weight: var(--font-bold);
     letter-spacing: var(--tracking-display);
     line-height: var(--leading-tight);
-    margin-top: var(--space-7);
-    margin-bottom: var(--space-3);
+    margin-top: var(--space-8);
+    margin-bottom: var(--space-4);
   }
 
   .prose :where(h3):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
@@ -58,10 +58,34 @@
     margin-bottom: var(--space-3);
   }
 
+  /* Heading anchor links */
+  .prose :where(h2, h3):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    position: relative;
+  }
+
+  .prose :where(.heading-anchor):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    position: absolute;
+    left: calc(-1 * var(--space-5));
+    font-weight: var(--font-regular);
+    color: var(--muted);
+    opacity: 0;
+    text-decoration: none;
+    transition: opacity var(--transition-fast), color var(--transition-fast);
+  }
+
+  .prose :where(h2:hover .heading-anchor, h3:hover .heading-anchor):not(:where([class~="not-prose"], [class~="not-prose"] *)),
+  .prose :where(.heading-anchor:focus):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    opacity: 1;
+  }
+
+  .prose :where(.heading-anchor:hover):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
+    color: var(--fg);
+  }
+
   /* Paragraph spacing */
   .prose :where(p):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
     margin-top: var(--space-4);
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-5);
   }
 
   /* First paragraph after heading - tighter spacing */
@@ -99,7 +123,7 @@
     font-family: var(--font-mono);
     font-size: var(--text-sm);
     line-height: var(--leading-normal);
-    padding: var(--space-4);
+    padding: var(--space-5);
     border-radius: var(--space-2);
     margin-top: var(--space-5);
     margin-bottom: var(--space-5);
@@ -125,7 +149,7 @@
   .prose :where(ul, ol):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
     padding-left: var(--space-5);
     margin-top: var(--space-4);
-    margin-bottom: var(--space-4);
+    margin-bottom: var(--space-5);
   }
 
   .prose :where(ul):not(:where([class~="not-prose"], [class~="not-prose"] *)) {

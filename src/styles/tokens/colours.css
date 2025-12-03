@@ -46,7 +46,7 @@
 /* Theme: Teal (with coral foreground exception) */
 .theme-teal {
   --bg: oklch(0.2239 0.0239 195.58);
-  --fg: oklch(0.7294 0.1687 34.05); /* Coral - intentional hue shift */
+  --fg: oklch(0.76 0.1687 34.05); /* Coral - increased lightness for readability */
   --muted: oklch(0.555 0.0365 196.15);
   --rule: oklch(0.3243 0.0378 195.45);
   --highlight: oklch(0.8447 0.0861 33.1);

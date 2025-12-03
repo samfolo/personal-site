@@ -2,19 +2,21 @@
  * Scroll Header Controller
  *
  * Uses Intersection Observer to toggle fixed header visibility
- * when the hero wordmark scrolls out of view.
+ * when the scroll trigger element scrolls out of view.
+ *
+ * Any element can become a scroll trigger by adding data-scroll-trigger.
  */
 
 const HEADER_ID = 'fixed-header';
-const HERO_WORDMARK_ID = 'hero-wordmark';
+const SCROLL_TRIGGER_SELECTOR = '[data-scroll-trigger]';
 const INITIAL_SWITCHER_ID = 'initial-theme-switcher';
 
 function init(): void {
   const header = document.getElementById(HEADER_ID);
-  const heroWordmark = document.getElementById(HERO_WORDMARK_ID);
+  const scrollTrigger = document.querySelector<HTMLElement>(SCROLL_TRIGGER_SELECTOR);
   const initialSwitcher = document.getElementById(INITIAL_SWITCHER_ID);
 
-  if (!header || !heroWordmark) {
+  if (!header || !scrollTrigger) {
     return;
   }
 
@@ -22,11 +24,11 @@ function init(): void {
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          // Wordmark visible: hide header, show initial switcher
+          // Trigger visible: hide header, show initial switcher
           header.classList.remove('visible');
           initialSwitcher?.classList.remove('hidden');
         } else {
-          // Wordmark not visible: show header, hide initial switcher
+          // Trigger not visible: show header, hide initial switcher
           header.classList.add('visible');
           initialSwitcher?.classList.add('hidden');
         }
@@ -37,7 +39,7 @@ function init(): void {
     }
   );
 
-  observer.observe(heroWordmark);
+  observer.observe(scrollTrigger);
 }
 
 // Initialise on load and after Astro page transitions

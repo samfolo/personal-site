@@ -7,6 +7,7 @@
  */
 
 import Base from './Base.astro';
+import SheenText from '../components/SheenText.astro';
 import { formatDate, formatUpdatedDate } from '../utils/formatDate';
 import type { CollectionEntry } from 'astro:content';
 
@@ -26,7 +27,7 @@ const { title, description, publishDate, updatedDate, tags } = post.data;
     <article class="post">
       <!-- Post Header -->
       <header class="post-header">
-        <h1 class="post-title">{title}</h1>
+        <SheenText text={title} tag="h1" class="post-title" id="post-title" data-scroll-trigger />
 
         <div class="post-meta">
           <time datetime={publishDate.toISOString()}>
@@ -95,7 +96,8 @@ const { title, description, publishDate, updatedDate, tags } = post.data;
     margin-bottom: var(--space-7);
   }
 
-  .post-title {
+  /* :global() required as SheenText renders the h1 in its own scope */
+  :global(.post-title) {
     font-size: clamp(var(--text-lg), 5vw, var(--text-xl));
     font-weight: var(--font-bold);
     letter-spacing: var(--tracking-display);
@@ -188,3 +190,7 @@ const { title, description, publishDate, updatedDate, tags } = post.data;
     }
   }
 </style>
+
+<script>
+  import '../scripts/heading-anchors.ts';
+</script>

@@ -18,6 +18,7 @@ const {
   theme = 'steel',
 } = Astro.props;
 
+import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import FixedHeader from '../components/FixedHeader.astro';
 import FixedFooter from '../components/FixedFooter.astro';
@@ -42,6 +43,9 @@ import ThemeSwitcher from '../components/ThemeSwitcher.astro';
       type="font/woff2"
       crossorigin
     />
+
+    <!-- View Transitions for smooth page navigation -->
+    <ClientRouter />
   </head>
   <body class={`theme-${theme}`}>
     <script is:inline>

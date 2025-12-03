@@ -5,12 +5,13 @@
  * Displays text with a left-to-right colour sweep animation on hover.
  * The sheen highlights the centre character with the highlight colour
  * and blends adjacent characters.
+ *
+ * Supports spreading additional attributes (data-*, aria-*, etc.)
  */
 
-interface Props {
+interface Props extends astroHTML.JSX.HTMLAttributes {
   text: string;
   tag?: keyof HTMLElementTagNameMap;
-  class?: string;
   interval?: number;
 }
 
@@ -19,6 +20,7 @@ const {
   tag: Tag = 'span',
   class: className,
   interval = 15,
+  ...attrs
 } = Astro.props;
 ---
 
@@ -26,6 +28,7 @@ const {
   class:list={['sheen-text', className]}
   data-sheen-text={text}
   data-sheen-interval={interval}
+  {...attrs}
 >
   {text}
 </Tag>
