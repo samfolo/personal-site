@@ -1,0 +1,45 @@
+---
+/**
+ * Individual Blog Post Page
+ *
+ * Dynamic route for rendering blog posts.
+ * Calculates reading time and adjacent post navigation.
+ */
+
+import { getCollection, render } from 'astro:content';
+import Post from '../../layouts/Post.astro';
+import { calculateReadingTime } from '../../utils/readingTime';
+
+export async function getStaticPaths() {
+  const allPosts = await getCollection('blog', ({ data }) => {
+    return import.meta.env.PROD ? !data.draft : true;
+  });
+
+  // Sort by publish date (newest first) for navigation
+  const sortedPosts = allPosts.sort(
+    (a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime()
+  );
+
+  return sortedPosts.map((post, index) => {
+    const prevPost = sortedPosts[index + 1]
+      ? { slug: sortedPosts[index + 1].id, title: sortedPosts[index + 1].data.title }
+      : null;
+    const nextPost = sortedPosts[index - 1]
+      ? { slug: sortedPosts[index - 1].id, title: sortedPosts[index - 1].data.title }
+      : null;
+
+    return {
+      params: { slug: post.id },
+      props: { post, prevPost, nextPost },
+    };
+  });
+}
+
+const { post, prevPost, nextPost } = Astro.props;
+const { Content } = await render(post);
+const readingTime = calculateReadingTime(post.body || '');
+---
+
+<Post post={post} readingTime={readingTime} prevPost={prevPost} nextPost={nextPost}>
+  <Content />
+</Post>
