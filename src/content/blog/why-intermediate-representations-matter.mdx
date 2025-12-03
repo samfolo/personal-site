@@ -1,0 +1,43 @@
+---
+title: "Why intermediate representations matter"
+description: "How introducing intermediate layers between user intent and system action can dramatically improve AI system reliability."
+publishDate: 2024-12-03
+tags: ["AI", "architecture", "design-patterns"]
+draft: false
+---
+
+One of the most powerful patterns in building reliable AI systems is the introduction of intermediate representations.
+
+## The direct approach problem
+
+Many AI systems attempt to go directly from user input to final action. This creates brittleness and makes debugging difficult. When something goes wrong, you have no visibility into where the failure occurred.
+
+## Introducing intermediate layers
+
+Consider this pipeline:
+
+1. **User Intent** - Raw natural language input
+2. **Semantic Representation** - Structured understanding of what the user wants
+3. **Execution Plan** - Concrete steps to achieve the goal
+4. **Actions** - Actual system operations
+
+Each layer provides an opportunity for validation and correction.
+
+## Benefits
+
+The advantages of this approach are substantial:
+
+- **Debuggability** - You can inspect each layer to understand where issues arise
+- **Testability** - Each transformation can be tested in isolation
+- **Flexibility** - Swap implementations at any layer without affecting others
+- **Observability** - Log intermediate states for analysis
+
+## A practical example
+
+Rather than asking an AI to "send an email to John about the meeting", you might:
+
+1. Parse intent: `{ action: "send_email", recipient: "John", topic: "meeting" }`
+2. Resolve references: `{ action: "send_email", recipient: "john@example.com", topic: "Q4 planning meeting" }`
+3. Generate content and execute
+
+This pattern has proven invaluable in production systems where reliability is paramount.

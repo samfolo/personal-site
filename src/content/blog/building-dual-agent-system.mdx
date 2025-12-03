@@ -1,0 +1,38 @@
+---
+title: "Building a dual-agent system for semantic parsing"
+description: "Exploring the architecture of a two-agent system that separates understanding from execution, improving reliability in complex parsing tasks."
+publishDate: 2024-12-12
+tags: ["AI", "agents", "semantic-parsing"]
+draft: false
+---
+
+This post explores the architecture behind a dual-agent system designed for semantic parsing tasks.
+
+## The problem with single-agent approaches
+
+When building systems that need to understand and execute complex instructions, a single agent often struggles with both interpretation and execution simultaneously. The cognitive load of doing both at once leads to errors and inconsistencies.
+
+## Introducing the dual-agent pattern
+
+By separating concerns between two specialised agents, we can achieve better results:
+
+1. **Understanding Agent** - Focuses purely on semantic interpretation
+2. **Execution Agent** - Handles the mechanical aspects of task completion
+
+This separation allows each agent to be optimised for its specific role.
+
+## Implementation details
+
+The key insight is that each agent can be tuned independently, leading to more reliable outputs overall.
+
+```typescript
+// Example of agent coordination
+const understanding = await understandingAgent.parse(input);
+const result = await executionAgent.execute(understanding);
+```
+
+The understanding agent produces an intermediate representation that the execution agent can work with deterministically. This makes debugging significantly easier.
+
+> The best systems are often those that break complex problems into simpler, well-defined subtasks.
+
+More details on the implementation will follow in future posts.
