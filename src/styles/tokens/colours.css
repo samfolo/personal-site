@@ -67,7 +67,7 @@
 :root {
   /* Default syntax tokens (Steel defaults) */
   --shiki-foreground: var(--fg);
-  --shiki-background: oklch(0.19 0.01 265);
+  --shiki-background: oklch(0.19 0.01 255.6);
   --shiki-token-keyword: oklch(0.72 0.17 285);
   --shiki-token-function: oklch(0.77 0.14 255);
   --shiki-token-constant: oklch(0.75 0.14 220);
@@ -88,7 +88,7 @@
   --code-diff-remove-bg: oklch(0.21 0.05 25);
   --code-diff-add-symbol: oklch(0.65 0.15 150);
   --code-diff-remove-symbol: oklch(0.65 0.15 25);
-  --code-highlight-bg: oklch(0.22 0.01 265);
+  --code-highlight-bg: oklch(0.22 0.01 255.6);
 
   /* Focus mode opacity */
   --code-focus-opacity: 0.3;
@@ -97,7 +97,7 @@
 
 /* Steel syntax tokens - Primary: 255, Secondary: 220 */
 .theme-steel {
-  --shiki-background: oklch(0.19 0.01 265);
+  --shiki-background: oklch(0.19 0.01 255.6);
   --shiki-token-keyword: oklch(0.72 0.17 285);
   --shiki-token-function: oklch(0.77 0.14 255);
   --shiki-token-constant: oklch(0.75 0.14 220);
@@ -110,17 +110,17 @@
   /* Code block colours */
   --code-diff-add-bg: oklch(0.21 0.05 150);
   --code-diff-remove-bg: oklch(0.21 0.05 25);
-  --code-highlight-bg: oklch(0.22 0.01 265);
+  --code-highlight-bg: oklch(0.22 0.01 255.6);
 }
 
-/* Purple syntax tokens - Primary: 303, Secondary: 91 (gold) */
+/* Purple syntax tokens - Primary: 303, Secondary: 97.89 (gold) */
 .theme-purple {
   --shiki-background: oklch(0.19 0.02 303);
-  --shiki-token-keyword: oklch(0.72 0.17 333);
-  --shiki-token-function: oklch(0.77 0.14 303);
-  --shiki-token-constant: oklch(0.75 0.14 91);
-  --shiki-token-string: oklch(0.72 0.13 150);
-  --shiki-token-string-expression: oklch(0.70 0.13 130);
+  --shiki-token-keyword: oklch(0.7 0.15 330);
+  --shiki-token-function: oklch(0.7 0.15 300);
+  --shiki-token-constant: oklch(0.8 0.1 97.89);
+  --shiki-token-string: oklch(0.8 0.05 97.89);
+  --shiki-token-string-expression: oklch(0.8 0.05 97.89);
   --shiki-token-comment: oklch(0.52 0.02 303);
   --shiki-token-punctuation: oklch(0.66 0.03 303);
   --shiki-token-parameter: oklch(0.80 0.11 197);
@@ -166,7 +166,7 @@
   --shiki-token-parameter: oklch(0.78 0.11 115);
 
   /* Code block colours */
-  --code-diff-add-bg: oklch(0.23 0.06 150);
+  --code-diff-add-bg: oklch(0.22 0.06 150);
   --code-diff-remove-bg: oklch(0.22 0.06 26);
   --code-highlight-bg: oklch(0.23 0.02 195.73);
 }

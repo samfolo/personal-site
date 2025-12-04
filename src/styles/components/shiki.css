@@ -276,3 +276,85 @@ pre.astro-code .highlighted-word {
     display: none;
   }
 }
+
+/* ==========================================================================
+   Language-Specific Token Overrides
+
+   Override theme defaults for specific languages using data-language attribute.
+   Supported languages: typescript, javascript, html, css, json, yaml, xml,
+                        csv, markdown, rust, python, lua, plaintext
+
+   Usage: Uncomment and modify selectors as needed for per-language styling.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   Steel Theme - Language Overrides
+   -------------------------------------------------------------------------- */
+
+/* .theme-steel pre.astro-code[data-language="typescript"] {} */
+/* .theme-steel pre.astro-code[data-language="javascript"] {} */
+/* .theme-steel pre.astro-code[data-language="html"] {} */
+/* .theme-steel pre.astro-code[data-language="css"] {} */
+/* .theme-steel pre.astro-code[data-language="json"] {} */
+/* .theme-steel pre.astro-code[data-language="yaml"] {} */
+/* .theme-steel pre.astro-code[data-language="xml"] {} */
+/* .theme-steel pre.astro-code[data-language="csv"] {} */
+/* .theme-steel pre.astro-code[data-language="markdown"] {} */
+/* .theme-steel pre.astro-code[data-language="rust"] {} */
+/* .theme-steel pre.astro-code[data-language="python"] {} */
+/* .theme-steel pre.astro-code[data-language="lua"] {} */
+/* .theme-steel pre.astro-code[data-language="plaintext"] {} */
+
+/* --------------------------------------------------------------------------
+   Purple Theme - Language Overrides
+   -------------------------------------------------------------------------- */
+
+/* .theme-purple pre.astro-code[data-language="typescript"] {} */
+/* .theme-purple pre.astro-code[data-language="javascript"] {} */
+/* .theme-purple pre.astro-code[data-language="html"] {} */
+/* .theme-purple pre.astro-code[data-language="css"] {} */
+/* .theme-purple pre.astro-code[data-language="json"] {} */
+/* .theme-purple pre.astro-code[data-language="yaml"] {} */
+/* .theme-purple pre.astro-code[data-language="xml"] {} */
+/* .theme-purple pre.astro-code[data-language="csv"] {} */
+/* .theme-purple pre.astro-code[data-language="markdown"] {} */
+/* .theme-purple pre.astro-code[data-language="rust"] {} */
+/* .theme-purple pre.astro-code[data-language="python"] {} */
+/* .theme-purple pre.astro-code[data-language="lua"] {} */
+/* .theme-purple pre.astro-code[data-language="plaintext"] {} */
+
+/* --------------------------------------------------------------------------
+   Charcoal Theme - Language Overrides
+   -------------------------------------------------------------------------- */
+
+/* .theme-charcoal pre.astro-code[data-language="typescript"] {} */
+/* .theme-charcoal pre.astro-code[data-language="javascript"] {} */
+/* .theme-charcoal pre.astro-code[data-language="html"] {} */
+/* .theme-charcoal pre.astro-code[data-language="css"] {} */
+/* .theme-charcoal pre.astro-code[data-language="json"] {} */
+/* .theme-charcoal pre.astro-code[data-language="yaml"] {} */
+/* .theme-charcoal pre.astro-code[data-language="xml"] {} */
+/* .theme-charcoal pre.astro-code[data-language="csv"] {} */
+/* .theme-charcoal pre.astro-code[data-language="markdown"] {} */
+/* .theme-charcoal pre.astro-code[data-language="rust"] {} */
+/* .theme-charcoal pre.astro-code[data-language="python"] {} */
+/* .theme-charcoal pre.astro-code[data-language="lua"] {} */
+/* .theme-charcoal pre.astro-code[data-language="plaintext"] {} */
+
+/* --------------------------------------------------------------------------
+   Teal Theme - Language Overrides
+   -------------------------------------------------------------------------- */
+
+/* .theme-teal pre.astro-code[data-language="typescript"] {} */
+/* .theme-teal pre.astro-code[data-language="javascript"] {} */
+/* .theme-teal pre.astro-code[data-language="html"] {} */
+/* .theme-teal pre.astro-code[data-language="css"] {} */
+/* .theme-teal pre.astro-code[data-language="json"] {} */
+/* .theme-teal pre.astro-code[data-language="yaml"] {} */
+/* .theme-teal pre.astro-code[data-language="xml"] {} */
+/* .theme-teal pre.astro-code[data-language="csv"] {} */
+/* .theme-teal pre.astro-code[data-language="markdown"] {} */
+/* .theme-teal pre.astro-code[data-language="rust"] {} */
+/* .theme-teal pre.astro-code[data-language="python"] {} */
+/* .theme-teal pre.astro-code[data-language="lua"] {} */
+/* .theme-teal pre.astro-code[data-language="plaintext"] {} */
