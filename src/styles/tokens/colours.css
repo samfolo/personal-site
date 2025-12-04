@@ -113,17 +113,18 @@
   --code-highlight-bg: oklch(0.22 0.01 255.6);
 }
 
-/* Purple syntax tokens - Primary: 303, Secondary: 97.89 (gold) */
+/* Purple syntax tokens - Primary: 300, Secondary: 97.89 (gold) */
 .theme-purple {
+  --shiki-foreground: var(--fg);
   --shiki-background: oklch(0.19 0.02 303);
   --shiki-token-keyword: oklch(0.7 0.15 330);
   --shiki-token-function: oklch(0.7 0.15 300);
   --shiki-token-constant: oklch(0.8 0.1 97.89);
   --shiki-token-string: oklch(0.8 0.05 97.89);
   --shiki-token-string-expression: oklch(0.8 0.05 97.89);
-  --shiki-token-comment: oklch(0.52 0.02 303);
-  --shiki-token-punctuation: oklch(0.66 0.03 303);
-  --shiki-token-parameter: oklch(0.80 0.11 197);
+  --shiki-token-comment: oklch(0.6 0.02 300);
+  --shiki-token-punctuation: var(--fg);
+  --shiki-token-parameter: oklch(0.7 0.15 320);
 
   /* Code block colours */
   --code-diff-add-bg: oklch(0.21 0.05 154);
