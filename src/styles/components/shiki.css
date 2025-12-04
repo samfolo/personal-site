@@ -11,10 +11,11 @@
    CSS Variables Mapping
 
    Astro 5 uses --astro-code-* prefix. We map our --shiki-* tokens to these.
-   These must be set on body (not :root) to inherit theme-specific values.
+   Set on pre.astro-code (not body) so per-language overrides cascade to
+   inline styles on child <span> elements.
    ========================================================================== */
 
-body {
+pre.astro-code {
   --astro-code-foreground: var(--shiki-foreground, var(--fg));
   --astro-code-background: var(--shiki-background, var(--rule));
   --astro-code-token-constant: var(--shiki-token-constant);
@@ -312,7 +313,9 @@ pre.astro-code .highlighted-word {
 /* .theme-purple pre.astro-code[data-language="typescript"] {} */
 /* .theme-purple pre.astro-code[data-language="javascript"] {} */
 /* .theme-purple pre.astro-code[data-language="html"] {} */
-/* .theme-purple pre.astro-code[data-language="css"] {} */
+.theme-purple pre.astro-code[data-language="css"] {
+  --shiki-token-keyword: oklch(0.8 0.1 97.89);
+}
 /* .theme-purple pre.astro-code[data-language="json"] {} */
 /* .theme-purple pre.astro-code[data-language="yaml"] {} */
 /* .theme-purple pre.astro-code[data-language="xml"] {} */
