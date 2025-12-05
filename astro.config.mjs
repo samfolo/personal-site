@@ -6,6 +6,7 @@ import {
   transformerNotationFocus,
   transformerNotationWordHighlight,
 } from '@shikijs/transformers';
+import { customCssVariablesTheme } from './src/lib/shiki-theme';
 
 import node from '@astrojs/node';
 import mdx from '@astrojs/mdx';
@@ -28,7 +29,7 @@ export default defineConfig({
       rehypeCodeBlocks,
     ],
     shikiConfig: {
-      theme: 'css-variables',
+      theme: customCssVariablesTheme,
       wrap: true,
       transformers: [
         transformerNotationDiff(),

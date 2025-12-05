@@ -1,10 +1,12 @@
 /**
  * Colour Tokens
  *
- * Using OKLCH colour space for perceptually uniform colour manipulation.
- * Each theme defines: bg, fg, muted, rule, highlight
+ * Base theme colours using OKLCH colour space.
+ * Each theme defines: bg, fg, muted, rule, highlight, emphasis
  *
  * Theme switching: Apply class to <body> (e.g., .theme-steel)
+ *
+ * Note: Syntax highlighting tokens are in src/styles/components/shiki.css
  */
 
 :root {
@@ -55,119 +57,4 @@
   --rule: oklch(0.3243 0.0378 195.45);
   --highlight: oklch(0.8447 0.0861 33.1);
   --emphasis: oklch(0.85 0.19 34.05);
-}
-
-/* ==========================================================================
-   Syntax Highlighting Tokens
-
-   CSS variables for Shiki's css-variables theme.
-   Each theme defines coordinated syntax colours using OKLCH.
-   ========================================================================== */
-
-:root {
-  /* Default syntax tokens (Steel defaults) */
-  --shiki-foreground: var(--fg);
-  --shiki-background: oklch(0.19 0.01 255.6);
-  --shiki-token-keyword: oklch(0.72 0.17 285);
-  --shiki-token-function: oklch(0.77 0.14 255);
-  --shiki-token-constant: oklch(0.75 0.14 220);
-  --shiki-token-string: oklch(0.72 0.13 150);
-  --shiki-token-string-expression: oklch(0.70 0.13 130);
-  --shiki-token-comment: oklch(0.52 0.02 255);
-  --shiki-token-punctuation: oklch(0.66 0.03 255);
-  --shiki-token-parameter: oklch(0.80 0.11 238);
-  --shiki-token-link: var(--highlight);
-
-  /* Code block UI - lightness shifts from --rule */
-  --code-header-bg: oklch(from var(--rule) calc(l - 0.04) c h);
-  --code-header-border: oklch(from var(--rule) calc(l + 0.05) c h);
-  --code-overlay-border: oklch(from var(--rule) calc(l + 0.1) c h);
-
-  /* Diff and highlight colours (Steel defaults) */
-  --code-diff-add-bg: oklch(0.21 0.05 150);
-  --code-diff-remove-bg: oklch(0.21 0.05 25);
-  --code-diff-add-symbol: oklch(0.65 0.15 150);
-  --code-diff-remove-symbol: oklch(0.65 0.15 25);
-  --code-highlight-bg: oklch(0.22 0.01 255.6);
-
-  /* Focus mode opacity */
-  --code-focus-opacity: 0.3;
-  --code-focus-hover-opacity: 0.7;
-}
-
-/* Steel syntax tokens - Primary: 255, Secondary: 220 */
-.theme-steel {
-  --shiki-background: oklch(0.19 0.01 255.6);
-  --shiki-token-keyword: oklch(0.72 0.17 285);
-  --shiki-token-function: oklch(0.77 0.14 255);
-  --shiki-token-constant: oklch(0.75 0.14 220);
-  --shiki-token-string: oklch(0.72 0.13 150);
-  --shiki-token-string-expression: oklch(0.70 0.13 130);
-  --shiki-token-comment: oklch(0.52 0.02 255);
-  --shiki-token-punctuation: oklch(0.66 0.03 255);
-  --shiki-token-parameter: oklch(0.80 0.11 238);
-
-  /* Code block colours */
-  --code-diff-add-bg: oklch(0.21 0.05 150);
-  --code-diff-remove-bg: oklch(0.21 0.05 25);
-  --code-highlight-bg: oklch(0.22 0.01 255.6);
-}
-
-/* Purple syntax tokens - Primary: 300, Secondary: 97.89 (gold) */
-.theme-purple {
-  --shiki-foreground: var(--fg);
-  --shiki-background: oklch(0.19 0.02 303);
-  --shiki-token-keyword: oklch(0.7 0.15 330);
-  --shiki-token-function: oklch(0.7 0.15 300);
-  --shiki-token-constant: oklch(0.8 0.1 97.89);
-  --shiki-token-string: oklch(0.8 0.05 97.89);
-  --shiki-token-string-expression: oklch(0.8 0.05 97.89);
-  --shiki-token-comment: oklch(0.6 0.02 300);
-  --shiki-token-punctuation: var(--fg);
-  --shiki-token-parameter: oklch(0.7 0.15 320);
-
-  /* Code block colours */
-  --code-diff-add-bg: oklch(0.21 0.05 154);
-  --code-diff-remove-bg: oklch(0.21 0.05 21);
-  --code-highlight-bg: oklch(0.22 0.02 303);
-}
-
-/* Charcoal syntax tokens - Warm neutral (hue 60, minimal chroma) */
-.theme-charcoal {
-  --shiki-background: oklch(0.19 0 0);
-  --shiki-token-keyword: oklch(0.82 0.02 60);
-  --shiki-token-function: oklch(0.77 0.02 60);
-  --shiki-token-constant: oklch(0.75 0.02 60);
-  --shiki-token-string: oklch(0.70 0.02 60);
-  --shiki-token-string-expression: oklch(0.68 0.02 60);
-  --shiki-token-comment: oklch(0.48 0.01 60);
-  --shiki-token-punctuation: oklch(0.58 0.01 60);
-  --shiki-token-parameter: oklch(0.80 0.02 60);
-
-  /* Code block colours */
-  --code-diff-add-bg: oklch(0.22 0.05 145);
-  --code-diff-remove-bg: oklch(0.22 0.05 20);
-  --code-highlight-bg: oklch(0.22 0 0);
-
-  /* More muted diff symbols to match warm neutral theme */
-  --code-diff-add-symbol: oklch(0.65 0.10 150);
-  --code-diff-remove-symbol: oklch(0.65 0.10 25);
-}
-
-/* Teal syntax tokens - Primary: 195, Secondary: 34 (coral) */
-.theme-teal {
-  --shiki-background: oklch(0.19 0.02 195.58);
-  --shiki-token-keyword: oklch(0.72 0.17 225);
-  --shiki-token-function: oklch(0.77 0.14 195);
-  --shiki-token-constant: oklch(0.75 0.14 195);
-  --shiki-token-string: oklch(0.72 0.13 34);
-  --shiki-token-string-expression: oklch(0.70 0.13 34);
-  --shiki-token-comment: oklch(0.50 0.03 195);
-  --shiki-token-punctuation: oklch(0.62 0.03 195);
-  --shiki-token-parameter: oklch(0.78 0.11 115);
-
-  /* Code block colours */
-  --code-diff-add-bg: oklch(0.22 0.06 150);
-  --code-diff-remove-bg: oklch(0.22 0.06 26);
-  --code-highlight-bg: oklch(0.23 0.02 195.73);
 }

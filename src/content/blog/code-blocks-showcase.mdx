@@ -1,176 +1,1390 @@
 ---
 title: "Code blocks showcase"
-description: "A comprehensive display of syntax highlighting, diff notation, line highlighting, and other code block features."
+description: "A comprehensive display of syntax highlighting tokens across all supported languages, demonstrating the custom TextMate theme."
 publishDate: 2024-01-02
 tags: ["design", "code"]
 draft: true
 ---
 
-This article showcases all the code block features available in the site's typography system. It demonstrates syntax highlighting across multiple languages, transformer features like diff and focus mode, and the copy functionality.
+This article showcases all syntax highlighting tokens across supported languages. Each code block includes comments explaining which tokens are being demonstrated, making it easy to verify theme colours.
 
-## Basic syntax highlighting
+## TypeScript
 
-Code blocks automatically receive syntax highlighting based on the specified language. The colours adapt to whichever theme you're using.
-
-### TypeScript
+TypeScript provides the richest token variety with types, generics, and modern syntax.
 
 ```typescript
+// COMMENT: This line tests comment styling (italic)
+
+// KEYWORD: storage types and control flow
+import type { ReactNode } from 'react';
+export default class UserService extends BaseService {
+  // TYPE: class name, interface, generic parameter
+  private readonly cache: Map<string, User>;
+
+  // FUNCTION: method definition
+  // PARAMETER: typed parameters
+  async fetchUser(id: string, options?: RequestOptions): Promise<User | null> {
+    // VARIABLE: local variables and destructuring
+    const { timeout = 5000, retries = 3 } = options ?? {};
+
+    // CONSTANT: language literals (null, true, false, undefined)
+    if (id === null || id === undefined) {
+      return null;
+    }
+
+    // STRING: template literal with ESCAPE characters
+    const endpoint = `/api/users/${id}`;
+    const message = "Loading user:\t\"John\"\nLine 2\\end";
+
+    // STRING-EXPRESSION: interpolation markers ${}
+    console.log(`Fetching ${id} with timeout ${timeout}ms`);
+
+    // NUMBER: integers and floats
+    const maxRetries = 3;
+    const backoffMultiplier = 1.5;
+    const hexValue = 0xff;
+    const binaryValue = 0b1010;
+
+    // OPERATOR: arithmetic, comparison, logical, ternary
+    const delay = timeout * backoffMultiplier;
+    const isValid = id.length > 0 && retries >= 1;
+    const result = isValid ? 'valid' : 'invalid';
+
+    // KEYWORD: typeof, instanceof, new
+    if (typeof id === 'string' && this instanceof UserService) {
+      const error = new Error('Test');
+    }
+
+    // CONSTANT: variable marked as const (UPPER_CASE convention)
+    const API_VERSION = 'v2';
+
+    // PUNCTUATION: braces, brackets, semicolons
+    return { id, name: 'User', createdAt: new Date() };
+  }
+}
+
+// TYPE: interface definition
 interface User {
   id: string;
   name: string;
-  email: string;
-  createdAt: Date;
+  email?: string;
 }
 
-async function fetchUser(id: string): Promise<User | null> {
-  const response = await fetch(`/api/users/${id}`);
-
-  if (!response.ok) {
-    return null;
-  }
-
-  return response.json();
-}
+// REGEXP: regular expression literal
+const emailPattern = /^[\w.-]+@[\w.-]+\.\w{2,}$/gi;
+const escapeTest = /path\/to\/file\.\w+/;
 ```
 
-### JavaScript
+## JavaScript
+
+JavaScript shares most tokens with TypeScript but lacks type annotations.
 
 ```javascript
+// COMMENT: single-line comment
+/* COMMENT: multi-line
+   block comment */
+
+// KEYWORD: var, let, const, function, class
 const CONFIG = {
+  // STRING: property keys and values
   apiUrl: 'https://api.example.com',
+  // NUMBER: integers
   timeout: 5000,
-  retries: 3,
+  // CONSTANT: boolean literal
+  debug: true,
 };
 
+// FUNCTION: function declaration
+// PARAMETER: function parameters
 function debounce(fn, delay) {
+  // VARIABLE: local variable
   let timeoutId;
+
+  // FUNCTION: arrow function (return value)
   return (...args) => {
+    // FUNCTION: built-in function call
     clearTimeout(timeoutId);
+
+    // OPERATOR: assignment
     timeoutId = setTimeout(() => fn(...args), delay);
   };
 }
-```
 
-### CSS
-
-```css
-.card {
-  --card-padding: 1.5rem;
-  --card-radius: 0.5rem;
-
-  display: flex;
-  flex-direction: column;
-  padding: var(--card-padding);
-  border-radius: var(--card-radius);
-  background: oklch(0.98 0.01 250);
-  box-shadow: 0 4px 6px oklch(0 0 0 / 0.1);
+// KEYWORD: async/await
+async function loadData() {
+  // KEYWORD: try/catch/finally
+  try {
+    // VARIABLE: this keyword
+    const response = await this.fetch('/data');
+    // CONSTANT: null check
+    return response ?? null;
+  } catch (error) {
+    // STRING: escape sequences
+    console.error("Error:\n\t" + error.message);
+    throw error;
+  }
 }
 
+// REGEXP: with escape characters and flags
+const urlPattern = /https?:\/\/[\w.-]+\/[\w\/?=&-]*/gi;
+const specialChars = /[\[\]{}()*+?.\\^$|]/g;
+
+// STRING: template literal with expressions
+const greeting = `Hello, ${name}!
+Multi-line string with "quotes" and 'apostrophes'.
+Tab:\there, Newline above.`;
+```
+
+## CSS
+
+CSS demonstrates property names, values, units, selectors, and colour tokens.
+
+```css
+/* COMMENT: CSS block comment */
+
+/* SELECTOR: class selector */
+/* PROPERTY: CSS property names */
+/* PROPERTY-VALUE: CSS values and keywords */
+/* UNIT: px, rem, %, etc. */
+.card {
+  /* PROPERTY: custom property definition */
+  --card-padding: 1.5rem;
+  --card-radius: 0.5rem;
+  --card-shadow: 0 4px 6px;
+
+  /* PROPERTY-VALUE: keyword values */
+  display: flex;
+  flex-direction: column;
+  position: relative;
+
+  /* NUMBER + UNIT: dimensions */
+  padding: var(--card-padding);
+  margin: 16px 24px;
+  width: 100%;
+  max-width: 32rem;
+  min-height: 200px;
+
+  /* PROPERTY-VALUE: colour values */
+  background: oklch(0.98 0.01 250);
+  color: #1a1a1a;
+  border: 1px solid rgb(200, 200, 200);
+  border-radius: var(--card-radius);
+
+  /* PROPERTY-VALUE: complex values */
+  box-shadow: var(--card-shadow) oklch(0 0 0 / 0.1);
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* SELECTOR: pseudo-class */
 .card:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 12px oklch(0 0 0 / 0.15);
 }
-```
 
-### Rust
-
-```rust
-use std::collections::HashMap;
-
-fn word_count(text: &str) -> HashMap<String, usize> {
-    let mut counts = HashMap::new();
-
-    for word in text.split_whitespace() {
-        let word = word.to_lowercase();
-        *counts.entry(word).or_insert(0) += 1;
-    }
-
-    counts
+/* SELECTOR: pseudo-element */
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
-```
 
-### Python
+/* SELECTOR: ID selector */
+#main-content {
+  /* NUMBER: unitless and percentage */
+  opacity: 0.95;
+  line-height: 1.6;
+  flex-grow: 1;
+}
 
-```python
-from dataclasses import dataclass
-from typing import Optional
+/* SELECTOR: attribute selector */
+[data-theme="dark"] .card {
+  background: oklch(0.2 0.01 250);
+  color: oklch(0.95 0.01 90);
+}
 
-@dataclass
-class Article:
-    title: str
-    content: str
-    author: str
-    published: bool = False
-    views: int = 0
+/* KEYWORD: media query */
+@media (min-width: 768px) and (prefers-color-scheme: dark) {
+  .card {
+    padding: 2rem;
+  }
+}
 
-    def publish(self) -> None:
-        self.published = True
-
-    def summary(self, length: int = 100) -> str:
-        return self.content[:length] + "..." if len(self.content) > length else self.content
-```
-
-### Bash
-
-```bash
-#!/bin/bash
-
-# Deploy script
-set -e
-
-echo "Building project..."
-npm run build
-
-echo "Running tests..."
-npm test
-
-echo "Deploying to production..."
-gcloud run deploy personal-site \
-  --source . \
-  --region europe-west1 \
-  --allow-unauthenticated
-
-echo "Deployment complete!"
-```
-
-### JSON
-
-```json
-{
-  "name": "personal-site",
-  "version": "1.0.0",
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
-  },
-  "dependencies": {
-    "astro": "^5.0.0"
+/* KEYWORD: keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 ```
 
-## Diff notation
+## HTML
 
-Use `// [!code ++]` and `// [!code --]` to show additions and removals. This is perfect for demonstrating changes in code.
+HTML showcases tags, attributes, and embedded content.
+
+```html
+<!-- COMMENT: HTML comment -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- TAG: element names -->
+    <!-- ATTRIBUTE: attribute names and values -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Example page with \"quotes\"" />
+    <title>Token Showcase</title>
+
+    <!-- TAG: link and script elements -->
+    <link rel="stylesheet" href="/styles/main.css" />
+    <script src="/scripts/app.js" defer></script>
+
+    <!-- EMBEDDED: inline styles -->
+    <style>
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+    </style>
+  </head>
+  <body class="theme-light" data-page="home">
+    <!-- TAG: semantic elements -->
+    <header id="site-header">
+      <nav aria-label="Main navigation">
+        <a href="/" class="logo">Home</a>
+        <a href="/about" target="_blank" rel="noopener">About</a>
+      </nav>
+    </header>
+
+    <main class="container">
+      <!-- ATTRIBUTE: boolean and data attributes -->
+      <article data-id="123" hidden>
+        <h1>Welcome</h1>
+        <p>Paragraph with <strong>bold</strong> and <em>italic</em> text.</p>
+
+        <!-- ATTRIBUTE: event handlers -->
+        <button type="submit" disabled onclick="handleClick()">
+          Submit
+        </button>
+
+        <!-- TAG: self-closing elements -->
+        <img src="/image.jpg" alt="Description" width="300" height="200" />
+        <input type="text" placeholder="Enter text..." required />
+        <br />
+        <hr />
+      </article>
+    </main>
+
+    <!-- EMBEDDED: inline script -->
+    <script>
+      const message = "Hello from inline script";
+      console.log(message);
+    </script>
+  </body>
+</html>
+```
+
+## JSON
+
+JSON demonstrates strings, numbers, booleans, null, and structure.
+
+```json
+{
+  "_comment": "JSON doesn't support comments, but we use a field to explain",
+
+  "stringValue": "A simple string with \"escaped quotes\"",
+  "stringWithEscapes": "Tab:\t Newline:\n Backslash:\\ Unicode:\u00A9",
+
+  "integerNumber": 42,
+  "floatNumber": 3.14159,
+  "negativeNumber": -273.15,
+  "exponentialNumber": 6.022e23,
+
+  "booleanTrue": true,
+  "booleanFalse": false,
+  "nullValue": null,
+
+  "arrayOfStrings": ["one", "two", "three"],
+  "arrayOfNumbers": [1, 2, 3, 4, 5],
+  "arrayOfMixed": [1, "two", true, null],
+
+  "nestedObject": {
+    "level1": {
+      "level2": {
+        "level3": "deeply nested value"
+      }
+    }
+  },
+
+  "package": {
+    "name": "personal-site",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+      "dev": "astro dev",
+      "build": "astro build"
+    },
+    "dependencies": {
+      "astro": "^5.0.0"
+    }
+  }
+}
+```
+
+## YAML
+
+YAML shows keys, values, anchors, and various data types.
+
+```yaml
+# COMMENT: YAML comment
+
+# STRING: unquoted, single-quoted, double-quoted
+title: Unquoted String Value
+single_quoted: 'String with ''escaped'' quotes'
+double_quoted: "String with \"escaped\" quotes\nand newline"
+
+# NUMBER: integers and floats
+integer: 42
+float: 3.14159
+negative: -273.15
+exponential: 6.022e23
+hex: 0xFF
+octal: 0o755
+
+# CONSTANT: boolean and null
+enabled: true
+disabled: false
+empty: null
+also_null: ~
+
+# KEYWORD: special types
+date: 2024-01-15
+timestamp: 2024-01-15T10:30:00Z
+
+# STRUCTURE: arrays and objects
+simple_array:
+  - item one
+  - item two
+  - item three
+
+inline_array: [one, two, three]
+
+nested_object:
+  level1:
+    level2:
+      key: value
+
+# KEYWORD: anchors and aliases
+defaults: &defaults
+  timeout: 5000
+  retries: 3
+
+production:
+  <<: *defaults
+  timeout: 10000
+
+# KEYWORD: multi-line strings
+literal_block: |
+  This preserves newlines
+  exactly as written.
+  Line three.
+
+folded_block: >
+  This folds newlines
+  into spaces for
+  a single paragraph.
+
+# Complex example: GitHub Actions workflow
+name: Deploy
+on:
+  push:
+    branches: [main]
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm ci
+      - run: npm run build
+```
+
+## Rust
+
+Rust demonstrates ownership, lifetimes, traits, and pattern matching.
+
+```rust
+// COMMENT: single-line comment
+/// COMMENT: doc comment for functions
+
+// KEYWORD: use, pub, mod, struct, impl, trait
+use std::collections::HashMap;
+use std::fmt::{self, Display};
+
+// TYPE: struct with generics and lifetime
+// CONSTANT: static lifetime
+pub struct Cache<'a, K, V>
+where
+    K: std::hash::Hash + Eq,
+{
+    // VARIABLE: struct fields
+    data: HashMap<K, V>,
+    name: &'a str,
+    // NUMBER: default capacity
+    capacity: usize,
+}
+
+// KEYWORD: impl block with lifetime
+impl<'a, K, V> Cache<'a, K, V>
+where
+    K: std::hash::Hash + Eq,
+{
+    // FUNCTION: constructor
+    // PARAMETER: self and typed parameters
+    pub fn new(name: &'a str, capacity: usize) -> Self {
+        // KEYWORD: Self type
+        Self {
+            data: HashMap::with_capacity(capacity),
+            name,
+            capacity,
+        }
+    }
+
+    // FUNCTION: method with mutable self
+    pub fn insert(&mut self, key: K, value: V) -> Option<V> {
+        // VARIABLE: method call on self
+        self.data.insert(key, value)
+    }
+}
+
+// KEYWORD: trait definition
+trait Processor {
+    // TYPE: associated type
+    type Output;
+
+    // FUNCTION: trait method signature
+    fn process(&self, input: &str) -> Self::Output;
+}
+
+// FUNCTION: standalone function
+// CONSTANT: boolean literals
+fn validate(input: &str) -> bool {
+    // OPERATOR: comparison and logical
+    !input.is_empty() && input.len() <= 100
+}
+
+// FUNCTION: with pattern matching
+fn parse_number(s: &str) -> Result<i64, &'static str> {
+    // KEYWORD: match expression
+    match s.trim().parse::<i64>() {
+        // CONSTANT: Ok and Err variants
+        Ok(n) if n >= 0 => Ok(n),
+        Ok(_) => Err("negative numbers not allowed"),
+        Err(_) => Err("invalid number format"),
+    }
+}
+
+fn main() {
+    // STRING: with escape sequences
+    let greeting = "Hello, \"World\"!\n\tTabbed line";
+    let raw_string = r#"Raw string with "quotes" and \backslash"#;
+
+    // NUMBER: various formats
+    let decimal = 1_000_000;
+    let hex = 0xDEAD_BEEF;
+    let binary = 0b1010_1010;
+    let float = 3.14_159_f64;
+
+    // CONSTANT: char literals with escapes
+    let newline = '\n';
+    let tab = '\t';
+    let unicode = '\u{1F600}';
+
+    // KEYWORD: control flow
+    for i in 0..10 {
+        if i % 2 == 0 {
+            println!("{} is even", i);
+        }
+    }
+
+    // KEYWORD: loop with break value
+    let result = loop {
+        break 42;
+    };
+}
+```
+
+## Go
+
+Go demonstrates goroutines, channels, interfaces, generics, and error handling.
+
+```go
+// COMMENT: single-line comment
+/*
+COMMENT: multi-line comment
+Used for package and function documentation.
+*/
+
+// KEYWORD: package declaration
+package main
+
+// KEYWORD: import statement with grouping
+import (
+	"context"
+	"errors"
+	"fmt"
+	"sync"
+	"time"
+)
+
+// TYPE: struct definition with tags
+// VARIABLE: struct fields
+type Server struct {
+	addr     string
+	port     int
+	timeout  time.Duration
+	handlers map[string]Handler
+}
+
+// TYPE: interface definition
+type Handler interface {
+	// FUNCTION: method signature
+	Handle(ctx context.Context, req Request) (Response, error)
+}
+
+// TYPE: generic type with constraints
+type Result[T any] struct {
+	Value T
+	Error error
+}
+
+// TYPE: type alias
+type Request = map[string]any
+type Response = map[string]any
+
+// CONSTANT: constant declarations with iota
+const (
+	StatusOK = iota
+	StatusError
+	StatusPending
+)
+
+// CONSTANT: typed constants
+const (
+	MaxRetries  int           = 3
+	DefaultPort int           = 8080
+	Timeout     time.Duration = 30 * time.Second
+)
+
+// FUNCTION: constructor function
+// PARAMETER: typed parameters
+func NewServer(addr string, port int) *Server {
+	return &Server{
+		addr:     addr,
+		port:     port,
+		timeout:  Timeout,
+		handlers: make(map[string]Handler),
+	}
+}
+
+// FUNCTION: method with pointer receiver
+func (s *Server) Start(ctx context.Context) error {
+	// KEYWORD: defer statement
+	defer fmt.Println("Server shutting down")
+
+	// VARIABLE: short variable declaration
+	addr := fmt.Sprintf("%s:%d", s.addr, s.port)
+
+	// KEYWORD: select for channel operations
+	select {
+	case <-ctx.Done():
+		return ctx.Err()
+	case <-time.After(s.timeout):
+		return errors.New("timeout waiting for connection")
+	}
+}
+
+// FUNCTION: generic function with constraints
+func Map[T, U any](slice []T, fn func(T) U) []U {
+	// VARIABLE: slice with make
+	result := make([]U, len(slice))
+
+	// KEYWORD: range loop
+	for i, v := range slice {
+		result[i] = fn(v)
+	}
+
+	return result
+}
+
+// FUNCTION: error handling patterns
+func processData(data []byte) (Result[string], error) {
+	// CONSTANT: nil check
+	if data == nil {
+		return Result[string]{}, errors.New("data cannot be nil")
+	}
+
+	// KEYWORD: type switch
+	var value any = string(data)
+	switch v := value.(type) {
+	case string:
+		return Result[string]{Value: v}, nil
+	case []byte:
+		return Result[string]{Value: string(v)}, nil
+	default:
+		return Result[string]{}, fmt.Errorf("unexpected type: %T", v)
+	}
+}
+
+// FUNCTION: goroutines and channels
+func worker(id int, jobs <-chan int, results chan<- int, wg *sync.WaitGroup) {
+	// KEYWORD: defer with function call
+	defer wg.Done()
+
+	// KEYWORD: for-range over channel
+	for job := range jobs {
+		// FUNCTION: built-in function
+		fmt.Printf("Worker %d processing job %d\n", id, job)
+		results <- job * 2
+	}
+}
+
+func main() {
+	// STRING: various string formats
+	greeting := "Hello, \"World\"!\n\tTabbed line"
+	rawString := `Raw string with "quotes" and \backslash`
+
+	// NUMBER: various formats
+	decimal := 1_000_000
+	hex := 0xDEAD_BEEF
+	binary := 0b1010_1010
+	octal := 0o755
+	float := 3.14_159
+
+	// CONSTANT: boolean and nil literals
+	var enabled bool = true
+	var disabled bool = false
+	var ptr *int = nil
+
+	// VARIABLE: slice and map literals
+	numbers := []int{1, 2, 3, 4, 5}
+	config := map[string]any{
+		"host": "localhost",
+		"port": 8080,
+		"ssl":  true,
+	}
+
+	// KEYWORD: goroutine launch
+	go func() {
+		fmt.Println("Running in goroutine")
+	}()
+
+	// VARIABLE: channel creation
+	jobs := make(chan int, 100)
+	results := make(chan int, 100)
+
+	// KEYWORD: recover from panic
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered from:", r)
+		}
+	}()
+
+	// KEYWORD: conditional
+	if len(numbers) > 0 {
+		// FUNCTION: append built-in
+		numbers = append(numbers, 6)
+	}
+
+	// KEYWORD: for loop variants
+	for i := 0; i < 10; i++ {
+		if i%2 == 0 {
+			continue
+		}
+		fmt.Println(i)
+	}
+
+	// Suppress unused variable warnings
+	_ = greeting
+	_ = rawString
+	_ = decimal
+	_ = hex
+	_ = binary
+	_ = octal
+	_ = float
+	_ = enabled
+	_ = disabled
+	_ = ptr
+	_ = config
+	_ = jobs
+	_ = results
+}
+```
+
+## Python
+
+Python shows decorators, comprehensions, type hints, and f-strings.
+
+```python
+# COMMENT: single-line comment
+"""
+COMMENT: multi-line docstring
+Used for module and function documentation.
+"""
+
+# KEYWORD: import statements
+from dataclasses import dataclass, field
+from typing import Optional, List, Dict, TypeVar, Generic
+import re
+
+# TYPE: type variable for generics
+T = TypeVar('T')
+
+# KEYWORD: decorator
+@dataclass
+class Article:
+    """COMMENT: Class docstring."""
+
+    # TYPE: type annotations
+    # VARIABLE: instance attributes
+    title: str
+    content: str
+    author: str
+    # CONSTANT: default values (True, False, None)
+    published: bool = False
+    views: int = 0
+    tags: List[str] = field(default_factory=list)
+
+    # FUNCTION: method definition
+    # PARAMETER: self and typed parameters
+    def publish(self) -> None:
+        """Publish the article."""
+        # VARIABLE: self reference
+        self.published = True
+
+    # FUNCTION: method with return type
+    def summary(self, length: int = 100) -> str:
+        # OPERATOR: comparison, slicing, ternary-like
+        if len(self.content) > length:
+            return self.content[:length] + "..."
+        return self.content
+
+
+# KEYWORD: generic class
+class Repository(Generic[T]):
+    # FUNCTION: constructor
+    def __init__(self) -> None:
+        # TYPE: Dict with type parameters
+        self._items: Dict[str, T] = {}
+
+    # FUNCTION: method with Optional return
+    def get(self, key: str) -> Optional[T]:
+        # CONSTANT: None literal
+        return self._items.get(key, None)
+
+
+# FUNCTION: standalone function
+# KEYWORD: async function
+async def fetch_data(url: str, timeout: float = 5.0) -> dict:
+    """
+    Fetch data from URL.
+
+    Args:
+        url: The URL to fetch
+        timeout: Request timeout in seconds
+    """
+    # KEYWORD: async/await
+    async with aiohttp.ClientSession() as session:
+        async with session.get(url, timeout=timeout) as response:
+            return await response.json()
+
+
+# FUNCTION: with pattern matching (Python 3.10+)
+def handle_response(status: int) -> str:
+    # KEYWORD: match statement
+    match status:
+        # NUMBER: integer literals
+        case 200:
+            return "Success"
+        case 404:
+            return "Not Found"
+        case 500 | 502 | 503:
+            return "Server Error"
+        case _:
+            return "Unknown"
+
+
+def demonstrate_strings():
+    # STRING: various string types
+    simple = "Double quoted with \"escape\""
+    single = 'Single quoted with \'escape\''
+
+    # STRING: escape sequences
+    with_escapes = "Tab:\tNewline:\nBackslash:\\"
+
+    # STRING: raw string (no escape processing)
+    raw = r"Raw string: \n is literal backslash-n"
+
+    # STRING-EXPRESSION: f-string with expressions
+    name = "World"
+    count = 42
+    formatted = f"Hello, {name}! Count: {count:04d}"
+    expression = f"Sum: {1 + 2 + 3}, Upper: {name.upper()}"
+
+    # STRING: multi-line
+    multiline = """
+    Line one
+    Line two with "quotes"
+    Line three
+    """
+
+    # REGEXP: compiled pattern
+    pattern = re.compile(r'^[\w.-]+@[\w.-]+\.\w{2,}$')
+    # REGEXP: with escape sequences
+    path_pattern = re.compile(r'/path/to/(\w+)/file\.txt')
+
+
+# NUMBER: various formats
+INTEGER = 1_000_000
+FLOAT = 3.14_159
+HEX = 0xFF_FF
+BINARY = 0b1010_1010
+COMPLEX = 3 + 4j
+
+# CONSTANT: module-level constants
+PI = 3.14159
+MAX_SIZE = 1024
+DEBUG = True
+EMPTY = None
+
+# KEYWORD: comprehensions
+squares = [x ** 2 for x in range(10)]
+even_squares = [x ** 2 for x in range(10) if x % 2 == 0]
+word_lengths = {word: len(word) for word in ["hello", "world"]}
+
+# KEYWORD: lambda
+double = lambda x: x * 2
+
+# KEYWORD: exception handling
+def safe_divide(a: float, b: float) -> Optional[float]:
+    try:
+        return a / b
+    except ZeroDivisionError:
+        return None
+    finally:
+        print("Division attempted")
+```
+
+## Lua
+
+Lua demonstrates tables, metatables, and coroutines.
+
+```lua
+-- COMMENT: single-line comment
+--[[
+  COMMENT: multi-line block comment
+  Lua uses --[[ and ]] for blocks
+]]
+
+-- KEYWORD: local variable declaration
+-- STRING: with escape sequences
+local greeting = "Hello, \"World\"!\n\tTabbed"
+local raw_string = [[Raw string with "quotes" and \backslash]]
+
+-- NUMBER: various formats
+local integer = 1000000
+local float = 3.14159
+local hex = 0xFF
+local exponential = 6.022e23
+
+-- CONSTANT: boolean and nil
+local enabled = true
+local disabled = false
+local empty = nil
+
+-- KEYWORD: table (object/array)
+local config = {
+  -- STRING: table keys
+  name = "MyApp",
+  version = "1.0.0",
+  -- NUMBER: numeric value
+  timeout = 5000,
+  -- CONSTANT: boolean value
+  debug = true,
+  -- TABLE: nested table
+  settings = {
+    theme = "dark",
+    language = "en",
+  },
+}
+
+-- KEYWORD: array-style table
+local items = { "one", "two", "three" }
+
+-- FUNCTION: function declaration
+-- PARAMETER: function parameters
+local function greet(name, punctuation)
+  -- OPERATOR: concatenation, comparison
+  punctuation = punctuation or "!"
+  if name ~= nil and name ~= "" then
+    -- STRING-EXPRESSION: concatenation
+    return "Hello, " .. name .. punctuation
+  else
+    return "Hello, stranger" .. punctuation
+  end
+end
+
+-- FUNCTION: anonymous function assigned to variable
+local double = function(x)
+  return x * 2
+end
+
+-- FUNCTION: method-style function
+local Calculator = {}
+
+function Calculator:new(initial)
+  -- KEYWORD: self, setmetatable
+  local obj = { value = initial or 0 }
+  setmetatable(obj, { __index = self })
+  return obj
+end
+
+function Calculator:add(n)
+  self.value = self.value + n
+  return self
+end
+
+function Calculator:multiply(n)
+  self.value = self.value * n
+  return self
+end
+
+-- KEYWORD: control flow
+local function process_items(items)
+  -- KEYWORD: for loop with ipairs
+  for index, item in ipairs(items) do
+    print(index, item)
+  end
+
+  -- KEYWORD: for loop with pairs
+  for key, value in pairs(config) do
+    -- KEYWORD: type checking
+    if type(value) == "string" then
+      print(key .. ": " .. value)
+    end
+  end
+
+  -- KEYWORD: while loop
+  local i = 1
+  while i <= #items do
+    -- OPERATOR: comparison, arithmetic
+    if items[i] == "skip" then
+      -- KEYWORD: control statements
+      goto continue
+    end
+    print(items[i])
+    ::continue::
+    i = i + 1
+  end
+
+  -- KEYWORD: repeat-until
+  local count = 0
+  repeat
+    count = count + 1
+  until count >= 10
+end
+
+-- KEYWORD: coroutine
+local function async_task()
+  -- KEYWORD: coroutine functions
+  local co = coroutine.create(function()
+    for i = 1, 5 do
+      print("Step " .. i)
+      coroutine.yield(i)
+    end
+    return "done"
+  end)
+
+  -- KEYWORD: loop with coroutine
+  while coroutine.status(co) ~= "dead" do
+    local success, value = coroutine.resume(co)
+    if success then
+      print("Yielded: " .. tostring(value))
+    end
+  end
+end
+
+-- KEYWORD: module pattern
+local Module = {}
+
+Module.VERSION = "1.0.0"
+
+function Module.init(options)
+  -- OPERATOR: or for defaults
+  options = options or {}
+  return {
+    name = options.name or "default",
+    debug = options.debug or false,
+  }
+end
+
+return Module
+```
+
+## XML
+
+XML shows elements, attributes, namespaces, and special sections.
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- COMMENT: XML comment -->
+
+<!-- TAG: root element with namespace -->
+<root xmlns="http://example.com/default"
+      xmlns:custom="http://example.com/custom">
+
+  <!-- TAG: element with attributes -->
+  <!-- ATTRIBUTE: attribute names and values -->
+  <metadata id="meta-1" version="2.0">
+    <title>XML Token Showcase</title>
+    <description lang="en">Demonstrates XML syntax tokens</description>
+    <created date="2024-01-15T10:30:00Z"/>
+  </metadata>
+
+  <!-- TAG: namespaced elements -->
+  <custom:settings priority="high">
+    <custom:option name="debug" value="true"/>
+    <custom:option name="timeout" value="5000"/>
+  </custom:settings>
+
+  <!-- TAG: element with text content -->
+  <content>
+    <paragraph>Simple text content.</paragraph>
+    <paragraph>Text with &lt;escaped&gt; &amp; special &quot;characters&quot;.</paragraph>
+  </content>
+
+  <!-- TAG: CDATA section (unparsed character data) -->
+  <script>
+    <![CDATA[
+      function example() {
+        if (a < b && c > d) {
+          return true;
+        }
+      }
+    ]]>
+  </script>
+
+  <!-- TAG: empty elements (self-closing) -->
+  <items>
+    <item id="1" name="First" active="true"/>
+    <item id="2" name="Second" active="false"/>
+    <item id="3" name="Third"/>
+  </items>
+
+  <!-- TAG: mixed content -->
+  <mixed>
+    Some text <emphasis>with inline</emphasis> elements and
+    <link href="https://example.com">links</link> mixed in.
+  </mixed>
+
+  <!-- TAG: deeply nested structure -->
+  <nested>
+    <level1>
+      <level2>
+        <level3 attr="value">Deep content</level3>
+      </level2>
+    </level1>
+  </nested>
+
+</root>
+```
+
+## Markdown
+
+Markdown shows headings, emphasis, links, and code blocks.
+
+```markdown
+# HEADING: Level 1 Heading
+
+## HEADING: Level 2 Heading
+
+### HEADING: Level 3 Heading
+
+PARAGRAPH: Regular paragraph text flows naturally across
+multiple lines until a blank line separates it.
+
+**BOLD: Strong emphasis text**
+
+*ITALIC: Emphasized text*
+
+***BOLD+ITALIC: Combined emphasis***
+
+~~STRIKETHROUGH: Deleted text~~
+
+LINK: [Link text](https://example.com "Optional title")
+
+LINK: [Reference-style link][ref-id]
+
+[ref-id]: https://example.com "Reference definition"
+
+IMAGE: ![Alt text](/path/to/image.jpg)
+
+INLINE CODE: Use `const` for constants and `let` for variables.
+
+> BLOCKQUOTE: Quoted text that can span
+> multiple lines with the > prefix.
+
+UNORDERED LIST:
+- First item
+- Second item
+  - Nested item
+  - Another nested
+- Third item
+
+ORDERED LIST:
+1. First step
+2. Second step
+3. Third step
+
+HORIZONTAL RULE:
+
+---
+
+TABLE:
+| Header 1 | Header 2 | Header 3 |
+|----------|:--------:|---------:|
+| Left     | Center   | Right    |
+| Cell     | Cell     | Cell     |
+
+TASK LIST:
+- [x] Completed task
+- [ ] Pending task
+- [ ] Another pending
+
+FOOTNOTE: Here is text with a footnote[^1].
+
+[^1]: This is the footnote content.
+
+DEFINITION:
+Term
+: Definition of the term
+
+CODE BLOCK:
+    Indented code block
+    preserves whitespace
+
+FENCED CODE:
+\`\`\`javascript
+const example = "fenced code block";
+\`\`\`
+```
+
+## Bash/Shell
+
+Shell scripts show commands, variables, and control structures.
+
+```bash
+#!/bin/bash
+# COMMENT: Shebang and single-line comment
+
+# KEYWORD: variable assignment (no spaces around =)
+# STRING: various quoting styles
+NAME="World"
+SINGLE='Single quotes: $NAME is literal'
+DOUBLE="Double quotes: $NAME is expanded"
+UNQUOTED=no_spaces_needed
+
+# NUMBER: integers
+COUNT=42
+PORT=8080
+
+# KEYWORD: special variables
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ARGS_COUNT=$#
+EXIT_CODE=$?
+CURRENT_PID=$$
+
+# STRING: escape sequences in double quotes
+MESSAGE="Tab:\tNewline:\nBackslash:\\"
+
+# STRING-EXPRESSION: command substitution
+CURRENT_DATE=$(date +%Y-%m-%d)
+CURRENT_TIME=`date +%H:%M:%S`
+
+# STRING-EXPRESSION: variable expansion
+DEFAULT_VALUE=${UNDEFINED_VAR:-"default"}
+LENGTH=${#NAME}
+SUBSTRING=${NAME:0:3}
+
+# KEYWORD: arrays
+ITEMS=("one" "two" "three")
+FIRST_ITEM=${ITEMS[0]}
+ALL_ITEMS=${ITEMS[@]}
+ARRAY_LENGTH=${#ITEMS[@]}
+
+# KEYWORD: associative array
+declare -A CONFIG
+CONFIG[host]="localhost"
+CONFIG[port]="8080"
+
+# FUNCTION: function definition
+greet() {
+    # PARAMETER: function arguments
+    local name="${1:-Guest}"
+    local greeting="${2:-Hello}"
+
+    # KEYWORD: echo with options
+    echo -e "${greeting}, ${name}!"
+}
+
+# KEYWORD: control flow - if/elif/else
+check_status() {
+    local status=$1
+
+    # OPERATOR: comparison operators
+    if [[ $status -eq 0 ]]; then
+        echo "Success"
+    elif [[ $status -lt 10 ]]; then
+        echo "Warning"
+    else
+        echo "Error"
+    fi
+
+    # OPERATOR: string comparison
+    if [[ "$NAME" == "World" ]] && [[ -n "$NAME" ]]; then
+        echo "Name is World and not empty"
+    fi
+
+    # OPERATOR: file tests
+    if [[ -f "/etc/passwd" ]] && [[ -r "/etc/passwd" ]]; then
+        echo "File exists and is readable"
+    fi
+}
+
+# KEYWORD: for loop
+for item in "${ITEMS[@]}"; do
+    echo "Processing: $item"
+done
+
+# KEYWORD: for loop with range
+for i in {1..5}; do
+    echo "Iteration $i"
+done
+
+# KEYWORD: C-style for loop
+for ((i = 0; i < 10; i++)); do
+    echo "Count: $i"
+done
+
+# KEYWORD: while loop
+counter=0
+while [[ $counter -lt 5 ]]; do
+    echo "Counter: $counter"
+    ((counter++))
+done
+
+# KEYWORD: case statement
+handle_signal() {
+    case $1 in
+        SIGINT)
+            echo "Interrupted"
+            ;;
+        SIGTERM)
+            echo "Terminated"
+            ;;
+        *)
+            echo "Unknown signal: $1"
+            ;;
+    esac
+}
+
+# KEYWORD: here document
+cat <<EOF
+Multi-line content
+with variable expansion: $NAME
+and "quotes" preserved.
+EOF
+
+# KEYWORD: here document (no expansion)
+cat <<'EOF'
+Literal content
+$NAME is not expanded here
+EOF
+
+# KEYWORD: pipeline and redirection
+echo "Processing..." | tee output.log
+ls -la > listing.txt 2>&1
+sort < input.txt >> output.txt
+
+# KEYWORD: command chaining
+mkdir -p build && cd build && cmake .. && make
+
+# KEYWORD: background and job control
+long_running_task &
+TASK_PID=$!
+wait $TASK_PID
+
+# KEYWORD: error handling
+set -euo pipefail
+trap 'echo "Error on line $LINENO"' ERR
+```
+
+## Plain Text / CSV
+
+Plain text and CSV show minimal highlighting.
+
+```text
+Plain text has no syntax highlighting.
+It preserves whitespace and formatting.
+
+    Indented content
+    is kept as-is.
+
+Special characters like <, >, &, ", ' are displayed literally.
+No tokens are coloured differently.
+```
+
+```csv
+id,name,email,active,score
+1,"John Doe",john@example.com,true,95.5
+2,"Jane Smith",jane@example.com,true,87.3
+3,"Bob Wilson",bob@example.com,false,72.0
+4,"Alice ""Ali"" Brown",alice@example.com,true,91.8
+5,"Test, User",test@example.com,false,0
+```
+
+## Transformer Features
+
+### Diff notation
+
+Use `// [!code ++]` and `// [!code --]` to show additions and removals:
 
 ```typescript
-function greet(name: string) {
-  console.log('Hello, ' + name); // [!code --]
-  console.log(`Hello, ${name}!`); // [!code ++]
+function formatName(name: string) {
+  return 'Hello, ' + name; // [!code --]
+  return `Hello, ${name}!`; // [!code ++]
 }
 
 const config = {
   theme: 'light', // [!code --]
   theme: 'dark', // [!code ++]
-  fontSize: 14, // [!code --]
-  fontSize: 16, // [!code ++]
+  timeout: 5000, // [!code --]
+  timeout: 10000, // [!code ++]
 };
 ```
 
-## Line highlighting
+### Line highlighting
 
-Use `// [!code highlight]` to draw attention to specific lines.
+Use `// [!code highlight]` to emphasise specific lines:
 
 ```typescript
 async function processPayment(amount: number) {
@@ -186,158 +1400,47 @@ async function processPayment(amount: number) {
 }
 ```
 
-## Focus mode
+### Focus mode
 
-Use `// [!code focus]` to dim all lines except the focused ones. Hover over the code block to reveal the full context.
+Use `// [!code focus]` to dim unfocused lines (hover to reveal):
 
 ```typescript
-interface DatabaseConfig {
+interface Config {
   host: string;
   port: number;
-  username: string;
-  password: string;
   database: string;
 }
 
-function createConnection(config: DatabaseConfig) { // [!code focus]
-  const { host, port, username, password, database } = config; // [!code focus]
-  return new Pool({ host, port, user: username, password, database }); // [!code focus]
+function createConnection(config: Config) { // [!code focus]
+  const { host, port, database } = config; // [!code focus]
+  return new Pool({ host, port, database }); // [!code focus]
 } // [!code focus]
 
-async function query<T>(sql: string, params: unknown[]): Promise<T[]> {
+async function query<T>(sql: string): Promise<T[]> {
   const client = await pool.connect();
-  try {
-    const result = await client.query(sql, params);
-    return result.rows;
-  } finally {
-    client.release();
-  }
+  const result = await client.query(sql);
+  return result.rows;
 }
 ```
 
-## Combining features
+### Combined features
 
-You can combine diff and highlight in the same block:
+Diff and highlight can be combined:
 
 ```typescript
-function calculateTotal(items: CartItem[]) {
+function sum(items: number[]) {
   let total = 0; // [!code --]
   for (const item of items) { // [!code --]
-    total += item.price * item.quantity; // [!code --]
+    total += item; // [!code --]
   } // [!code --]
   return total; // [!code --]
 
   return items.reduce((sum, item) => { // [!code ++]
-    return sum + item.price * item.quantity; // [!code ++] [!code highlight]
+    return sum + item; // [!code ++] [!code highlight]
   }, 0); // [!code ++]
 }
 ```
 
-## Minimal mode
-
-For simpler code snippets, use `{minimal}` to show only the copy button on hover, without the header bar.
-
-```typescript {minimal}
-const greeting = "Hello, World!";
-console.log(greeting);
-```
-
-Compare with the default header treatment:
-
-```typescript
-const greeting = "Hello, World!";
-console.log(greeting);
-```
-
-## Various languages
-
-### HTML
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Example</title>
-  </head>
-  <body>
-    <main class="container">
-      <h1>Welcome</h1>
-      <p>This is an example page.</p>
-    </main>
-  </body>
-</html>
-```
-
-### YAML
-
-```yaml
-name: Deploy
-on:
-  push:
-    branches: [main]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - run: npm ci
-      - run: npm run build
-```
-
-### Markdown
-
-```markdown
-# Heading
-
-This is a paragraph with **bold** and *italic* text.
-
-- List item one
-- List item two
-- List item three
-
-> This is a blockquote
-
-[Link text](https://example.com)
-```
-
-## Long lines and scrolling
-
-Code blocks handle long lines gracefully with horizontal scrolling:
-
-```typescript
-const veryLongVariableName = someFunction(firstArgument, secondArgument, thirdArgument, fourthArgument, fifthArgument, sixthArgument, seventhArgument);
-
-const anotherExampleWithManyChainedMethods = array.filter(item => item.active).map(item => item.value).reduce((acc, val) => acc + val, 0).toString().padStart(10, '0');
-```
-
-## Tables
-
-Tables are styled consistently with the code blocks:
-
-| Feature | Syntax | Description |
-|---------|--------|-------------|
-| Diff add | `// [!code ++]` | Highlights line as added |
-| Diff remove | `// [!code --]` | Highlights line as removed |
-| Highlight | `// [!code highlight]` | Highlights specific lines |
-| Focus | `// [!code focus]` | Dims unfocused lines |
-| Minimal | `{minimal}` | Shows overlay copy button only |
-
-## Plain text
-
-Code blocks without a language fall back to plain text styling:
-
-```
-This is plain text without any syntax highlighting.
-It still gets the same container treatment with
-the copy button and language label (showing "text").
-```
-
 ---
 
-This showcase demonstrates the complete code block system. Each feature has been designed to work seamlessly across all four colour themes whilst maintaining readability and visual consistency.
+This showcase covers all syntax tokens across supported languages. Use it to verify theme colours are applied correctly and consistently.
