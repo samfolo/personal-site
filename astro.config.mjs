@@ -30,6 +30,7 @@ export default defineConfig({
     ],
     shikiConfig: {
       theme: customCssVariablesTheme,
+      defaultColor: false,
       wrap: true,
       transformers: [
         transformerNotationDiff(),

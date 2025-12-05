@@ -103,7 +103,7 @@
    -------------------------------------------------------------------------- */
 .theme-purple {
   --shiki-foreground: var(--fg);
-  --shiki-background: oklch(0.19 0.02 303);
+  --shiki-background: oklch(0.2 0.02 303);
   --shiki-token-keyword: oklch(0.7 0.15 330);
   --shiki-token-function: oklch(0.7 0.15 300);
   --shiki-token-constant: var(--shiki-token-string);
@@ -230,7 +230,6 @@ pre.astro-code {
   --shiki-token-function: var(--shiki-token-parameter);
 }
 
-.theme-purple pre.astro-code[data-language="json"],
 .theme-purple pre.astro-code[data-language="yaml"],
 .theme-purple pre.astro-code[data-language="python"],
 .theme-purple pre.astro-code[data-language="rust"],
@@ -239,7 +238,21 @@ pre.astro-code {
 }
 
 .theme-purple pre.astro-code[data-language="json"] {
+  --shiki-token-constant: var(--shiki-token-keyword);
   --shiki-token-property: var(--shiki-token-string);
+}
+
+.theme-purple pre.astro-code[data-language="html"],
+.theme-purple pre.astro-code[data-language="xml"] {
+  --shiki-token-selector: var(--fg);
+  --shiki-token-attribute: oklch(0.8 0.05 97.89);
+  --shiki-token-property: var(--fg);
+  --shiki-token-property-value: oklch(0.8 0.05 97.89);
+}
+
+.theme-purple pre.astro-code[data-language="markdown"] {
+  --shiki-token-keyword: var(--shiki-foreground);
+  --shiki-token-link: var(--shiki-token-string);
 }
 
 /* --------------------------------------------------------------------------
@@ -273,7 +286,7 @@ pre.astro-code {
   font-family: var(--font-mono);
   font-size: var(--text-sm);
   line-height: var(--leading-24);
-  background-color: var(--astro-code-background);
+  background-color: var(--astro-code-background) !important;
   color: var(--astro-code-foreground);
   border-radius: var(--space-2);
 }

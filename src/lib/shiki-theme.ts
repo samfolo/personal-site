@@ -45,14 +45,7 @@ export const customCssVariablesTheme: ThemeRegistration = {
       },
     },
     {
-      scope: [
-        'string.regexp',
-        'punctuation.definition.string.begin.regexp',
-        'punctuation.definition.string.end.regexp',
-        'punctuation.definition.character-class.regexp',
-        'punctuation.character-class.regexp',
-        'constant.other.character-class.regexp',
-      ],
+      scope: ['string.regexp', 'constant.other.character-class.regexp'],
       settings: {
         foreground: 'var(--astro-code-token-regexp)',
       },
@@ -86,6 +79,11 @@ export const customCssVariablesTheme: ThemeRegistration = {
         'constant.numeric.binary',
         'constant.numeric.octal',
         'storage.type.numeric',
+        'storage.type.number',
+        'storage.type.number.python',
+        'storage.type.imaginary',
+        'storage.type.imaginary.number',
+        'storage.type.imaginary.number.python',
         'keyword.other.unit.imaginary',
       ],
       settings: {
@@ -134,6 +132,19 @@ export const customCssVariablesTheme: ThemeRegistration = {
       ],
       settings: {
         foreground: 'var(--astro-code-token-keyword)',
+      },
+    },
+
+    // ==========================================================================
+    // Numeric Type Indicators (must come after keywords to override storage.type)
+    // ==========================================================================
+    {
+      scope: [
+        'storage.type.number',
+        'storage.type.imaginary',
+      ],
+      settings: {
+        foreground: 'var(--astro-code-token-number)',
       },
     },
 
