@@ -102,26 +102,46 @@
    Purple Theme - Primary hue: 300, Secondary: 97.89 (gold)
    -------------------------------------------------------------------------- */
 .theme-purple {
-  --shiki-foreground: var(--fg);
-  --shiki-background: oklch(0.2 0.02 303);
-  --shiki-token-keyword: oklch(0.7 0.15 330);
-  --shiki-token-function: oklch(0.7 0.15 300);
-  --shiki-token-constant: var(--shiki-token-string);
-  --shiki-token-string: oklch(0.8 0.05 97.89);
-  --shiki-token-string-expression: var(--shiki-token-function);
-  --shiki-token-comment: oklch(0.6 0.02 300);
-  --shiki-token-punctuation: oklch(0.8 0.01 0);
-  --shiki-token-parameter: oklch(0.8 0.05 280);
-  --shiki-token-variable: var(--fg);
-  --shiki-token-type: var(--shiki-token-function);
-  --shiki-token-tag: oklch(0.72 0.17 285);
-  --shiki-token-escape: oklch(0.8 0.13 95);
-  --shiki-token-number: oklch(0.8 0.1 40);
-  --shiki-token-unit: oklch(0.8 0.1 40);
+  /* Base syntax colours - single source of truth */
+  --syn-bg: oklch(0.2 0.02 303);
+  --syn-fg: var(--fg);
+  --syn-magenta: oklch(0.7 0.15 330);
+  --syn-purple: oklch(0.7 0.15 300);
+  --syn-cream: oklch(0.8 0.05 97.89);
+  --syn-muted: oklch(0.6 0.02 300);
+  --syn-ash: oklch(0.8 0.01 0);
+  --syn-lavender: oklch(0.8 0.05 280);
+  --syn-violet: oklch(0.72 0.17 285);
+  --syn-gold: oklch(0.8 0.13 95);
+  --syn-orange: oklch(0.8 0.1 40);
 
-  --code-diff-add-bg: oklch(0.21 0.05 154);
-  --code-diff-remove-bg: oklch(0.21 0.05 21);
-  --code-highlight-bg: oklch(0.22 0.02 303);
+  /* Diff/highlight backgrounds */
+  --syn-diff-add-bg: oklch(0.21 0.05 154);
+  --syn-diff-remove-bg: oklch(0.21 0.05 21);
+  --syn-highlight-bg: oklch(0.22 0.02 303);
+
+  /* Semantic token mapping - all reference base colours */
+  --shiki-foreground: var(--syn-fg);
+  --shiki-background: var(--syn-bg);
+  --shiki-token-keyword: var(--syn-magenta);
+  --shiki-token-function: var(--syn-purple);
+  --shiki-token-constant: var(--syn-cream);
+  --shiki-token-string: var(--syn-cream);
+  --shiki-token-string-expression: var(--syn-purple);
+  --shiki-token-comment: var(--syn-muted);
+  --shiki-token-punctuation: var(--syn-ash);
+  --shiki-token-parameter: var(--syn-lavender);
+  --shiki-token-variable: var(--syn-fg);
+  --shiki-token-type: var(--syn-purple);
+  --shiki-token-tag: var(--syn-violet);
+  --shiki-token-escape: var(--syn-gold);
+  --shiki-token-number: var(--syn-orange);
+  --shiki-token-unit: var(--syn-orange);
+
+  /* Code block UI */
+  --code-diff-add-bg: var(--syn-diff-add-bg);
+  --code-diff-remove-bg: var(--syn-diff-remove-bg);
+  --code-highlight-bg: var(--syn-highlight-bg);
 }
 
 /* --------------------------------------------------------------------------
