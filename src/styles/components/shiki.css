@@ -97,17 +97,15 @@
   /* Base syntax colours - single source of truth */
   --syn-bg: oklch(0.19 0.01 255.6);
   --syn-fg: var(--fg);
-  --syn-violet: oklch(0.72 0.17 285);
-  --syn-blue: oklch(0.77 0.14 255);
-  --syn-cyan: oklch(0.75 0.14 220);
-  --syn-green: oklch(0.72 0.13 150);
-  --syn-lime: oklch(0.70 0.13 130);
-  --syn-muted: oklch(0.52 0.02 255);
+  --syn-violet: oklch(0.7 0.03 275);
+  --syn-blue: oklch(0.7 0.06 253.64);
+  --syn-muted: oklch(0.6 0.01 47);
   --syn-steel: oklch(0.66 0.03 255);
-  --syn-sky: oklch(0.80 0.11 238);
-  --syn-teal: oklch(0.78 0.12 180);
-  --syn-aqua: oklch(0.75 0.12 195);
-  --syn-coral: oklch(0.78 0.14 50);
+  --syn-dusk: oklch(0.6 0.09 255);
+  --syn-sky: oklch(0.80 0.03 235);
+  --syn-cloud: oklch(0.9 0.03 235);
+  --syn-warm: oklch(0.75 0.09 47.3);
+  --syn-gold: oklch(0.75 0.1 75);
   --syn-rust: oklch(0.70 0.15 25);
 
   /* Diff/highlight backgrounds */
@@ -120,19 +118,19 @@
   --shiki-background: var(--syn-bg);
   --shiki-token-keyword: var(--syn-violet);
   --shiki-token-function: var(--syn-blue);
-  --shiki-token-constant: var(--syn-cyan);
-  --shiki-token-string: var(--syn-green);
-  --shiki-token-string-expression: var(--syn-lime);
+  --shiki-token-constant: var(--syn-sky);
+  --shiki-token-string: var(--syn-sky);
+  --shiki-token-string-expression: var(--syn-dusk);
   --shiki-token-comment: var(--syn-muted);
   --shiki-token-punctuation: var(--syn-steel);
   --shiki-token-parameter: var(--syn-sky);
-  --shiki-token-variable: var(--syn-sky);
-  --shiki-token-type: var(--syn-aqua);
+  --shiki-token-variable: var(--syn-fg);
+  --shiki-token-type: var(--syn-cloud);
   --shiki-token-tag: var(--syn-violet);
-  --shiki-token-attribute: var(--syn-sky);
-  --shiki-token-escape: var(--syn-coral);
-  --shiki-token-number: var(--syn-teal);
-  --shiki-token-unit: var(--syn-teal);
+  --shiki-token-attribute: var(--syn-cloud);
+  --shiki-token-escape: var(--syn-gold);
+  --shiki-token-number: var(--syn-warm);
+  --shiki-token-unit: var(--syn-warm);
   --shiki-token-regexp: var(--syn-rust);
 
   /* Code block UI */
