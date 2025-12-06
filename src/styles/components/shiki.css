@@ -328,9 +328,61 @@ pre.astro-code {
 
 /* --------------------------------------------------------------------------
    Steel Theme - Language Overrides
+   All overrides reference --syn-* base colours, never --shiki-token-*
    -------------------------------------------------------------------------- */
 
-/* No overrides yet */
+.theme-steel pre.astro-code[data-language="css"] {
+  --shiki-token-keyword: var(--syn-sky);
+  --shiki-token-variable: var(--syn-fg);
+  --shiki-token-property: var(--syn-fg);
+  --shiki-token-attribute: var(--syn-sky);
+  --shiki-token-operator: var(--syn-sky);
+  --shiki-token-selector: var(--syn-fg);
+  --shiki-token-property-value: var(--syn-sky);
+  --shiki-token-function: var(--syn-blue);
+}
+
+.theme-steel pre.astro-code[data-language="yaml"] {
+  --shiki-token-constant: var(--syn-violet);
+}
+
+.theme-steel pre.astro-code[data-language="python"] {
+  --shiki-token-constant: var(--syn-violet);
+  --shiki-token-type: var(--syn-cloud);
+}
+
+.theme-steel pre.astro-code[data-language="rust"] {
+  --shiki-token-constant: var(--syn-violet);
+}
+
+.theme-steel pre.astro-code[data-language="go"] {
+  --shiki-token-constant: var(--syn-violet);
+  --shiki-token-type: var(--syn-cloud);
+}
+
+.theme-steel pre.astro-code[data-language="json"] {
+  --shiki-token-constant: var(--syn-violet);
+  --shiki-token-property: var(--syn-sky);
+}
+
+.theme-steel pre.astro-code[data-language="html"] {
+  --shiki-token-selector: var(--syn-fg);
+  --shiki-token-attribute: var(--syn-sky);
+  --shiki-token-property: var(--syn-fg);
+  --shiki-token-property-value: var(--syn-sky);
+}
+
+.theme-steel pre.astro-code[data-language="xml"] {
+  --shiki-token-selector: var(--syn-fg);
+  --shiki-token-attribute: var(--syn-sky);
+  --shiki-token-property: var(--syn-fg);
+  --shiki-token-property-value: var(--syn-sky);
+}
+
+.theme-steel pre.astro-code[data-language="markdown"] {
+  --shiki-token-keyword: var(--syn-fg);
+  --shiki-token-link: var(--syn-sky);
+}
 
 /* --------------------------------------------------------------------------
    Purple Theme - Language Overrides
