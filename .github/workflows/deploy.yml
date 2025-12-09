@@ -3,7 +3,7 @@ name: Deploy to Cloud Run
 on:
   push:
     branches:
-      - '**'
+      - "**"
 
 env:
   PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
@@ -67,6 +67,7 @@ jobs:
           service: ${{ env.SERVICE_NAME }}
           region: ${{ env.REGION }}
           image: ${{ env.REGISTRY }}/${{ env.PROJECT_ID }}/personal-site/${{ env.SERVICE_NAME }}:${{ github.sha }}
+          revision_traffic: 100
           flags: |
             --min-instances=0
             --max-instances=2
