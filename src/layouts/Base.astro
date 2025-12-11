@@ -69,7 +69,7 @@ const {
     <!-- View Transitions for smooth page navigation -->
     <ClientRouter />
   </head>
-  <body class="@container/page min-h-screen">
+  <body class="@container/page min-h-dvh">
     <script is:inline>
       (function () {
         var THEME_KEY = 'theme';
@@ -92,7 +92,7 @@ const {
     </script>
 
     <!-- Initial theme switcher (visible when hero wordmark is in view) -->
-    <div id="initial-theme-switcher" class="initial-theme-switcher fixed top-5 right-5 z-90 transition-opacity duration-300">
+    <div id="initial-theme-switcher" class="initial-theme-switcher">
       <ThemeSwitcher />
     </div>
 
@@ -108,6 +108,14 @@ const {
 </html>
 
 <style>
+  .initial-theme-switcher {
+    position: fixed;
+    top: calc(var(--space-5) + var(--safe-area-top));
+    right: var(--space-5);
+    z-index: var(--z-overlay);
+    transition: opacity var(--transition-slow);
+  }
+
   .initial-theme-switcher.hidden {
     opacity: 0;
     pointer-events: none;

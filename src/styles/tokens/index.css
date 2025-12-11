@@ -8,6 +8,7 @@
 @import './typography.css';
 @import './spacing.css';
 @import './sizing.css';
+@import './layout.css';
 @import './z-index.css';
 @import './transitions.css';
 @import './borders.css';
