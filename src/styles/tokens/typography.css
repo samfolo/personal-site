@@ -91,4 +91,10 @@
   --leading-normal: 1.5;
   --leading-relaxed: 1.75;
   --leading-loose: 2;
+
+  /* Logomark: "SF." */
+  --logomark-font: var(--font-sans);
+  --logomark-weight: var(--font-bold);
+  --logomark-tracking: var(--tracking-display);
+  --logomark-size-mobile: var(--text-base);
 }

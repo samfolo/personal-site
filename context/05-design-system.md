@@ -124,6 +124,24 @@ document.addEventListener('astro:after-swap', applyStoredTheme);
 | `--tracking-labels` | 0.1em | Uppercase labels |
 | `--tracking-body` | 0.01em | Body text |
 
+## Logomark
+
+### Specification
+The logomark is **"SF."** (initials plus period), matching the full "Sam Folorunsho." wordmark style.
+
+### Tokens (`src/styles/tokens/typography.css`)
+| Token | Value | Purpose |
+|-------|-------|---------|
+| `--logomark-font` | `var(--font-sans)` | Switzer font family |
+| `--logomark-weight` | `var(--font-bold)` | 700 weight |
+| `--logomark-tracking` | `var(--tracking-display)` | -0.03em tight tracking |
+| `--logomark-size-mobile` | `var(--text-base)` | 16px for mobile header |
+
+### Usage
+- **Utility class:** `.logomark` (in `src/styles/global.css`)
+- **Colour:** Uses `var(--fg)` to respect theme switching
+- **Locations:** Mobile header, favicons
+
 ## Spacing Scale (Base-8)
 
 | Token | Value | Pixels |
