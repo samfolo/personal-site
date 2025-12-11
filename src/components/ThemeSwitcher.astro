@@ -6,74 +6,86 @@
  * Persists selection to localStorage and updates body class.
  */
 
+import ThemeSwitcherButton, { type ThemeId } from './ThemeSwitcherButton.astro';
+
 interface Props {
   size?: 'sm' | 'md';
 }
 
 const { size = 'md' } = Astro.props;
 
-const themes = [
+const themes: Array<{ id: ThemeId; label: string }> = [
   { id: 'steel', label: 'Steel grey + warm cream' },
   { id: 'purple', label: 'Dark purple + gold' },
   { id: 'charcoal', label: 'Warm charcoal + off-white' },
   { id: 'teal', label: 'Dark teal + coral' },
-] as const;
-
-const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
+];
 ---
 
 <div class="theme-switcher" data-size={size}>
-  {themes.map((theme) => (
-    <button
-      type="button"
-      class={`theme-button theme-${theme.id}`}
-      data-theme={theme.id}
-      aria-label={theme.label}
-    />
-  ))}
+  {/* Desktop: four-button switcher */}
+  <div class="theme-switcher-desktop gap-2">
+    {themes.map((theme) => (
+      <ThemeSwitcherButton
+        size={size}
+        theme={theme.id}
+        label={theme.label}
+        class="theme-button"
+      />
+    ))}
+  </div>
+
+  {/* Mobile: single cycle button (shows current theme) */}
+  <ThemeSwitcherButton
+    size="md"
+    isActive={true}
+    label="Cycle colour theme"
+    class="theme-toggle-mobile"
+  />
 </div>
 
-<style define:vars={{ buttonSize }}>
+<style>
   .theme-switcher {
     display: flex;
     gap: var(--space-2);
   }
 
-  .theme-button {
-    width: var(--buttonSize);
-    height: var(--buttonSize);
-    border: var(--border-thin) solid var(--fg);
-    cursor: pointer;
-    background: linear-gradient(135deg, var(--bg) 50%, var(--fg) 50%);
-    transition: transform var(--transition-fast);
-    outline: var(--outline-width) solid transparent;
-    outline-offset: var(--outline-offset-tight);
+  /* Desktop switcher: hidden on mobile, visible on desktop */
+  .theme-switcher-desktop {
+    display: none;
+    visibility: hidden;
   }
 
-  .theme-button:hover {
-    transform: scale(1.1);
+  /* Mobile toggle: visible on mobile, hidden on desktop */
+  .theme-switcher :global(.theme-toggle-mobile) {
+    display: flex;
+    visibility: visible;
   }
 
-  .theme-button:focus-visible {
-    outline: var(--outline-width) solid var(--fg);
-    outline-offset: var(--outline-offset-tight);
-  }
+  /* Breakpoint aligned with LogoMark (32rem / 512px) */
+  @container page (min-width: 32rem) {
+    .theme-switcher-desktop {
+      display: flex;
+      visibility: visible;
+    }
 
-  .theme-button[data-active='true'] {
-    outline: var(--outline-width) solid var(--fg);
-    outline-offset: var(--outline-offset-tight);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .theme-button {
-      transition: none;
+    .theme-switcher :global(.theme-toggle-mobile) {
+      display: none;
+      visibility: hidden;
     }
   }
 </style>
 
 <script>
   const THEME_KEY = 'theme';
-  const THEME_CLASSES = ['theme-steel', 'theme-purple', 'theme-charcoal', 'theme-teal'];
+  const THEME_LABELS: Record<string, string> = {
+    steel: 'Steel grey + warm cream',
+    purple: 'Dark purple + gold',
+    charcoal: 'Warm charcoal + off-white',
+    teal: 'Dark teal + coral',
+  };
+  const THEME_ORDER = Object.keys(THEME_LABELS);
+  const THEME_CLASSES = THEME_ORDER.map((id) => `theme-${id}`);
 
   function setTheme(themeId: string): void {
     document.documentElement.classList.remove(...THEME_CLASSES);
@@ -82,10 +94,23 @@ const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
     updateActiveStates(themeId);
   }
 
+  function cycleTheme(): void {
+    const current = getCurrentTheme();
+    const currentIndex = THEME_ORDER.indexOf(current);
+    const nextIndex = (currentIndex + 1) % THEME_ORDER.length;
+    setTheme(THEME_ORDER[nextIndex]);
+  }
+
   function updateActiveStates(activeTheme: string): void {
     document.querySelectorAll('.theme-button').forEach((button) => {
       const isActive = button.getAttribute('data-theme') === activeTheme;
       button.setAttribute('data-active', String(isActive));
+    });
+
+    // Update mobile toggle aria-label
+    const label = THEME_LABELS[activeTheme] ?? activeTheme;
+    document.querySelectorAll('.theme-toggle-mobile').forEach((button) => {
+      button.setAttribute('aria-label', `Cycle colour theme, currently ${label}`);
     });
   }
 
@@ -102,6 +127,7 @@ const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
     const currentTheme = getCurrentTheme();
     updateActiveStates(currentTheme);
 
+    // Desktop: individual theme buttons
     document.querySelectorAll('.theme-button').forEach((button) => {
       button.addEventListener('click', () => {
         const themeId = button.getAttribute('data-theme');
@@ -109,6 +135,11 @@ const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
           setTheme(themeId);
         }
       });
+    });
+
+    // Mobile: cycle toggle button
+    document.querySelectorAll('.theme-toggle-mobile').forEach((button) => {
+      button.addEventListener('click', cycleTheme);
     });
   }
 

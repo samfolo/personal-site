@@ -92,7 +92,7 @@ const {
     </script>
 
     <!-- Initial theme switcher (visible when hero wordmark is in view) -->
-    <div id="initial-theme-switcher" class="initial-theme-switcher">
+    <div id="initial-theme-switcher" class="initial-theme-switcher fixed top-5 right-5 z-90 transition-opacity duration-300">
       <ThemeSwitcher />
     </div>
 
@@ -108,14 +108,6 @@ const {
 </html>
 
 <style>
-  .initial-theme-switcher {
-    position: fixed;
-    top: var(--space-5);
-    right: var(--space-5);
-    z-index: 90;
-    transition: opacity 0.3s ease;
-  }
-
   .initial-theme-switcher.hidden {
     opacity: 0;
     pointer-events: none;

@@ -67,7 +67,13 @@ const navLinks = [
     position: relative;
     max-width: var(--container-max);
     margin: 0 auto;
-    padding: var(--space-5) var(--container-px);
+    padding: var(--space-4) var(--container-px);
+  }
+
+  @container page (min-width: 448px) {
+    .hero {
+      padding: var(--space-5) var(--container-px);
+    }
   }
 
   .hero-content {

@@ -28,13 +28,33 @@ const { href, label, container = 'page', onClick } = Astro.props;
   aria-label={label}
   data-onclick={onClick}
 >
-  <span class={`hidden @md/${container}:block`}>Sam Folorunsho.</span>
-  <span class={`block @md/${container}:hidden text-xl`}>SF.</span>
+  <span class="logomark-full">Sam Folorunsho.</span>
+  <span class="logomark-short text-xl">SF.</span>
 </a>
 
 <style>
   .logomark {
     color: var(--fg);
+  }
+
+  /* Mobile: show short version */
+  .logomark-full {
+    display: none;
+  }
+
+  .logomark-short {
+    display: block;
+  }
+
+  /* Desktop: show full version */
+  @container page (min-width: 32rem) {
+    .logomark-full {
+      display: block;
+    }
+
+    .logomark-short {
+      display: none;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {

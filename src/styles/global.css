@@ -99,6 +99,10 @@
   --z-tooltip: var(--z-tooltip);
   --z-header: var(--z-header);
   --z-max: var(--z-max);
+
+  /* Container query breakpoints */
+  --container-md: 28rem;  /* 448px */
+  --container-lg: 32rem;  /* 512px */
 }
 
 /* ==========================================================================

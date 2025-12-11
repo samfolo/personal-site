@@ -1,0 +1,84 @@
+---
+/**
+ * ThemeSwitcherButton Component
+ *
+ * Reusable theme button with diagonal colour preview.
+ * Used by ThemeSwitcher for both desktop buttons and mobile toggle.
+ */
+
+export type ThemeId = 'steel' | 'purple' | 'charcoal' | 'teal';
+
+interface Props {
+  /** Button size: sm (24px) or md (32px) */
+  size?: 'sm' | 'md';
+  /** Theme to preview. If omitted, shows current theme colours. */
+  theme?: ThemeId;
+  /** Whether outline is always visible (not just on focus) */
+  isActive?: boolean;
+  /** Accessible label for the button */
+  label: string;
+  /** Additional classes */
+  class?: string;
+}
+
+const { size = 'md', theme, isActive = false, label, class: className } = Astro.props;
+
+const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
+---
+
+<button
+  type="button"
+  class:list={[
+    'theme-switcher-button',
+    theme && `theme-${theme}`,
+    className,
+  ]}
+  data-theme={theme}
+  data-active={isActive}
+  aria-label={label}
+>
+  <span class="theme-switcher-button-visual" />
+</button>
+
+<style define:vars={{ buttonSize }}>
+  .theme-switcher-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--buttonSize);
+    height: var(--buttonSize);
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+    outline: var(--outline-width) solid transparent;
+    outline-offset: var(--outline-offset-tight);
+    background: transparent;
+    border: none;
+    padding: 0;
+  }
+
+  .theme-switcher-button-visual {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: var(--border-thin) solid var(--fg);
+    background: linear-gradient(135deg, var(--bg) 50%, var(--fg) 50%);
+  }
+
+  .theme-switcher-button:hover {
+    transform: scale(1.1);
+  }
+
+  .theme-switcher-button:focus-visible {
+    outline: var(--outline-width) solid var(--fg);
+  }
+
+  .theme-switcher-button[data-active='true'] {
+    outline: var(--outline-width) solid var(--fg);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .theme-switcher-button {
+      transition: none;
+    }
+  }
+</style>
