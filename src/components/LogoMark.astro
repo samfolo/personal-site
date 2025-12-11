@@ -1,0 +1,42 @@
+---
+/**
+ * LogoMark Component
+ *
+ * Site wordmark with responsive abbreviation.
+ * Shows "SF." on small containers, "Sam Folorunsho." on larger ones.
+ */
+
+interface Props {
+  href: string;
+  label: string;
+  container?: string;
+  onClick?: string;
+}
+
+const { href, label, container = 'page', onClick } = Astro.props;
+---
+
+<a
+  href={href}
+  class:list={[
+    'logomark',
+    'min-h-11 inline-flex items-center',
+    'font-semibold text-sm tracking-display text-fg',
+    'transition-opacity duration-150 hover:opacity-80',
+    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-fg focus-visible:outline-offset-2',
+  ]}
+  aria-label={label}
+  data-onclick={onClick}
+>
+  <span class={`hidden @md/${container}:block`}>Sam Folorunsho.</span>
+  <span class={`block @md/${container}:hidden text-xl`}>SF.</span>
+</a>
+
+<style>
+  /* Reduced motion support */
+  @media (prefers-reduced-motion: reduce) {
+    .logomark {
+      transition: none;
+    }
+  }
+</style>

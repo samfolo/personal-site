@@ -8,6 +8,7 @@
 
 import ThemeSwitcher from './ThemeSwitcher.astro';
 import NavLink from './NavLink.astro';
+import LogoMark from './LogoMark.astro';
 
 const navLinks = [
   { href: '/blog', label: 'Blog' },
@@ -19,10 +20,7 @@ const navLinks = [
 <header id="fixed-header" class="fixed-header">
   <div class="header-inner">
     <div class="header-left">
-      <a href="/" class="wordmark min-h-11 inline-flex items-center" aria-label="Go to home">
-        <span class="hidden md:block">Sam Folorunsho.</span>
-        <span class="block md:hidden logomark font-semibold text-xl">SF.</span>
-      </a>
+      <LogoMark href="/" label="Go to home" container="page" onClick="scrollToTop" />
       <nav class="nav" aria-label="Main navigation">
         {navLinks.map((link) => (
           <NavLink href={link.href}>
@@ -76,23 +74,6 @@ const navLinks = [
     gap: var(--space-6);
   }
 
-  .wordmark {
-    font-weight: var(--font-semibold);
-    font-size: var(--text-sm);
-    letter-spacing: var(--tracking-display);
-    color: var(--fg);
-    transition: opacity var(--transition-fast);
-  }
-
-  .wordmark:hover {
-    opacity: 0.8;
-  }
-
-  .wordmark:focus-visible {
-    outline: var(--outline-width) solid var(--fg);
-    outline-offset: var(--outline-offset);
-  }
-
   .nav {
     display: flex;
     gap: var(--space-5);
@@ -104,18 +85,17 @@ const navLinks = [
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .fixed-header,
-    .wordmark {
+    .fixed-header {
       transition: none;
     }
   }
 </style>
 
 <script>
-  function initWordmark() {
-    const wordmark = document.querySelector('.fixed-header .wordmark');
+  function initScrollToTop() {
+    const logomark = document.querySelector('.logomark[data-onclick="scrollToTop"]');
 
-    wordmark?.addEventListener('click', (e) => {
+    logomark?.addEventListener('click', (e) => {
       if (window.location.pathname === '/') {
         e.preventDefault();
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -123,6 +103,6 @@ const navLinks = [
     });
   }
 
-  initWordmark();
-  document.addEventListener('astro:after-swap', initWordmark);
+  initScrollToTop();
+  document.addEventListener('astro:after-swap', initScrollToTop);
 </script>
