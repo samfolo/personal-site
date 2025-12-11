@@ -23,7 +23,6 @@ const { href, label, container = 'page', onClick } = Astro.props;
     'min-h-11 inline-flex items-center',
     'font-semibold text-sm tracking-display',
     'transition-opacity duration-150 hover:opacity-80',
-    'focus-visible:outline focus-visible:outline-2 focus-visible:outline-fg focus-visible:outline-offset-2',
   ]}
   aria-label={label}
   data-onclick={onClick}
@@ -35,6 +34,11 @@ const { href, label, container = 'page', onClick } = Astro.props;
 <style>
   .logomark {
     color: var(--fg);
+  }
+
+  .logomark:focus-visible {
+    outline: var(--outline-width) solid var(--fg);
+    outline-offset: var(--outline-offset);
   }
 
   /* Mobile: show short version */
