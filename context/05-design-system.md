@@ -67,10 +67,12 @@ All colours use OKLCH for perceptual uniformity:
 - `H` - Hue angle (degrees)
 
 ### Theme Application
-Theme class applied to `<body>`:
+Theme class applied to `<html>`:
 ```html
-<body class="theme-steel">
+<html class="theme-steel">
 ```
+
+This ensures CSS variables are available to view transition pseudo-elements.
 
 Changed via `ThemeSwitcher` component, persisted to localStorage.
 
@@ -78,11 +80,11 @@ Changed via `ThemeSwitcher` component, persisted to localStorage.
 ```javascript
 // Set theme
 localStorage.setItem('theme', themeId);
-document.body.classList.add(`theme-${themeId}`);
+document.documentElement.classList.add(`theme-${themeId}`);
 
 // Restore on load (inline script in Base.astro)
 const saved = localStorage.getItem('theme');
-if (saved) document.body.classList.add(`theme-${saved}`);
+if (saved) document.documentElement.classList.add(`theme-${saved}`);
 
 // Restore after View Transitions
 document.addEventListener('astro:after-swap', applyStoredTheme);
@@ -124,29 +126,59 @@ document.addEventListener('astro:after-swap', applyStoredTheme);
 | `--tracking-labels` | 0.1em | Uppercase labels |
 | `--tracking-body` | 0.01em | Body text |
 
+## Container Queries
+
+The site uses container queries for responsive layout, enabling components to respond to their container's width rather than the viewport.
+
+### Page Container
+The `<body>` element has `@container/page` class, making the entire page a named container:
+```html
+<body class="@container/page min-h-screen">
+```
+
+### Usage
+Components can use Tailwind container query variants:
+```html
+<span class="hidden @md/page:block">Desktop content</span>
+<span class="block @md/page:hidden">Mobile content</span>
+```
+
+Or CSS `@container` queries in `<style>` blocks:
+```css
+@container page (max-width: 640px) {
+  .element { /* mobile styles */ }
+}
+```
+
+### Media Queries (Preserved)
+User preference and output queries remain as `@media`:
+- `@media (prefers-reduced-motion: reduce)` - Accessibility
+- `@media print` - Print styles
+
 ## Logomark
 
 ### Specification
 The logomark is **"SF."** (initials plus period), matching the full "Sam Folorunsho." wordmark style.
 
-### Tokens (`src/styles/tokens/typography.css`)
-| Token | Value | Purpose |
-|-------|-------|---------|
-| `--logomark-font` | `var(--font-sans)` | Switzer font family |
-| `--logomark-tracking` | `var(--tracking-display)` | -0.03em tight tracking |
+### Component (`src/components/LogoMark.astro`)
+Self-contained component with responsive abbreviation:
+- Shows "SF." on small containers (< 768px)
+- Shows "Sam Folorunsho." on larger containers (≥ 768px)
+
+### Props
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `href` | `string` | required | Link destination |
+| `label` | `string` | required | Accessible label (aria-label) |
+| `container` | `string` | `'page'` | Container name to query |
+| `onClick` | `string` | `undefined` | Handler identifier (data-onclick) |
 
 ### Usage
-The `.logomark` class (in `src/styles/global.css`) provides core styling:
-- Font family (Switzer)
-- Letter spacing (-0.03em)
-- Colour (`var(--fg)` for theme switching)
-
-Weight and size are applied via Tailwind classes for contextual flexibility:
-```html
-<span class="logomark font-semibold text-xl">SF.</span>
+```astro
+<LogoMark href="/" label="Go to home" container="page" onClick="scrollToTop" />
 ```
 
-**Locations:** Mobile header, favicons
+**Locations:** Fixed header, favicons
 
 ## Spacing Scale (Base-8)
 

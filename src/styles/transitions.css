@@ -31,6 +31,11 @@
    Full Page Transitions (default)
    ========================================================================== */
 
+/* Persist background colour during transition */
+::view-transition-group(root) {
+  background-color: var(--bg);
+}
+
 ::view-transition-old(root) {
   animation: fadeOut var(--duration-fast) var(--ease-default) forwards;
 }

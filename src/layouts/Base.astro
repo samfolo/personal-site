@@ -38,7 +38,7 @@ const {
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en" class={`theme-${theme}`}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -69,7 +69,7 @@ const {
     <!-- View Transitions for smooth page navigation -->
     <ClientRouter />
   </head>
-  <body class={`theme-${theme} @container/page`}>
+  <body class="@container/page min-h-screen">
     <script is:inline>
       (function () {
         var THEME_KEY = 'theme';
@@ -78,8 +78,8 @@ const {
         function applyStoredTheme() {
           var saved = localStorage.getItem(THEME_KEY);
           if (saved && THEME_CLASSES.indexOf('theme-' + saved) !== -1) {
-            document.body.classList.remove.apply(document.body.classList, THEME_CLASSES);
-            document.body.classList.add('theme-' + saved);
+            document.documentElement.classList.remove.apply(document.documentElement.classList, THEME_CLASSES);
+            document.documentElement.classList.add('theme-' + saved);
           }
         }
 

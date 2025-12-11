@@ -4,7 +4,8 @@
  * Base theme colours using OKLCH colour space.
  * Each theme defines: bg, fg, muted, rule, highlight, emphasis
  *
- * Theme switching: Apply class to <body> (e.g., .theme-steel)
+ * Theme switching: Apply class to <html> (e.g., .theme-steel)
+ * This ensures CSS variables are available to view transition pseudo-elements.
  *
  * Note: Syntax highlighting tokens are in src/styles/components/shiki.css
  */

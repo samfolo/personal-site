@@ -76,8 +76,8 @@ const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
   const THEME_CLASSES = ['theme-steel', 'theme-purple', 'theme-charcoal', 'theme-teal'];
 
   function setTheme(themeId: string): void {
-    document.body.classList.remove(...THEME_CLASSES);
-    document.body.classList.add(`theme-${themeId}`);
+    document.documentElement.classList.remove(...THEME_CLASSES);
+    document.documentElement.classList.add(`theme-${themeId}`);
     localStorage.setItem(THEME_KEY, themeId);
     updateActiveStates(themeId);
   }
@@ -90,7 +90,7 @@ const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
   }
 
   function getCurrentTheme(): string {
-    for (const cls of document.body.classList) {
+    for (const cls of document.documentElement.classList) {
       if (cls.startsWith('theme-')) {
         return cls.replace('theme-', '');
       }

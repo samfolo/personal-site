@@ -21,7 +21,7 @@ const { href, label, container = 'page', onClick } = Astro.props;
   class:list={[
     'logomark',
     'min-h-11 inline-flex items-center',
-    'font-semibold text-sm tracking-display text-fg',
+    'font-semibold text-sm tracking-display',
     'transition-opacity duration-150 hover:opacity-80',
     'focus-visible:outline focus-visible:outline-2 focus-visible:outline-fg focus-visible:outline-offset-2',
   ]}
@@ -33,7 +33,10 @@ const { href, label, container = 'page', onClick } = Astro.props;
 </a>
 
 <style>
-  /* Reduced motion support */
+  .logomark {
+    color: var(--fg);
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .logomark {
       transition: none;
