@@ -6,23 +6,35 @@
  * All pages should use this layout for consistent styling.
  */
 
-interface Props {
-  title: string;
-  description?: string;
-  theme?: 'steel' | 'purple' | 'charcoal' | 'teal';
-}
-
-const {
-  title,
-  description = 'Personal site',
-  theme = 'steel',
-} = Astro.props;
-
 import { ClientRouter } from 'astro:transitions';
 import '../styles/global.css';
 import FixedHeader from '../components/FixedHeader.astro';
 import FixedFooter from '../components/FixedFooter.astro';
 import ThemeSwitcher from '../components/ThemeSwitcher.astro';
+import SEO from '../components/SEO.astro';
+import JsonLd from '../components/JsonLd.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  theme?: 'steel' | 'purple' | 'charcoal' | 'teal';
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  publishDate?: Date;
+  updatedDate?: Date;
+  tags?: string[];
+}
+
+const {
+  title,
+  description,
+  theme = 'steel',
+  ogImage,
+  ogType = 'website',
+  publishDate,
+  updatedDate,
+  tags,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -30,10 +42,20 @@ import ThemeSwitcher from '../components/ThemeSwitcher.astro';
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="description" content={description} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
+
+    <SEO
+      title={title}
+      description={description}
+      ogImage={ogImage}
+      ogType={ogType}
+      publishDate={publishDate}
+      updatedDate={updatedDate}
+      tags={tags}
+    />
+    <JsonLd type="WebSite" />
 
     <!-- Preload critical fonts -->
     <link

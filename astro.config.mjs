@@ -16,6 +16,8 @@ import rehypeCodeBlocks from './src/plugins/rehype-code-blocks';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://samfolorunsho.com',
+  trailingSlash: 'never',
   output: 'server',
   adapter: node({
     mode: 'standalone'
