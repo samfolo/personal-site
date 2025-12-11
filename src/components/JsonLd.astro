@@ -12,8 +12,8 @@ import { SITE } from '../config';
 interface ArticleData {
   headline: string;
   description: string;
-  datePublished: Date;
-  dateModified?: Date;
+  publishDate: Date;
+  updatedDate?: Date;
   tags?: string[];
 }
 
@@ -43,8 +43,8 @@ const schema =
         headline: article.headline,
         description: article.description,
         url: articleUrl,
-        datePublished: article.datePublished.toISOString(),
-        dateModified: (article.dateModified ?? article.datePublished).toISOString(),
+        datePublished: article.publishDate.toISOString(),
+        dateModified: (article.updatedDate ?? article.publishDate).toISOString(),
         author,
         keywords: article.tags?.join(', '),
       }

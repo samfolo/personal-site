@@ -7,6 +7,7 @@
  */
 
 import Base from './Base.astro';
+import JsonLd from '../components/JsonLd.astro';
 import SheenText from '../components/SheenText.astro';
 import { formatDate, formatUpdatedDate } from '../utils/formatDate';
 import type { CollectionEntry } from 'astro:content';
@@ -22,7 +23,24 @@ const { post, readingTime, prevPost, nextPost } = Astro.props;
 const { title, description, publishDate, updatedDate, tags } = post.data;
 ---
 
-<Base title={`${title} | Sam Folorunsho`} description={description}>
+<Base
+  title={`${title} | Sam Folorunsho`}
+  description={description}
+  ogType="article"
+  publishDate={publishDate}
+  updatedDate={updatedDate}
+  tags={tags}
+>
+  <JsonLd
+    type="Article"
+    article={{
+      headline: title,
+      description,
+      publishDate,
+      updatedDate,
+      tags,
+    }}
+  />
   <main class="post-container">
     <article class="post">
       <!-- Post Header -->
