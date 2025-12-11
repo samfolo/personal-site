@@ -70,7 +70,7 @@ const themeLabels: Record<string, string> = {
   }
 
   function getThemeLabel(): string {
-    for (const cls of document.body.classList) {
+    for (const cls of document.documentElement.classList) {
       if (cls.startsWith('theme-')) {
         const themeId = cls.replace('theme-', '');
         return window.__themeLabels[themeId] || 'STEEL GREY + WARM CREAM';
@@ -86,7 +86,7 @@ const themeLabels: Record<string, string> = {
     }
   }
 
-  // Observe body class changes for theme updates
+  // Observe html element class changes for theme updates
   function observeThemeChanges(): void {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
@@ -96,7 +96,7 @@ const themeLabels: Record<string, string> = {
       });
     });
 
-    observer.observe(document.body, {
+    observer.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ['class'],
     });
