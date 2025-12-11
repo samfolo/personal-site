@@ -133,14 +133,20 @@ The logomark is **"SF."** (initials plus period), matching the full "Sam Folorun
 | Token | Value | Purpose |
 |-------|-------|---------|
 | `--logomark-font` | `var(--font-sans)` | Switzer font family |
-| `--logomark-weight` | `var(--font-bold)` | 700 weight |
 | `--logomark-tracking` | `var(--tracking-display)` | -0.03em tight tracking |
-| `--logomark-size-mobile` | `var(--text-base)` | 16px for mobile header |
 
 ### Usage
-- **Utility class:** `.logomark` (in `src/styles/global.css`)
-- **Colour:** Uses `var(--fg)` to respect theme switching
-- **Locations:** Mobile header, favicons
+The `.logomark` class (in `src/styles/global.css`) provides core styling:
+- Font family (Switzer)
+- Letter spacing (-0.03em)
+- Colour (`var(--fg)` for theme switching)
+
+Weight and size are applied via Tailwind classes for contextual flexibility:
+```html
+<span class="logomark font-semibold text-xl">SF.</span>
+```
+
+**Locations:** Mobile header, favicons
 
 ## Spacing Scale (Base-8)
 

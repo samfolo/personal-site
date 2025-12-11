@@ -185,7 +185,6 @@
 @layer components {
   .logomark {
     font-family: var(--logomark-font);
-    font-weight: var(--logomark-weight);
     letter-spacing: var(--logomark-tracking);
     color: var(--fg);
   }

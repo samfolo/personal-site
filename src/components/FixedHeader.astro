@@ -19,8 +19,9 @@ const navLinks = [
 <header id="fixed-header" class="fixed-header">
   <div class="header-inner">
     <div class="header-left">
-      <a href="/" class="wordmark" aria-label="Go to home">
-        Sam Folorunsho.
+      <a href="/" class="wordmark min-h-11 inline-flex items-center" aria-label="Go to home">
+        <span class="hidden md:block">Sam Folorunsho.</span>
+        <span class="block md:hidden logomark font-semibold text-xl">SF.</span>
       </a>
       <nav class="nav" aria-label="Main navigation">
         {navLinks.map((link) => (

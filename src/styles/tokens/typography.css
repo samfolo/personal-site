@@ -94,7 +94,5 @@
 
   /* Logomark: "SF." */
   --logomark-font: var(--font-sans);
-  --logomark-weight: var(--font-bold);
   --logomark-tracking: var(--tracking-display);
-  --logomark-size-mobile: var(--text-base);
 }
