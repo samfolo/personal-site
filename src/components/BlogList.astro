@@ -70,23 +70,27 @@ const groupedPosts = groupPostsByMonth(posts);
 ---
 
 <div class="blog-list">
-  {Array.from(groupedPosts.entries()).map(([_key, monthPosts]) => (
-    <section class="blog-month-group">
-      <h2 class="month-label">{formatMonthLabel(monthPosts[0].date)}</h2>
-      <ul class="post-list">
-        {monthPosts.map((post) => (
-          <li class="post-item">
-            <a href={`/blog/${post.slug}`} class="post-link">
-              <span class="post-title">
-                <SheenText text={post.title} tag="span" interval={12} />
-              </span>
-              <span class="post-date">{formatPostDate(post.date)}</span>
-            </a>
-          </li>
-        ))}
-      </ul>
-    </section>
-  ))}
+  {posts.length === 0 ? (
+    <p class="empty-state">No blog posts to display.</p>
+  ) : (
+    Array.from(groupedPosts.entries()).map(([_key, monthPosts]) => (
+      <section class="blog-month-group">
+        <h2 class="month-label">{formatMonthLabel(monthPosts[0].date)}</h2>
+        <ul class="post-list">
+          {monthPosts.map((post) => (
+            <li class="post-item">
+              <a href={`/blog/${post.slug}`} class="post-link">
+                <span class="post-title">
+                  <SheenText text={post.title} tag="span" interval={12} />
+                </span>
+                <span class="post-date">{formatPostDate(post.date)}</span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  )}
 </div>
 
 <style>
@@ -94,6 +98,12 @@ const groupedPosts = groupPostsByMonth(posts);
     display: flex;
     flex-direction: column;
     gap: var(--space-7);
+  }
+
+  .empty-state {
+    font-size: var(--text-base);
+    line-height: var(--leading-24);
+    color: var(--muted);
   }
 
   .blog-month-group {
