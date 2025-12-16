@@ -200,19 +200,19 @@
   /* Foundation - semantic names, colour descriptions in comments */
   --syn-bg: oklch(0.19 0 0);
   --syn-fg: var(--fg);
-  --syn-keyword: oklch(0.82 0.02 60);        /* chalk */
-  --syn-function: oklch(0.77 0.02 60);       /* ash */
+  --syn-keyword: oklch(0.80 0.02 60);        /* chalk */
+  --syn-function: oklch(0.86 0 0);       /* ash */
   --syn-tag: oklch(0.82 0.02 60);            /* chalk */
-  --syn-string: oklch(0.70 0.02 60);         /* slate */
-  --syn-string-alt: oklch(0.68 0.02 60);     /* stone */
-  --syn-constant: oklch(0.75 0.02 60);       /* smoke */
-  --syn-number: oklch(0.75 0.02 60);         /* smoke */
-  --syn-type: oklch(0.75 0.02 60);           /* smoke */
-  --syn-param: oklch(0.80 0.02 60);          /* bone */
+  --syn-string: oklch(0.80 0.01 70);         /* slate */
+  --syn-string-alt: oklch(0.80 0.01 70);     /* stone */
+  --syn-constant: oklch(0.77 0 0);       /* smoke */
+  --syn-number: oklch(0.73 0.08 60);         /* smoke */
+  --syn-type: oklch(1 0 0);                 /* smoke */
+  --syn-param: oklch(0.77 0 0);          /* bone */
   --syn-attr: oklch(0.80 0.02 60);           /* bone */
   --syn-comment: oklch(0.48 0.01 60);        /* coal */
-  --syn-punctuation: oklch(0.58 0.01 60);    /* graphite */
-  --syn-escape: oklch(0.82 0.02 60);         /* chalk */
+  --syn-punctuation: oklch(0.80 0.02 60);    /* graphite */
+  --syn-escape: oklch(0.80 0.1 90);         /* chalk */
 
   /* Diff/highlight backgrounds & symbols */
   --syn-diff-add-bg: oklch(0.22 0.05 145);
@@ -237,7 +237,7 @@
   --shiki-token-attribute: var(--syn-attr);
   --shiki-token-comment: var(--syn-comment);
   --shiki-token-punctuation: var(--syn-punctuation);
-  --shiki-token-variable: var(--syn-param);
+  --shiki-token-variable: var(--syn-fg);
   --shiki-token-escape: var(--syn-escape);
 
   /* Code block UI */
@@ -464,7 +464,58 @@ pre.astro-code {
    Charcoal Theme - Language Overrides
    -------------------------------------------------------------------------- */
 
-/* No overrides yet */
+.theme-charcoal pre.astro-code[data-language="css"] {
+  --shiki-token-keyword: var(--syn-string);
+  --shiki-token-variable: var(--syn-fg);
+  --shiki-token-property: var(--syn-fg);
+  --shiki-token-attribute: var(--syn-string);
+  --shiki-token-operator: var(--syn-string);
+  --shiki-token-selector: var(--syn-fg);
+  --shiki-token-property-value: var(--syn-string);
+  --shiki-token-function: var(--syn-function);
+}
+
+.theme-charcoal pre.astro-code[data-language="yaml"] {
+  --shiki-token-constant: var(--syn-keyword);
+}
+
+.theme-charcoal pre.astro-code[data-language="python"] {
+  --shiki-token-constant: var(--syn-keyword);
+  --shiki-token-type: var(--syn-type);
+}
+
+.theme-charcoal pre.astro-code[data-language="rust"] {
+  --shiki-token-constant: var(--syn-keyword);
+}
+
+.theme-charcoal pre.astro-code[data-language="go"] {
+  --shiki-token-constant: var(--syn-keyword);
+  --shiki-token-type: var(--syn-type);
+}
+
+.theme-charcoal pre.astro-code[data-language="json"] {
+  --shiki-token-constant: var(--syn-keyword);
+  --shiki-token-property: var(--syn-string);
+}
+
+.theme-charcoal pre.astro-code[data-language="html"] {
+  --shiki-token-selector: var(--syn-fg);
+  --shiki-token-attribute: var(--syn-string);
+  --shiki-token-property: var(--syn-fg);
+  --shiki-token-property-value: var(--syn-string);
+}
+
+.theme-charcoal pre.astro-code[data-language="xml"] {
+  --shiki-token-selector: var(--syn-fg);
+  --shiki-token-attribute: var(--syn-string);
+  --shiki-token-property: var(--syn-fg);
+  --shiki-token-property-value: var(--syn-string);
+}
+
+.theme-charcoal pre.astro-code[data-language="markdown"] {
+  --shiki-token-keyword: var(--syn-fg);
+  --shiki-token-link: var(--syn-string);
+}
 
 /* --------------------------------------------------------------------------
    Teal Theme - Language Overrides
