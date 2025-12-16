@@ -261,9 +261,9 @@
   /* Foundation - semantic names, colour descriptions in comments */
   --syn-bg: oklch(0.19 0.02 195.58);
   --syn-fg: oklch(0.84 0.01 214);
-  --syn-keyword: oklch(0.66 0.05 34);       /* azure */
+  --syn-keyword: oklch(0.68 0.08 34);       /* azure */
   --syn-function: oklch(0.84 0.01 214);      /* teal */
-  --syn-tag: oklch(0.66 0.05 34);           /* azure */
+  --syn-tag: oklch(0.68 0.08 34);           /* azure */
   --syn-string: oklch(0.66 0.06 214);         /* coral */
   --syn-string-alt: oklch(0.66 0.06 214);     /* peach */
   --syn-constant: oklch(0.66 0.06 214);      /* cyan */
