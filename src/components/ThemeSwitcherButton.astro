@@ -6,13 +6,13 @@
  * Used by ThemeSwitcher for both desktop buttons and mobile toggle.
  */
 
-export type ThemeId = 'steel' | 'purple' | 'charcoal' | 'teal';
+import type { Theme } from '../types';
 
 interface Props {
   /** Button size: sm (24px) or md (32px) */
   size?: 'sm' | 'md';
   /** Theme to preview. If omitted, shows current theme colours. */
-  theme?: ThemeId;
+  theme?: Theme;
   /** Whether outline is always visible (not just on focus) */
   isActive?: boolean;
   /** Accessible label for the button */

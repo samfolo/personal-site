@@ -14,10 +14,12 @@ import ThemeSwitcher from '../components/ThemeSwitcher.astro';
 import SEO from '../components/SEO.astro';
 import JsonLd from '../components/JsonLd.astro';
 
+import type { Theme } from '../types';
+
 interface Props {
   title: string;
   description?: string;
-  theme?: 'steel' | 'purple' | 'charcoal' | 'teal';
+  theme?: Theme;
   ogImage?: string;
   ogType?: 'website' | 'article';
   publishDate?: Date;
