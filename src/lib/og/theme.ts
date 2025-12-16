@@ -12,6 +12,7 @@ import type { Theme } from '../../types';
 export interface ThemeColours {
   bg: string;
   fg: string;
+  muted: string;
 }
 
 /**
@@ -31,18 +32,22 @@ export const themeColours: Record<Theme, ThemeColours> = {
   steel: {
     bg: oklchToHex(0.2293, 0.009, 255.6),
     fg: oklchToHex(0.9615, 0.0098, 87.47),
+    muted: oklchToHex(0.6334, 0, 0),
   },
   purple: {
     bg: oklchToHex(0.227, 0.0199, 303.08),
     fg: oklchToHex(0.9251, 0.041, 91.72),
+    muted: oklchToHex(0.6432, 0.0302, 67.25),
   },
   charcoal: {
     bg: oklchToHex(0.2478, 0, 0),
     fg: oklchToHex(0.9851, 0, 0),
+    muted: oklchToHex(0.6268, 0, 0),
   },
   teal: {
     bg: oklchToHex(0.2239, 0.0239, 195.58),
     fg: oklchToHex(0.76, 0.1687, 34.05),
+    muted: oklchToHex(0.555, 0.0365, 196.15),
   },
 };
 

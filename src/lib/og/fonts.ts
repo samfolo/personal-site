@@ -1,7 +1,7 @@
 /**
  * Font Loading for OG Image Generation
  *
- * Loads Switzer variable font for use with Satori.
+ * Loads Switzer static fonts for use with Satori.
  * Font weights 400 (regular) and 700 (bold) are loaded.
  */
 
@@ -16,7 +16,9 @@ export interface FontData {
 }
 
 const FONT_NAME = 'Switzer';
-const FONT_PATH = join(process.cwd(), 'public', 'fonts', 'Switzer-Variable.woff2');
+const FONTS_DIR = join(process.cwd(), 'public', 'fonts');
+const FONT_REGULAR_PATH = join(FONTS_DIR, 'Switzer-Regular.otf');
+const FONT_BOLD_PATH = join(FONTS_DIR, 'Switzer-Bold.otf');
 
 /**
  * Singleton promise for font loading.
@@ -50,19 +52,21 @@ export async function loadFonts(): Promise<FontData[]> {
 }
 
 async function loadFontsInternal(): Promise<FontData[]> {
-  const fontBuffer = await readFile(FONT_PATH);
-  const fontData = bufferToArrayBuffer(fontBuffer);
+  const [regularBuffer, boldBuffer] = await Promise.all([
+    readFile(FONT_REGULAR_PATH),
+    readFile(FONT_BOLD_PATH),
+  ]);
 
   return [
     {
       name: FONT_NAME,
-      data: fontData,
+      data: bufferToArrayBuffer(regularBuffer),
       weight: 400,
       style: 'normal',
     },
     {
       name: FONT_NAME,
-      data: fontData,
+      data: bufferToArrayBuffer(boldBuffer),
       weight: 700,
       style: 'normal',
     },
