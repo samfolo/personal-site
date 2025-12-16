@@ -42,7 +42,7 @@ const {
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="icon" type="image/x-icon" href="/sf-steel.ico" data-favicon />
+    <link rel="icon" type="image/x-icon" data-favicon />
     <script is:inline>
       (function() {
         var theme = localStorage.getItem('theme') || 'steel';
@@ -87,9 +87,6 @@ const {
           if (saved && THEME_CLASSES.indexOf('theme-' + saved) !== -1) {
             document.documentElement.classList.remove.apply(document.documentElement.classList, THEME_CLASSES);
             document.documentElement.classList.add('theme-' + saved);
-            // Update favicon to match theme
-            var favicon = document.querySelector('link[data-favicon]');
-            if (favicon) favicon.href = '/sf-' + saved + '.ico';
           }
         }
 
@@ -98,6 +95,15 @@ const {
 
         // Reapply after View Transition navigation
         document.addEventListener('astro:after-swap', applyStoredTheme);
+
+        // Preserve favicon href during View Transitions (avoid re-fetching)
+        document.addEventListener('astro:before-swap', function(e) {
+          var currentFavicon = document.querySelector('link[data-favicon]');
+          var newFavicon = e.newDocument.querySelector('link[data-favicon]');
+          if (currentFavicon && currentFavicon.href && newFavicon) {
+            newFavicon.href = currentFavicon.href;
+          }
+        });
       })();
     </script>
 
