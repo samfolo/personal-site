@@ -8,7 +8,9 @@
       "type": "stdio",
       "command": "npx",
       "args": [
-        "@playwright/mcp@latest"
+        "@playwright/mcp@latest",
+        "--config",
+        "./mcp/playwright.config.json"
       ],
       "env": {}
     }

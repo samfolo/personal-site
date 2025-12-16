@@ -257,6 +257,55 @@ Three-level cascade in `src/styles/components/shiki.css`:
 }
 ```
 
+### Colour Patterns
+
+All syntax tokens use OKLCH colour space for perceptual uniformity.
+
+#### Lightness Bands
+| Band | L Range | Usage |
+|------|---------|-------|
+| Bright | 0.80-0.90 | Strings, types, attributes |
+| Normal | 0.65-0.75 | Keywords, functions |
+| Muted | 0.50-0.60 | Comments |
+| Dark | 0.19-0.22 | Backgrounds, highlights |
+
+#### Chroma Tiers
+| Tier | C Range | Usage |
+|------|---------|-------|
+| Accent | 0.10-0.17 | Keywords, escape sequences |
+| Subtle | 0.03-0.08 | Strings, functions, numbers |
+| Neutral | 0.00-0.02 | Comments, backgrounds |
+
+#### Theme Hue Families
+| Theme | Primary Hues | Accent Hues |
+|-------|-------------|-------------|
+| Steel | 235-275 (blue-grey) | 47 (warm gold) |
+| Purple | 280-330 (magenta-violet) | 40-97 (orange-gold) |
+| Charcoal | 60-70 (warm grey) | 0 (pure grey) |
+| Teal | 195-214 (cyan-teal) | 34, 90-128 (coral, gold, mint) |
+
+#### Near-Duplicate Token Groups
+Tokens intentionally sharing identical values for visual cohesion:
+
+**Steel:**
+- `string`, `constant`, `param`: `oklch(0.80 0.03 235)`
+- `type`, `attr`: `oklch(0.9 0.03 235)`
+- `keyword`, `tag`: `oklch(0.7 0.03 275)`
+
+**Purple:**
+- `string`, `constant`: `oklch(0.8 0.05 97.89)`
+- `param`, `punctuation`: `oklch(0.8 0.01 0)`
+
+**Charcoal:**
+- `constant`, `param`: `oklch(0.77 0 0)`
+- `string`, `string-alt`: `oklch(0.80 0.01 70)`
+- `keyword`, `attr`, `punctuation`: `oklch(0.80 0.02 60)`
+
+**Teal:**
+- `string`, `string-alt`, `constant`, `type`: `oklch(0.66 0.06 214)`
+- `punctuation`, `operator`: `oklch(0.62 0.03 195)`
+- `keyword`, `tag`: `oklch(0.70 0.11 34)`
+
 ## Prose Typography (`prose.css`)
 
 Extends Tailwind Typography with design tokens:

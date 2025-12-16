@@ -94,6 +94,11 @@
 
 /* --------------------------------------------------------------------------
    Steel Theme (blue-grey) - Primary hue: 255
+
+   Monochromatic blue-grey palette with warm number accents.
+   Hue: 235-275 (blue), accent: 47 (warm gold for numbers).
+   Lightness: L=0.9 bright, L=0.7 normal, L=0.6 muted.
+   Chroma: ≤0.06 subtle throughout.
    -------------------------------------------------------------------------- */
 .theme-steel {
   /* Foundation - semantic names, colour descriptions in comments */
@@ -148,6 +153,11 @@
 
 /* --------------------------------------------------------------------------
    Purple Theme - Primary hue: 300, Secondary: 97.89 (gold)
+
+   Magenta-violet primaries with gold string accents.
+   Hue: 280-330 (magenta/violet), accent: 40-97 (orange/gold).
+   Warm highlights contrast against cool purple background.
+   Chroma: 0.10-0.17 for accents, 0.01-0.05 for neutrals.
    -------------------------------------------------------------------------- */
 .theme-purple {
   /* Foundation - semantic names, colour descriptions in comments */
@@ -199,6 +209,11 @@
 
 /* --------------------------------------------------------------------------
    Charcoal Theme (neutral) - Warm hue: 60, minimal chroma
+
+   Nearly achromatic with subtle warm bias.
+   Hue: 60-70 (warm grey) or 0 (pure grey).
+   Relies on lightness contrast rather than colour.
+   Chroma: ≤0.02 for most tokens, 0.08 for number accents.
    -------------------------------------------------------------------------- */
 .theme-charcoal {
   /* Foundation - semantic names, colour descriptions in comments */
@@ -209,8 +224,8 @@
   --syn-tag: oklch(0.65 0.05 60);            /* chalk */
   --syn-string: oklch(0.80 0.01 70);         /* slate */
   --syn-string-alt: oklch(0.80 0.01 70);     /* stone */
-  --syn-constant: oklch(0.77 0 0);       /* smoke */
-  --syn-number: oklch(0.73 0.08 60);         /* smoke */
+  --syn-constant: oklch(0.77 0 0);           /* ash */
+  --syn-number: oklch(0.73 0.08 60);         /* warm */
   --syn-type: oklch(1 0 0);                 /* smoke */
   --syn-param: oklch(0.77 0 0);          /* bone */
   --syn-attr: oklch(0.80 0.02 60);           /* bone */
@@ -256,24 +271,29 @@
 
 /* --------------------------------------------------------------------------
    Teal Theme - Primary hue: 195, Secondary: 34 (coral)
+
+   Cyan-teal base with coral keyword accents.
+   Hue: 195-214 (teal/cyan), accent: 34 (coral), 90-128 (gold/mint).
+   Complementary colour scheme for visual interest.
+   Chroma: 0.06-0.11 moderate saturation throughout.
    -------------------------------------------------------------------------- */
 .theme-teal {
   /* Foundation - semantic names, colour descriptions in comments */
   --syn-bg: oklch(0.19 0.02 195.58);
   --syn-fg: oklch(0.84 0.01 214);
-  --syn-keyword: oklch(0.68 0.08 34);       /* azure */
+  --syn-keyword: oklch(0.70 0.11 34);        /* coral */
   --syn-function: oklch(0.84 0.01 214);      /* teal */
-  --syn-tag: oklch(0.68 0.08 34);           /* azure */
-  --syn-string: oklch(0.66 0.06 214);         /* coral */
-  --syn-string-alt: oklch(0.66 0.06 214);     /* peach */
-  --syn-constant: oklch(0.66 0.06 214);      /* cyan */
-  --syn-number: oklch(0.73 0.06 128);        /* cyan */
-  --syn-type: oklch(0.65 0.08 214);          /* cyan */
-  --syn-param: oklch(0.80 0.05 214);         /* lime */
+  --syn-tag: oklch(0.70 0.11 34);            /* coral */
+  --syn-string: oklch(0.66 0.06 214);        /* steel */
+  --syn-string-alt: oklch(0.66 0.06 214);    /* steel */
+  --syn-constant: oklch(0.66 0.06 214);      /* steel */
+  --syn-number: oklch(0.73 0.06 128);        /* mint */
+  --syn-type: oklch(0.66 0.06 214);          /* steel */
+  --syn-param: oklch(0.80 0.05 214);         /* mist */
   --syn-attr: oklch(0.78 0.11 115);          /* lime */
   --syn-comment: oklch(0.50 0.03 195);       /* muted */
   --syn-punctuation: oklch(0.62 0.03 195);   /* steel */
-  --syn-escape: oklch(0.8 0.1 90);         /* coral */
+  --syn-escape: oklch(0.8 0.1 90);           /* gold */
   --syn-operator: oklch(0.62 0.03 195);    /* steel */
 
   /* Diff/highlight backgrounds */
