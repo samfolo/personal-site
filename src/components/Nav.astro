@@ -1,0 +1,23 @@
+---
+/**
+ * Nav Component
+ *
+ * Renders a navigation element with links.
+ * Usage-agnostic: positioning and spacing are the parent's responsibility.
+ */
+
+import type {NavLink as NavLinkType} from "../config/navigation";
+
+import NavLink from "./NavLink.astro";
+
+interface Props {
+  links: NavLinkType[];
+  "aria-label": string;
+}
+
+const {links, "aria-label": ariaLabel} = Astro.props;
+---
+
+<nav class="flex gap-[var(--space-5)]" aria-label={ariaLabel}>
+  {links.map((link) => <NavLink href={link.href}>{link.label}</NavLink>)}
+</nav>

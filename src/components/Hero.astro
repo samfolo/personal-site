@@ -7,7 +7,9 @@
  * to toggle the fixed header visibility.
  */
 
-import NavLink from "./NavLink.astro";
+import {NAV_LINKS} from "../config/navigation";
+
+import Nav from "./Nav.astro";
 import SheenText from "./SheenText.astro";
 
 interface Props {
@@ -15,20 +17,14 @@ interface Props {
 }
 
 const {class: className} = Astro.props;
-
-const navLinks = [
-  {href: "/blog", label: "Blog"},
-  {href: "/about", label: "About"},
-  {href: "/uses", label: "Uses"},
-] as const;
 ---
 
 <section class:list={["hero", className]}>
   <div class="hero-content">
     <!-- Overline Navigation -->
-    <nav class="hero-nav" aria-label="Primary navigation">
-      {navLinks.map((link) => <NavLink href={link.href}>{link.label}</NavLink>)}
-    </nav>
+    <div class="hero-header">
+      <Nav links={NAV_LINKS} aria-label="Primary navigation" />
+    </div>
 
     <!-- Wordmark (observed by scroll-header.ts via data-scroll-trigger) -->
     <h1 id="hero-wordmark" class="hero-wordmark" data-scroll-trigger>
@@ -80,11 +76,11 @@ const navLinks = [
     width: 100%;
   }
 
-  /* Overline Navigation */
-  .hero-nav {
+  /* Overline Navigation Container */
+  .hero-header {
     display: flex;
-    gap: var(--space-5);
-    align-self: flex-end;
+    justify-content: flex-end;
+    width: 100%;
     margin-bottom: var(--space-6);
   }
 

@@ -6,15 +6,11 @@
  * Contains wordmark, navigation, and theme switcher.
  */
 
-import LogoMark from "./LogoMark.astro";
-import NavLink from "./NavLink.astro";
-import ThemeSwitcher from "./ThemeSwitcher.astro";
+import {NAV_LINKS} from "../config/navigation";
 
-const navLinks = [
-  {href: "/blog", label: "Blog"},
-  {href: "/about", label: "About"},
-  {href: "/uses", label: "Uses"},
-] as const;
+import LogoMark from "./LogoMark.astro";
+import Nav from "./Nav.astro";
+import ThemeSwitcher from "./ThemeSwitcher.astro";
 ---
 
 <header
@@ -31,13 +27,7 @@ const navLinks = [
         container="page"
         onClick="scrollToTop"
       />
-      <nav class="nav" aria-label="Main navigation">
-        {
-          navLinks.map((link) => (
-            <NavLink href={link.href}>{link.label}</NavLink>
-          ))
-        }
-      </nav>
+      <Nav links={NAV_LINKS} aria-label="Main navigation" />
     </div>
     <div class="header-right">
       <ThemeSwitcher size="sm" />
@@ -84,11 +74,6 @@ const navLinks = [
     display: flex;
     align-items: center;
     gap: var(--space-6);
-  }
-
-  .nav {
-    display: flex;
-    gap: var(--space-5);
   }
 
   .header-right {
