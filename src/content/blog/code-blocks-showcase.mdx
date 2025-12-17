@@ -16,7 +16,7 @@ TypeScript provides the richest token variety with types, generics, and modern s
 // COMMENT: This line tests comment styling (italic)
 
 // KEYWORD: storage types and control flow
-import type { ReactNode } from 'react';
+import type {ReactNode} from "react";
 export default class UserService extends BaseService {
   // TYPE: class name, interface, generic parameter
   private readonly cache: Map<string, User>;
@@ -25,7 +25,7 @@ export default class UserService extends BaseService {
   // PARAMETER: typed parameters
   async fetchUser(id: string, options?: RequestOptions): Promise<User | null> {
     // VARIABLE: local variables and destructuring
-    const { timeout = 5000, retries = 3 } = options ?? {};
+    const {timeout = 5000, retries = 3} = options ?? {};
 
     // CONSTANT: language literals (null, true, false, undefined)
     if (id === null || id === undefined) {
@@ -34,7 +34,7 @@ export default class UserService extends BaseService {
 
     // STRING: template literal with ESCAPE characters
     const endpoint = `/api/users/${id}`;
-    const message = "Loading user:\t\"John\"\nLine 2\\end";
+    const message = 'Loading user:\t"John"\nLine 2\\end';
 
     // STRING-EXPRESSION: interpolation markers ${}
     console.log(`Fetching ${id} with timeout ${timeout}ms`);
@@ -48,18 +48,18 @@ export default class UserService extends BaseService {
     // OPERATOR: arithmetic, comparison, logical, ternary
     const delay = timeout * backoffMultiplier;
     const isValid = id.length > 0 && retries >= 1;
-    const result = isValid ? 'valid' : 'invalid';
+    const result = isValid ? "valid" : "invalid";
 
     // KEYWORD: typeof, instanceof, new
-    if (typeof id === 'string' && this instanceof UserService) {
-      const error = new Error('Test');
+    if (typeof id === "string" && this instanceof UserService) {
+      const error = new Error("Test");
     }
 
     // CONSTANT: variable marked as const (UPPER_CASE convention)
-    const API_VERSION = 'v2';
+    const API_VERSION = "v2";
 
     // PUNCTUATION: braces, brackets, semicolons
-    return { id, name: 'User', createdAt: new Date() };
+    return {id, name: "User", createdAt: new Date()};
   }
 }
 
@@ -87,7 +87,7 @@ JavaScript shares most tokens with TypeScript but lacks type annotations.
 // KEYWORD: var, let, const, function, class
 const CONFIG = {
   // STRING: property keys and values
-  apiUrl: 'https://api.example.com',
+  apiUrl: "https://api.example.com",
   // NUMBER: integers
   timeout: 5000,
   // CONSTANT: boolean literal
@@ -115,7 +115,7 @@ async function loadData() {
   // KEYWORD: try/catch/finally
   try {
     // VARIABLE: this keyword
-    const response = await this.fetch('/data');
+    const response = await this.fetch("/data");
     // CONSTANT: null check
     return response ?? null;
   } catch (error) {
@@ -172,8 +172,13 @@ CSS demonstrates property names, values, units, selectors, and colour tokens.
 
   /* PROPERTY-VALUE: complex values */
   box-shadow: var(--card-shadow) oklch(0 0 0 / 0.1);
-  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
-  font-family: system-ui, -apple-system, sans-serif;
+  transition:
+    transform 0.2s ease-out,
+    box-shadow 0.2s ease-out;
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
 }
 
 /* SELECTOR: pseudo-class */
@@ -1124,9 +1129,9 @@ multiple lines until a blank line separates it.
 
 **BOLD: Strong emphasis text**
 
-*ITALIC: Emphasized text*
+_ITALIC: Emphasized text_
 
-***BOLD+ITALIC: Combined emphasis***
+**_BOLD+ITALIC: Combined emphasis_**
 
 ~~STRIKETHROUGH: Deleted text~~
 
@@ -1144,6 +1149,7 @@ INLINE CODE: Use `const` for constants and `let` for variables.
 > multiple lines with the > prefix.
 
 UNORDERED LIST:
+
 - First item
 - Second item
   - Nested item
@@ -1151,6 +1157,7 @@ UNORDERED LIST:
 - Third item
 
 ORDERED LIST:
+
 1. First step
 2. Second step
 3. Third step
@@ -1162,10 +1169,11 @@ HORIZONTAL RULE:
 TABLE:
 | Header 1 | Header 2 | Header 3 |
 |----------|:--------:|---------:|
-| Left     | Center   | Right    |
-| Cell     | Cell     | Cell     |
+| Left | Center | Right |
+| Cell | Cell | Cell |
 
 TASK LIST:
+
 - [x] Completed task
 - [ ] Pending task
 - [ ] Another pending
@@ -1179,8 +1187,8 @@ Term
 : Definition of the term
 
 CODE BLOCK:
-    Indented code block
-    preserves whitespace
+Indented code block
+preserves whitespace
 
 FENCED CODE:
 \`\`\`javascript
@@ -1370,13 +1378,13 @@ Use `// [!code ++]` and `// [!code --]` to show additions and removals:
 
 ```typescript
 function formatName(name: string) {
-  return 'Hello, ' + name; // [!code --]
+  return "Hello, " + name; // [!code --]
   return `Hello, ${name}!`; // [!code ++]
 }
 
 const config = {
-  theme: 'light', // [!code --]
-  theme: 'dark', // [!code ++]
+  theme: "light", // [!code --]
+  theme: "dark", // [!code ++]
   timeout: 5000, // [!code --]
   timeout: 10000, // [!code ++]
 };
@@ -1390,9 +1398,10 @@ Use `// [!code highlight]` to emphasise specific lines:
 async function processPayment(amount: number) {
   const session = await createSession();
 
-  const payment = await stripe.charges.create({ // [!code highlight]
+  const payment = await stripe.charges.create({
+    // [!code highlight]
     amount: amount * 100, // [!code highlight]
-    currency: 'gbp', // [!code highlight]
+    currency: "gbp", // [!code highlight]
   }); // [!code highlight]
 
   await session.commit();
@@ -1411,9 +1420,10 @@ interface Config {
   database: string;
 }
 
-function createConnection(config: Config) { // [!code focus]
-  const { host, port, database } = config; // [!code focus]
-  return new Pool({ host, port, database }); // [!code focus]
+function createConnection(config: Config) {
+  // [!code focus]
+  const {host, port, database} = config; // [!code focus]
+  return new Pool({host, port, database}); // [!code focus]
 } // [!code focus]
 
 async function query<T>(sql: string): Promise<T[]> {
@@ -1430,12 +1440,14 @@ Diff and highlight can be combined:
 ```typescript
 function sum(items: number[]) {
   let total = 0; // [!code --]
-  for (const item of items) { // [!code --]
+  for (const item of items) {
+    // [!code --]
     total += item; // [!code --]
   } // [!code --]
   return total; // [!code --]
 
-  return items.reduce((sum, item) => { // [!code ++]
+  return items.reduce((sum, item) => {
+    // [!code ++]
     return sum + item; // [!code ++] [!code highlight]
   }, 0); // [!code ++]
 }

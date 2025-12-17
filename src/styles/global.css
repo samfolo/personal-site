@@ -15,24 +15,24 @@
    Design Tokens
    ========================================================================== */
 
-@import './tokens/index.css';
+@import "./tokens/index.css";
 
 /* ==========================================================================
    Tailwind CSS
    ========================================================================== */
 
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @plugin "@tailwindcss/typography";
 
-@import './prose.css';
-@import './components/shiki.css';
+@import "./prose.css";
+@import "./components/shiki.css";
 
 /* ==========================================================================
    View Transitions
    ========================================================================== */
 
-@import './transitions.css';
+@import "./transitions.css";
 
 /* ==========================================================================
    Tailwind v4 Theme Configuration
@@ -101,8 +101,8 @@
   --z-max: var(--z-max);
 
   /* Container query breakpoints */
-  --container-md: 28rem;  /* 448px */
-  --container-lg: 32rem;  /* 512px */
+  --container-md: 28rem; /* 448px */
+  --container-lg: 32rem; /* 512px */
 }
 
 /* ==========================================================================
@@ -166,7 +166,9 @@
     line-height: var(--leading-normal);
     letter-spacing: var(--tracking-body);
     color: var(--fg);
-    transition: background var(--transition-slow), color var(--transition-slow);
+    transition:
+      background var(--transition-slow),
+      color var(--transition-slow);
     background-color: var(--bg);
   }
 
@@ -180,4 +182,3 @@
     scroll-margin-top: calc(var(--header-height) + var(--space-4));
   }
 }
-

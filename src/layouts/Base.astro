@@ -6,22 +6,22 @@
  * All pages should use this layout for consistent styling.
  */
 
-import {ClientRouter} from 'astro:transitions';
+import {ClientRouter} from "astro:transitions";
 
-import FixedFooter from '../components/FixedFooter.astro';
-import FixedHeader from '../components/FixedHeader.astro';
-import JsonLd from '../components/JsonLd.astro';
-import SEO from '../components/SEO.astro';
-import ThemeSwitcher from '../components/ThemeSwitcher.astro';
-import '../styles/global.css';
-import type {Theme} from '../types';
+import FixedFooter from "../components/FixedFooter.astro";
+import FixedHeader from "../components/FixedHeader.astro";
+import JsonLd from "../components/JsonLd.astro";
+import SEO from "../components/SEO.astro";
+import ThemeSwitcher from "../components/ThemeSwitcher.astro";
+import "../styles/global.css";
+import type {Theme} from "../types";
 
 interface Props {
   title: string;
   description?: string;
   theme?: Theme;
   ogImage?: string;
-  ogType?: 'website' | 'article';
+  ogType?: "website" | "article";
   publishDate?: Date;
   updatedDate?: Date;
   tags?: string[];
@@ -30,9 +30,9 @@ interface Props {
 const {
   title,
   description,
-  theme = 'steel',
+  theme = "steel",
   ogImage,
-  ogType = 'website',
+  ogType = "website",
   publishDate,
   updatedDate,
   tags,
@@ -48,25 +48,34 @@ const {
     <link rel="apple-touch-icon" href="/sf-steel-apple-touch.png" />
     <meta name="theme-color" content="#191d21" data-theme-color />
     <script is:inline>
-      (function() {
-        const theme = localStorage.getItem('theme') || 'steel';
-        const favicon = document.querySelector('link[data-favicon]');
-        if (favicon) {favicon.href = '/sf-' + theme + '.ico';}
+      (function () {
+        const theme = localStorage.getItem("theme") || "steel";
+        const favicon = document.querySelector("link[data-favicon]");
+        if (favicon) {
+          favicon.href = "/sf-" + theme + ".ico";
+        }
       })();
     </script>
     <script is:inline>
       // Hex values from src/lib/theme.ts THEME_COLOURS.bg
-      (function() {
-        const colours = {steel: '#191d21', purple: '#1e1a24', charcoal: '#212121', teal: '#0d1f1f'};
+      (function () {
+        const colours = {
+          steel: "#191d21",
+          purple: "#1e1a24",
+          charcoal: "#212121",
+          teal: "#0d1f1f",
+        };
 
         const applyThemeColour = () => {
-          const theme = localStorage.getItem('theme') || 'steel';
-          const meta = document.querySelector('meta[data-theme-color]');
-          if (meta && colours[theme]) {meta.content = colours[theme];}
+          const theme = localStorage.getItem("theme") || "steel";
+          const meta = document.querySelector("meta[data-theme-color]");
+          if (meta && colours[theme]) {
+            meta.content = colours[theme];
+          }
         };
 
         applyThemeColour();
-        document.addEventListener('astro:after-swap', applyThemeColour);
+        document.addEventListener("astro:after-swap", applyThemeColour);
       })();
     </script>
     <meta name="generator" content={Astro.generator} />
@@ -98,14 +107,19 @@ const {
   <body class="@container/page min-h-dvh">
     <script is:inline>
       (function () {
-        const THEME_KEY = 'theme';
-        const THEME_CLASSES = ['theme-steel', 'theme-purple', 'theme-charcoal', 'theme-teal'];
+        const THEME_KEY = "theme";
+        const THEME_CLASSES = [
+          "theme-steel",
+          "theme-purple",
+          "theme-charcoal",
+          "theme-teal",
+        ];
 
         const applyStoredTheme = () => {
           const saved = localStorage.getItem(THEME_KEY);
-          if (saved && THEME_CLASSES.indexOf('theme-' + saved) !== -1) {
+          if (saved && THEME_CLASSES.indexOf("theme-" + saved) !== -1) {
             document.documentElement.classList.remove(...THEME_CLASSES);
-            document.documentElement.classList.add('theme-' + saved);
+            document.documentElement.classList.add("theme-" + saved);
           }
         };
 
@@ -113,12 +127,12 @@ const {
         applyStoredTheme();
 
         // Reapply after View Transition navigation
-        document.addEventListener('astro:after-swap', applyStoredTheme);
+        document.addEventListener("astro:after-swap", applyStoredTheme);
 
         // Preserve favicon href during View Transitions (avoid re-fetching)
-        document.addEventListener('astro:before-swap', (e) => {
-          const currentFavicon = document.querySelector('link[data-favicon]');
-          const newFavicon = e.newDocument.querySelector('link[data-favicon]');
+        document.addEventListener("astro:before-swap", (e) => {
+          const currentFavicon = document.querySelector("link[data-favicon]");
+          const newFavicon = e.newDocument.querySelector("link[data-favicon]");
           if (currentFavicon && currentFavicon.href && newFavicon) {
             newFavicon.href = currentFavicon.href;
           }
@@ -136,7 +150,7 @@ const {
     <FixedFooter />
 
     <script>
-      import '../scripts/scroll-header.ts';
+      import "../scripts/scroll-header.ts";
     </script>
   </body>
 </html>

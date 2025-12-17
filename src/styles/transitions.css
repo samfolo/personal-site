@@ -27,7 +27,8 @@
 
 ::view-transition-new(root) {
   opacity: 0;
-  animation: fade-in var(--duration-fast) var(--ease-default) var(--duration-fast) forwards;
+  animation: fade-in var(--duration-fast) var(--ease-default)
+    var(--duration-fast) forwards;
 }
 
 @keyframes fade-out {

@@ -5,12 +5,12 @@
  * Pipeline: satori-html → satori (SVG) → resvg-js (PNG)
  */
 
-import {Resvg} from '@resvg/resvg-js';
-import satori from 'satori';
+import {Resvg} from "@resvg/resvg-js";
+import satori from "satori";
 
-import {FONTS} from './fonts';
-import {createOgTemplate} from './template';
-import type {OgTemplateOptions} from './template';
+import {FONTS} from "./fonts";
+import {createOgTemplate} from "./template";
+import type {OgTemplateOptions} from "./template";
 
 const WIDTH = 1200;
 const HEIGHT = 630;
@@ -21,7 +21,9 @@ const HEIGHT = 630;
  * @param options - Template options (title, date, theme)
  * @returns PNG image as Buffer
  */
-export const generateOgImage = async (options: OgTemplateOptions): Promise<Buffer> => {
+export const generateOgImage = async (
+  options: OgTemplateOptions
+): Promise<Buffer> => {
   const template = createOgTemplate(options);
 
   const svg = await satori(template, {
@@ -33,7 +35,7 @@ export const generateOgImage = async (options: OgTemplateOptions): Promise<Buffe
   // Convert SVG to PNG using resvg-js
   const resvg = new Resvg(svg, {
     fitTo: {
-      mode: 'width',
+      mode: "width",
       value: WIDTH,
     },
   });

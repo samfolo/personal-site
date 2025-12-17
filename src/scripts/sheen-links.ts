@@ -10,10 +10,10 @@ import {
   startAnimation,
   stopAnimation,
   createState,
-} from './sheen-core';
+} from "./sheen-core";
 
-const PROSE_LINK_SELECTOR = '.prose a:not(.heading-anchor)';
-const INITIALISED_ATTR = 'data-sheen-link';
+const PROSE_LINK_SELECTOR = ".prose a:not(.heading-anchor)";
+const INITIALISED_ATTR = "data-sheen-link";
 
 // Default settings for prose links
 const LINK_INTERVAL = 20;
@@ -31,7 +31,7 @@ const initLink = (link: HTMLAnchorElement): void => {
     return;
   }
 
-  if (link.querySelector('img, svg, code')) {
+  if (link.querySelector("img, svg, code")) {
     return;
   }
 
@@ -46,9 +46,9 @@ const initLink = (link: HTMLAnchorElement): void => {
   const state = createState(chars, LINK_INTERVAL, LINK_SPREAD);
 
   linkStates.set(link, state);
-  link.setAttribute(INITIALISED_ATTR, '');
+  link.setAttribute(INITIALISED_ATTR, "");
 
-  link.addEventListener('mouseenter', () => {
+  link.addEventListener("mouseenter", () => {
     const s = linkStates.get(link);
 
     if (s) {
@@ -56,7 +56,7 @@ const initLink = (link: HTMLAnchorElement): void => {
     }
   });
 
-  link.addEventListener('mouseleave', () => {
+  link.addEventListener("mouseleave", () => {
     const s = linkStates.get(link);
 
     if (s) {
@@ -69,10 +69,11 @@ const initLink = (link: HTMLAnchorElement): void => {
  * Initialise all prose links
  */
 const init = (): void => {
-  const links = document.querySelectorAll<HTMLAnchorElement>(PROSE_LINK_SELECTOR);
+  const links =
+    document.querySelectorAll<HTMLAnchorElement>(PROSE_LINK_SELECTOR);
   links.forEach(initLink);
 };
 
 // Initialise on load and after Astro page transitions
 init();
-document.addEventListener('astro:after-swap', init);
+document.addEventListener("astro:after-swap", init);

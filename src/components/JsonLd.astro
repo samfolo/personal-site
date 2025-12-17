@@ -7,7 +7,7 @@
  * - Article schema for blog posts
  */
 
-import {SITE} from '../config';
+import {SITE} from "../config";
 
 interface ArticleData {
   headline: string;
@@ -18,7 +18,7 @@ interface ArticleData {
 }
 
 interface Props {
-  type: 'WebSite' | 'Article';
+  type: "WebSite" | "Article";
   article?: ArticleData;
 }
 
@@ -28,7 +28,7 @@ const {type, article} = Astro.props;
 const articleUrl = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
 
 const author = {
-  '@type': 'Person',
+  "@type": "Person",
   name: SITE.author.name,
   url: SITE.url,
   jobTitle: SITE.author.jobTitle,
@@ -36,26 +36,28 @@ const author = {
 };
 
 const schema =
-  type === 'Article' && article
+  type === "Article" && article
     ? {
-      '@context': 'https://schema.org',
-      '@type': 'Article',
-      headline: article.headline,
-      description: article.description,
-      url: articleUrl,
-      datePublished: article.publishDate.toISOString(),
-      dateModified: (article.updatedDate ?? article.publishDate).toISOString(),
-      author,
-      keywords: article.tags?.join(', '),
-    }
+        "@context": "https://schema.org",
+        "@type": "Article",
+        headline: article.headline,
+        description: article.description,
+        url: articleUrl,
+        datePublished: article.publishDate.toISOString(),
+        dateModified: (
+          article.updatedDate ?? article.publishDate
+        ).toISOString(),
+        author,
+        keywords: article.tags?.join(", "),
+      }
     : {
-      '@context': 'https://schema.org',
-      '@type': 'WebSite',
-      name: SITE.name,
-      url: SITE.url,
-      description: SITE.description,
-      author,
-    };
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        name: SITE.name,
+        url: SITE.url,
+        description: SITE.description,
+        author,
+      };
 ---
 
 <script type="application/ld+json" set:html={JSON.stringify(schema)} />

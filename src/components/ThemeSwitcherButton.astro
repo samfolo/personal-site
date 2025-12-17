@@ -6,11 +6,11 @@
  * Used by ThemeSwitcher for both desktop buttons and mobile toggle.
  */
 
-import type {Theme} from '../types';
+import type {Theme} from "../types";
 
 interface Props {
   /** Button size: sm (24px) or md (32px) */
-  size?: 'sm' | 'md';
+  size?: "sm" | "md";
   /** Theme to preview. If omitted, shows current theme colours. */
   theme?: Theme;
   /** Whether outline is always visible (not just on focus) */
@@ -21,23 +21,25 @@ interface Props {
   class?: string;
 }
 
-const {size = 'md', theme, isActive = false, label, class: className} = Astro.props;
+const {
+  size = "md",
+  theme,
+  isActive = false,
+  label,
+  class: className,
+} = Astro.props;
 
-const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
+const buttonSize = size === "sm" ? "1.5rem" : "2rem";
 ---
 
 <button
   type="button"
-  class:list={[
-    'theme-switcher-button',
-    theme && `theme-${theme}`,
-    className,
-  ]}
+  class:list={["theme-switcher-button", theme && `theme-${theme}`, className]}
   data-theme={theme}
   data-active={isActive}
   aria-label={label}
 >
-  <span class="theme-switcher-button-visual" />
+  <span class="theme-switcher-button-visual"></span>
 </button>
 
 <style define:vars={{buttonSize}}>
@@ -72,7 +74,7 @@ const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
     outline: var(--outline-width) solid var(--fg);
   }
 
-  .theme-switcher-button[data-active='true'] {
+  .theme-switcher-button[data-active="true"] {
     outline: var(--outline-width) solid var(--fg);
   }
 

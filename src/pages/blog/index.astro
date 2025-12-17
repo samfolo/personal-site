@@ -6,13 +6,15 @@
  * Uses BlogList component with content collection data.
  */
 
-import {getCollection} from 'astro:content';
+import {getCollection} from "astro:content";
 
-import BlogList from '../../components/BlogList.astro';
-import Base from '../../layouts/Base.astro';
+import BlogList from "../../components/BlogList.astro";
+import Base from "../../layouts/Base.astro";
 
 // Fetch all non-draft posts (or all posts in development)
-const allPosts = await getCollection('blog', ({data}) => import.meta.env.PROD ? !data.draft : true);
+const allPosts = await getCollection("blog", ({data}) =>
+  import.meta.env.PROD ? !data.draft : true
+);
 
 // Sort by publish date (newest first) and map to BlogList format
 const posts = allPosts
@@ -24,7 +26,10 @@ const posts = allPosts
   }));
 ---
 
-<Base title="Blog | Sam Folorunsho" description="Writing about AI agents, creative coding, and software engineering.">
+<Base
+  title="Blog | Sam Folorunsho"
+  description="Writing about AI agents, creative coding, and software engineering."
+>
   <main class="blog-index">
     <header class="blog-header">
       <h1 class="blog-title">Blog</h1>
@@ -40,7 +45,8 @@ const posts = allPosts
   .blog-index {
     max-width: var(--container-max);
     margin: 0 auto;
-    padding: calc(var(--header-height) + var(--space-8)) var(--container-px) var(--space-9);
+    padding: calc(var(--header-height) + var(--space-8)) var(--container-px)
+      var(--space-9);
   }
 
   .blog-header {

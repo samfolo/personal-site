@@ -15,12 +15,14 @@ npm run preview   # Preview production build locally
 This is an Astro 5 personal site using server-side rendering (SSR) with the Node.js adapter.
 
 **Key Configuration:**
+
 - Output mode: `server` (SSR via `@astrojs/node` in standalone mode)
 - Styling: Tailwind CSS v4 via Vite plugin
 - Content: MDX integration enabled
 - TypeScript: Strict mode extending `astro/tsconfigs/strict`
 
 **Project Structure:**
+
 - `src/pages/` - Astro pages (file-based routing)
 - `src/styles/global.css` - Global styles with Tailwind import
 - `scripts/` - gcloud utility scripts for Cloud Run management
@@ -33,6 +35,7 @@ The site deploys to Google Cloud Run via GitHub Actions (`.github/workflows/depl
 - **Preview**: Pushes to any other branch create tagged preview deployments (no traffic routing)
 
 **Useful Scripts:**
+
 - `scripts/cleanup-previews.sh` - Remove preview traffic tags
 - `scripts/url.sh`, `scripts/logs.sh`, `scripts/revisions.sh` - Cloud Run utilities
 

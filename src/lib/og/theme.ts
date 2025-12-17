@@ -4,19 +4,19 @@
  * Deterministically selects a theme based on title hash.
  */
 
-import type {Theme} from '../../types';
+import type {Theme} from "../../types";
 
-export const THEMES: Theme[] = ['steel', 'purple', 'charcoal', 'teal'];
+export const THEMES: Theme[] = ["steel", "purple", "charcoal", "teal"];
 
 /**
  * Theme labels for OG images.
  * Uppercase descriptive names shown below the date divider.
  */
 export const THEME_LABELS: Record<Theme, string> = {
-  steel: 'STEEL GREY + WARM CREAM',
-  purple: 'DARK PURPLE + GOLD',
-  charcoal: 'WARM CHARCOAL + OFF-WHITE',
-  teal: 'DARK TEAL + CORAL',
+  steel: "STEEL GREY + WARM CREAM",
+  purple: "DARK PURPLE + GOLD",
+  charcoal: "WARM CHARCOAL + OFF-WHITE",
+  teal: "DARK TEAL + CORAL",
 };
 
 /**

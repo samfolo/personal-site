@@ -7,14 +7,19 @@
  */
 
 const themeLabels: Record<string, string> = {
-  steel: 'STEEL GREY + WARM CREAM',
-  purple: 'DARK PURPLE + GOLD',
-  charcoal: 'WARM CHARCOAL + OFF-WHITE',
-  teal: 'DARK TEAL + CORAL',
+  steel: "STEEL GREY + WARM CREAM",
+  purple: "DARK PURPLE + GOLD",
+  charcoal: "WARM CHARCOAL + OFF-WHITE",
+  teal: "DARK TEAL + CORAL",
 };
 ---
 
-<footer id="fixed-footer" class="fixed-footer" transition:persist transition:name="footer">
+<footer
+  id="fixed-footer"
+  class="fixed-footer"
+  transition:persist
+  transition:name="footer"
+>
   <div class="footer-inner">
     <span id="theme-name" class="theme-name">STEEL GREY + WARM CREAM</span>
   </div>
@@ -31,7 +36,9 @@ const themeLabels: Record<string, string> = {
     left: 0;
     right: 0;
     z-index: var(--z-sticky);
-    transition: background var(--transition-slow), color var(--transition-slow);
+    transition:
+      background var(--transition-slow),
+      color var(--transition-slow);
     background: linear-gradient(
       in oklab to top,
       var(--bg) 0%,
@@ -72,16 +79,16 @@ const themeLabels: Record<string, string> = {
 
   const getThemeLabel = (): string => {
     for (const cls of document.documentElement.classList) {
-      if (cls.startsWith('theme-')) {
-        const themeId = cls.replace('theme-', '');
-        return window.__themeLabels[themeId] || 'STEEL GREY + WARM CREAM';
+      if (cls.startsWith("theme-")) {
+        const themeId = cls.replace("theme-", "");
+        return window.__themeLabels[themeId] || "STEEL GREY + WARM CREAM";
       }
     }
-    return 'STEEL GREY + WARM CREAM';
+    return "STEEL GREY + WARM CREAM";
   };
 
   const updateThemeName = (): void => {
-    const themeNameEl = document.getElementById('theme-name');
+    const themeNameEl = document.getElementById("theme-name");
     if (themeNameEl) {
       themeNameEl.textContent = getThemeLabel();
     }
@@ -91,7 +98,7 @@ const themeLabels: Record<string, string> = {
   const observeThemeChanges = (): void => {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
-        if (mutation.attributeName === 'class') {
+        if (mutation.attributeName === "class") {
           updateThemeName();
         }
       });
@@ -99,7 +106,7 @@ const themeLabels: Record<string, string> = {
 
     observer.observe(document.documentElement, {
       attributes: true,
-      attributeFilter: ['class'],
+      attributeFilter: ["class"],
     });
   };
 
@@ -109,5 +116,5 @@ const themeLabels: Record<string, string> = {
   };
 
   init();
-  document.addEventListener('astro:after-swap', init);
+  document.addEventListener("astro:after-swap", init);
 </script>

@@ -2,10 +2,7 @@
   "browser": {
     "launchOptions": {
       "headless": false,
-      "args": [
-        "--ozone-platform=x11",
-        "--disable-features=UseOzonePlatform"
-      ]
+      "args": ["--ozone-platform=x11", "--disable-features=UseOzonePlatform"]
     }
   }
 }

@@ -13,34 +13,37 @@ export interface SheenState {
   frame: number;
 }
 
-export const CHAR_CLASS = 'sheen-char';
-export const WORD_CLASS = 'sheen-word';
+export const CHAR_CLASS = "sheen-char";
+export const WORD_CLASS = "sheen-word";
 
 /**
  * Split text into individual character spans, grouped by words to prevent mid-word breaks
  */
-export const splitIntoChars = (element: HTMLElement, text: string): HTMLSpanElement[] => {
+export const splitIntoChars = (
+  element: HTMLElement,
+  text: string
+): HTMLSpanElement[] => {
   const chars: HTMLSpanElement[] = [];
-  element.innerHTML = '';
+  element.innerHTML = "";
 
   // Split by spaces, keeping track of words and spaces
   const words = text.split(/( )/);
 
   for (const word of words) {
-    if (word === ' ') {
+    if (word === " ") {
       // Spaces between words
-      const spaceSpan = document.createElement('span');
+      const spaceSpan = document.createElement("span");
       spaceSpan.className = CHAR_CLASS;
-      spaceSpan.innerHTML = '&nbsp;';
+      spaceSpan.innerHTML = "&nbsp;";
       element.appendChild(spaceSpan);
       chars.push(spaceSpan);
     } else if (word.length > 0) {
       // Wrap each word in a container to prevent mid-word breaks
-      const wordSpan = document.createElement('span');
+      const wordSpan = document.createElement("span");
       wordSpan.className = WORD_CLASS;
 
       for (const char of word) {
-        const charSpan = document.createElement('span');
+        const charSpan = document.createElement("span");
         charSpan.className = CHAR_CLASS;
         charSpan.textContent = char;
         wordSpan.appendChild(charSpan);
@@ -59,7 +62,7 @@ export const splitIntoChars = (element: HTMLElement, text: string): HTMLSpanElem
  */
 export const resetStyles = (chars: HTMLSpanElement[]): void => {
   for (const char of chars) {
-    char.style.color = '';
+    char.style.color = "";
   }
 };
 
@@ -67,20 +70,25 @@ export const resetStyles = (chars: HTMLSpanElement[]): void => {
  * Apply sheen colours at the current frame position
  * Creates a gradient from centre (100% highlight) to edges
  */
-export const applyFrame = (chars: HTMLSpanElement[], frame: number, spread: number): void => {
+export const applyFrame = (
+  chars: HTMLSpanElement[],
+  frame: number,
+  spread: number
+): void => {
   for (let i = 0; i < chars.length; i++) {
     const distance = Math.abs(i - frame);
 
     if (distance === 0) {
       // Centre character: full highlight
-      chars[i].style.color = 'var(--highlight)';
+      chars[i].style.color = "var(--highlight)";
     } else if (distance <= spread) {
       // Gradient falloff based on distance
       const intensity = 100 - (distance - 1) * (20 / spread);
-      chars[i].style.color = `color-mix(in srgb, var(--highlight) ${Math.round(intensity)}%, var(--fg))`;
+      chars[i].style.color =
+        `color-mix(in srgb, var(--highlight) ${Math.round(intensity)}%, var(--fg))`;
     } else {
       // All other characters: default
-      chars[i].style.color = '';
+      chars[i].style.color = "";
     }
   }
 };

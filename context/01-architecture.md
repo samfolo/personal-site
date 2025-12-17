@@ -6,19 +6,20 @@ This is an Astro 5 personal site using server-side rendering (SSR) with the Node
 
 ## Technology Stack
 
-| Layer | Technology | Version |
-|-------|------------|---------|
-| Framework | Astro | 5.x |
-| Rendering | SSR (Node.js adapter) | Standalone mode |
-| Styling | Tailwind CSS | 4.x (via Vite plugin) |
-| Content | MDX | Via @astrojs/mdx |
-| Syntax Highlighting | Shiki | Built into Astro |
-| Animation | p5.js | 2.x |
-| Deployment | Docker + Cloud Run | Node 22 Alpine |
+| Layer               | Technology            | Version               |
+| ------------------- | --------------------- | --------------------- |
+| Framework           | Astro                 | 5.x                   |
+| Rendering           | SSR (Node.js adapter) | Standalone mode       |
+| Styling             | Tailwind CSS          | 4.x (via Vite plugin) |
+| Content             | MDX                   | Via @astrojs/mdx      |
+| Syntax Highlighting | Shiki                 | Built into Astro      |
+| Animation           | p5.js                 | 2.x                   |
+| Deployment          | Docker + Cloud Run    | Node 22 Alpine        |
 
 ## Key Configuration Files
 
 ### `astro.config.mjs`
+
 - Site URL: `https://samfolorunsho.com`
 - Output mode: `server` (SSR)
 - Trailing slashes: disabled
@@ -27,10 +28,12 @@ This is an Astro 5 personal site using server-side rendering (SSR) with the Node
 - Shiki theme: Custom CSS variables theme (`src/lib/shiki-theme.ts`)
 
 ### `tsconfig.json`
+
 - Extends `astro/tsconfigs/strict`
 - Strict TypeScript mode enabled
 
 ### `package.json`
+
 - Type: ESM (`"type": "module"`)
 - Scripts: `dev`, `build`, `preview`
 
@@ -65,38 +68,41 @@ personal-site/
 ## Configuration Central (`src/config.ts`)
 
 Site-wide constants are centralised:
+
 ```typescript
 export const SITE = {
-  name: 'Sam Folorunsho',
-  url: 'https://samfolorunsho.com',
-  description: '...',
-  locale: 'en-GB',
-  ogLocale: 'en_GB',
+  name: "Sam Folorunsho",
+  url: "https://samfolorunsho.com",
+  description: "...",
+  locale: "en-GB",
+  ogLocale: "en_GB",
   author: {
-    name: 'Sam Folorunsho',
-    jobTitle: 'Software Engineer',
-    github: 'https://github.com/samfolo',
-    linkedin: 'https://www.linkedin.com/in/sam-folorunsho',
+    name: "Sam Folorunsho",
+    jobTitle: "Software Engineer",
+    github: "https://github.com/samfolo",
+    linkedin: "https://www.linkedin.com/in/sam-folorunsho",
   },
 };
 ```
 
 ## File-Based Routing
 
-| Route | Page | Description |
-|-------|------|-------------|
-| `/` | `src/pages/index.astro` | Home with Hero and blog list |
-| `/blog` | `src/pages/blog/index.astro` | Blog index |
-| `/blog/[slug]` | `src/pages/blog/[slug].astro` | Individual posts (SSR) |
-| `/about` | `src/pages/about.astro` | About page |
-| `/uses` | `src/pages/uses.astro` | Uses page |
-| `/rss.xml` | `src/pages/rss.xml.ts` | RSS feed |
-| `/sitemap.xml` | `src/pages/sitemap.xml.ts` | XML sitemap |
+| Route          | Page                          | Description                  |
+| -------------- | ----------------------------- | ---------------------------- |
+| `/`            | `src/pages/index.astro`       | Home with Hero and blog list |
+| `/blog`        | `src/pages/blog/index.astro`  | Blog index                   |
+| `/blog/[slug]` | `src/pages/blog/[slug].astro` | Individual posts (SSR)       |
+| `/about`       | `src/pages/about.astro`       | About page                   |
+| `/uses`        | `src/pages/uses.astro`        | Uses page                    |
+| `/rss.xml`     | `src/pages/rss.xml.ts`        | RSS feed                     |
+| `/sitemap.xml` | `src/pages/sitemap.xml.ts`    | XML sitemap                  |
 
 ## Layouts
 
 ### `Base.astro`
+
 The root layout providing:
+
 - HTML document structure
 - SEO component injection
 - JSON-LD structured data
@@ -107,7 +113,9 @@ The root layout providing:
 - Theme persistence via localStorage
 
 ### `Post.astro`
+
 Blog post layout extending Base with:
+
 - Article JSON-LD schema
 - Post header (title, date, tags)
 - Reading time
@@ -117,11 +125,13 @@ Blog post layout extending Base with:
 ## View Transitions
 
 Astro's View Transitions API is enabled via `ClientRouter`. All client scripts that modify DOM need to reinitialise after transitions using:
+
 ```typescript
-document.addEventListener('astro:after-swap', init);
+document.addEventListener("astro:after-swap", init);
 ```
 
 This pattern is used by:
+
 - `scroll-header.ts`
 - `sheen.ts` and related
 - `boids.ts`
@@ -131,6 +141,7 @@ This pattern is used by:
 ## Build Output
 
 The build produces a standalone Node.js server:
+
 ```
 dist/
 ├── server/

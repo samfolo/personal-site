@@ -24,9 +24,9 @@ const isExactMatch = pathname === href;
 
 <a
   href={href}
-  class:list={['nav-link', {active: isActive}, className]}
-  aria-current={isActive ? 'page' : undefined}
-  data-nav-exact={isExactMatch ? 'true' : undefined}
+  class:list={["nav-link", {active: isActive}, className]}
+  aria-current={isActive ? "page" : undefined}
+  data-nav-exact={isExactMatch ? "true" : undefined}
 >
   <slot />
 </a>
@@ -39,54 +39,60 @@ const isExactMatch = pathname === href;
   const syncNavLinkStates = (): void => {
     const pathname = window.location.pathname;
 
-    document.querySelectorAll<HTMLAnchorElement>('a.nav-link').forEach((link) => {
-      const href = link.getAttribute('href');
-      if (!href) {return;}
+    document
+      .querySelectorAll<HTMLAnchorElement>("a.nav-link")
+      .forEach((link) => {
+        const href = link.getAttribute("href");
+        if (!href) {
+          return;
+        }
 
-      // Check for active state (exact match or nested route)
-      const isActive = pathname === href || pathname.startsWith(`${href}/`);
-      // Check for exact match (used for preventing refetch)
-      const isExactMatch = pathname === href;
+        // Check for active state (exact match or nested route)
+        const isActive = pathname === href || pathname.startsWith(`${href}/`);
+        // Check for exact match (used for preventing refetch)
+        const isExactMatch = pathname === href;
 
-      // Update classes and attributes
-      link.classList.toggle('active', isActive);
-      if (isActive) {
-        link.setAttribute('aria-current', 'page');
-      } else {
-        link.removeAttribute('aria-current');
-      }
+        // Update classes and attributes
+        link.classList.toggle("active", isActive);
+        if (isActive) {
+          link.setAttribute("aria-current", "page");
+        } else {
+          link.removeAttribute("aria-current");
+        }
 
-      if (isExactMatch) {
-        link.setAttribute('data-nav-exact', 'true');
-      } else {
-        link.removeAttribute('data-nav-exact');
-      }
-    });
+        if (isExactMatch) {
+          link.setAttribute("data-nav-exact", "true");
+        } else {
+          link.removeAttribute("data-nav-exact");
+        }
+      });
   };
 
   /**
    * Prevent navigation when clicking on exact match links
    */
   const initActiveLinks = (): void => {
-    document.querySelectorAll<HTMLAnchorElement>('a.nav-link').forEach((link) => {
-      // Remove existing listeners by cloning (prevents duplicates on re-init)
-      const newLink = link.cloneNode(true) as HTMLAnchorElement;
-      link.parentNode?.replaceChild(newLink, link);
+    document
+      .querySelectorAll<HTMLAnchorElement>("a.nav-link")
+      .forEach((link) => {
+        // Remove existing listeners by cloning (prevents duplicates on re-init)
+        const newLink = link.cloneNode(true) as HTMLAnchorElement;
+        link.parentNode?.replaceChild(newLink, link);
 
-      newLink.addEventListener('click', (e) => {
-        if (newLink.getAttribute('data-nav-exact') === 'true') {
-          e.preventDefault();
-        }
+        newLink.addEventListener("click", (e) => {
+          if (newLink.getAttribute("data-nav-exact") === "true") {
+            e.preventDefault();
+          }
+        });
       });
-    });
-  }
+  };
 
   // Initial setup
   syncNavLinkStates();
   initActiveLinks();
 
   // Re-sync after Astro view transitions
-  document.addEventListener('astro:after-swap', () => {
+  document.addEventListener("astro:after-swap", () => {
     syncNavLinkStates();
     initActiveLinks();
   });
@@ -111,7 +117,7 @@ const isExactMatch = pathname === href;
   }
 
   .nav-link.active,
-  .nav-link[aria-current='page'] {
+  .nav-link[aria-current="page"] {
     color: var(--fg);
   }
 

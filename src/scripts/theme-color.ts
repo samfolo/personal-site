@@ -5,7 +5,7 @@
  * Controls Safari's browser chrome colour.
  */
 
-import {THEME_COLOURS} from '../lib/theme';
+import {THEME_COLOURS} from "../lib/theme";
 
 export const setThemeColor = (theme: string): void => {
   const colours = THEME_COLOURS[theme as keyof typeof THEME_COLOURS];
@@ -14,7 +14,9 @@ export const setThemeColor = (theme: string): void => {
     return;
   }
 
-  const meta = document.querySelector<HTMLMetaElement>('meta[data-theme-color]');
+  const meta = document.querySelector<HTMLMetaElement>(
+    "meta[data-theme-color]"
+  );
 
   if (meta) {
     meta.content = colours.bg;

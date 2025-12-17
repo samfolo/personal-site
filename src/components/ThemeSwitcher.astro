@@ -6,33 +6,42 @@
  * Persists selection to localStorage and updates body class.
  */
 
-import ThemeSwitcherButton, {type ThemeId} from './ThemeSwitcherButton.astro';
+import type {Theme} from "../types";
+
+import ThemeSwitcherButton from "./ThemeSwitcherButton.astro";
 
 interface Props {
-  size?: 'sm' | 'md';
+  size?: "sm" | "md";
 }
 
-const {size = 'md'} = Astro.props;
+interface ThemeOption {
+  id: Theme;
+  label: string;
+}
 
-const themes: Array<{ id: ThemeId; label: string }> = [
-  {id: 'steel', label: 'Steel grey + warm cream'},
-  {id: 'purple', label: 'Dark purple + gold'},
-  {id: 'charcoal', label: 'Warm charcoal + off-white'},
-  {id: 'teal', label: 'Dark teal + coral'},
+const {size = "md"} = Astro.props;
+
+const themes: ThemeOption[] = [
+  {id: "steel", label: "Steel grey + warm cream"},
+  {id: "purple", label: "Dark purple + gold"},
+  {id: "charcoal", label: "Warm charcoal + off-white"},
+  {id: "teal", label: "Dark teal + coral"},
 ];
 ---
 
 <div class="theme-switcher" data-size={size}>
   {/* Desktop: four-button switcher */}
   <div class="theme-switcher-desktop gap-2">
-    {themes.map((theme) => (
-      <ThemeSwitcherButton
-        size={size}
-        theme={theme.id}
-        label={theme.label}
-        class="theme-button"
-      />
-    ))}
+    {
+      themes.map((theme) => (
+        <ThemeSwitcherButton
+          size={size}
+          theme={theme.id}
+          label={theme.label}
+          class="theme-button"
+        />
+      ))
+    }
   </div>
 
   {/* Mobile: single cycle button (shows current theme) */}
@@ -77,15 +86,15 @@ const themes: Array<{ id: ThemeId; label: string }> = [
 </style>
 
 <script>
-  import {setFavicon} from '../scripts/favicon';
-  import {setThemeColor} from '../scripts/theme-color';
+  import {setFavicon} from "../scripts/favicon";
+  import {setThemeColor} from "../scripts/theme-color";
 
-  const THEME_KEY = 'theme';
+  const THEME_KEY = "theme";
   const THEME_LABELS: Record<string, string> = {
-    steel: 'Steel grey + warm cream',
-    purple: 'Dark purple + gold',
-    charcoal: 'Warm charcoal + off-white',
-    teal: 'Dark teal + coral',
+    steel: "Steel grey + warm cream",
+    purple: "Dark purple + gold",
+    charcoal: "Warm charcoal + off-white",
+    teal: "Dark teal + coral",
   };
   const THEME_ORDER = Object.keys(THEME_LABELS);
   const THEME_CLASSES = THEME_ORDER.map((id) => `theme-${id}`);
@@ -107,25 +116,28 @@ const themes: Array<{ id: ThemeId; label: string }> = [
   };
 
   const updateActiveStates = (activeTheme: string): void => {
-    document.querySelectorAll('.theme-button').forEach((button) => {
-      const isActive = button.getAttribute('data-theme') === activeTheme;
-      button.setAttribute('data-active', String(isActive));
+    document.querySelectorAll(".theme-button").forEach((button) => {
+      const isActive = button.getAttribute("data-theme") === activeTheme;
+      button.setAttribute("data-active", String(isActive));
     });
 
     // Update mobile toggle aria-label
     const label = THEME_LABELS[activeTheme] ?? activeTheme;
-    document.querySelectorAll('.theme-toggle-mobile').forEach((button) => {
-      button.setAttribute('aria-label', `Cycle colour theme, currently ${label}`);
+    document.querySelectorAll(".theme-toggle-mobile").forEach((button) => {
+      button.setAttribute(
+        "aria-label",
+        `Cycle colour theme, currently ${label}`
+      );
     });
   };
 
   const getCurrentTheme = (): string => {
     for (const cls of document.documentElement.classList) {
-      if (cls.startsWith('theme-')) {
-        return cls.replace('theme-', '');
+      if (cls.startsWith("theme-")) {
+        return cls.replace("theme-", "");
       }
     }
-    return 'steel';
+    return "steel";
   };
 
   const init = (): void => {
@@ -133,9 +145,9 @@ const themes: Array<{ id: ThemeId; label: string }> = [
     updateActiveStates(currentTheme);
 
     // Desktop: individual theme buttons
-    document.querySelectorAll('.theme-button').forEach((button) => {
-      button.addEventListener('click', () => {
-        const themeId = button.getAttribute('data-theme');
+    document.querySelectorAll(".theme-button").forEach((button) => {
+      button.addEventListener("click", () => {
+        const themeId = button.getAttribute("data-theme");
         if (themeId) {
           setTheme(themeId);
         }
@@ -143,12 +155,12 @@ const themes: Array<{ id: ThemeId; label: string }> = [
     });
 
     // Mobile: cycle toggle button
-    document.querySelectorAll('.theme-toggle-mobile').forEach((button) => {
-      button.addEventListener('click', cycleTheme);
+    document.querySelectorAll(".theme-toggle-mobile").forEach((button) => {
+      button.addEventListener("click", cycleTheme);
     });
   };
 
   // Initialise on DOM ready and after Astro page transitions
   init();
-  document.addEventListener('astro:after-swap', init);
+  document.addEventListener("astro:after-swap", init);
 </script>

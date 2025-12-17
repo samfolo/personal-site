@@ -10,9 +10,9 @@ const WORDS_PER_MINUTE = 200;
 export const calculateReadingTime = (content: string): string => {
   // Remove MDX/JSX components and code blocks
   const textContent = content
-    .replace(/<[^>]*>/g, '')
-    .replace(/```[\s\S]*?```/g, '')
-    .replace(/`[^`]*`/g, '');
+    .replace(/<[^>]*>/g, "")
+    .replace(/```[\s\S]*?```/g, "")
+    .replace(/`[^`]*`/g, "");
 
   const wordCount = textContent.trim().split(/\s+/).length;
   const minutes = Math.ceil(wordCount / WORDS_PER_MINUTE);

@@ -8,20 +8,20 @@
  * These are mapped to --shiki-* in src/styles/components/shiki.css
  */
 
-import type {ThemeRegistration} from 'shiki';
+import type {ThemeRegistration} from "shiki";
 
 export const customCssVariablesTheme: ThemeRegistration = {
-  name: 'custom-css-variables',
-  type: 'dark',
+  name: "custom-css-variables",
+  type: "dark",
   colors: {
-    'editor.background': 'var(--astro-code-background)',
-    'editor.foreground': 'var(--astro-code-foreground)',
+    "editor.background": "var(--astro-code-background)",
+    "editor.foreground": "var(--astro-code-foreground)",
   },
   settings: [
     // Base foreground
     {
       settings: {
-        foreground: 'var(--astro-code-foreground)',
+        foreground: "var(--astro-code-foreground)",
       },
     },
 
@@ -29,9 +29,9 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // Comments
     // ==========================================================================
     {
-      scope: ['comment', 'punctuation.definition.comment'],
+      scope: ["comment", "punctuation.definition.comment"],
       settings: {
-        foreground: 'var(--astro-code-token-comment)',
+        foreground: "var(--astro-code-token-comment)",
       },
     },
 
@@ -39,31 +39,36 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // Strings
     // ==========================================================================
     {
-      scope: ['string', 'string.quoted', 'string.template', 'markup.inline.raw'],
+      scope: [
+        "string",
+        "string.quoted",
+        "string.template",
+        "markup.inline.raw",
+      ],
       settings: {
-        foreground: 'var(--astro-code-token-string)',
+        foreground: "var(--astro-code-token-string)",
       },
     },
     {
-      scope: ['string.regexp', 'constant.other.character-class.regexp'],
+      scope: ["string.regexp", "constant.other.character-class.regexp"],
       settings: {
-        foreground: 'var(--astro-code-token-regexp)',
+        foreground: "var(--astro-code-token-regexp)",
       },
     },
     {
-      scope: ['constant.character.escape', 'string.escape'],
+      scope: ["constant.character.escape", "string.escape"],
       settings: {
-        foreground: 'var(--astro-code-token-escape)',
+        foreground: "var(--astro-code-token-escape)",
       },
     },
     // Template expression interpolation ${...}
     {
       scope: [
-        'punctuation.definition.template-expression',
-        'punctuation.section.embedded',
+        "punctuation.definition.template-expression",
+        "punctuation.section.embedded",
       ],
       settings: {
-        foreground: 'var(--astro-code-token-string-expression)',
+        foreground: "var(--astro-code-token-string-expression)",
       },
     },
 
@@ -72,28 +77,28 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // ==========================================================================
     {
       scope: [
-        'constant.numeric',
-        'constant.numeric.integer',
-        'constant.numeric.float',
-        'constant.numeric.hex',
-        'constant.numeric.binary',
-        'constant.numeric.octal',
-        'storage.type.numeric',
-        'storage.type.number',
-        'storage.type.number.python',
-        'storage.type.imaginary',
-        'storage.type.imaginary.number',
-        'storage.type.imaginary.number.python',
-        'keyword.other.unit.imaginary',
+        "constant.numeric",
+        "constant.numeric.integer",
+        "constant.numeric.float",
+        "constant.numeric.hex",
+        "constant.numeric.binary",
+        "constant.numeric.octal",
+        "storage.type.numeric",
+        "storage.type.number",
+        "storage.type.number.python",
+        "storage.type.imaginary",
+        "storage.type.imaginary.number",
+        "storage.type.imaginary.number.python",
+        "keyword.other.unit.imaginary",
       ],
       settings: {
-        foreground: 'var(--astro-code-token-number)',
+        foreground: "var(--astro-code-token-number)",
       },
     },
     {
-      scope: ['keyword.other.unit', 'constant.other.unit'],
+      scope: ["keyword.other.unit", "constant.other.unit"],
       settings: {
-        foreground: 'var(--astro-code-token-unit)',
+        foreground: "var(--astro-code-token-unit)",
       },
     },
 
@@ -102,16 +107,16 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // ==========================================================================
     {
       scope: [
-        'constant.language',
-        'constant.language.boolean',
-        'constant.language.null',
-        'constant.language.undefined',
-        'support.constant',
-        'support.constant.json',
-        'variable.other.constant',
+        "constant.language",
+        "constant.language.boolean",
+        "constant.language.null",
+        "constant.language.undefined",
+        "support.constant",
+        "support.constant.json",
+        "variable.other.constant",
       ],
       settings: {
-        foreground: 'var(--astro-code-token-constant)',
+        foreground: "var(--astro-code-token-constant)",
       },
     },
 
@@ -120,18 +125,18 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // ==========================================================================
     {
       scope: [
-        'keyword',
-        'keyword.control',
-        'keyword.operator.new',
-        'keyword.operator.expression',
-        'keyword.operator.instanceof',
-        'keyword.operator.typeof',
-        'storage',
-        'storage.type',
-        'storage.modifier',
+        "keyword",
+        "keyword.control",
+        "keyword.operator.new",
+        "keyword.operator.expression",
+        "keyword.operator.instanceof",
+        "keyword.operator.typeof",
+        "storage",
+        "storage.type",
+        "storage.modifier",
       ],
       settings: {
-        foreground: 'var(--astro-code-token-keyword)',
+        foreground: "var(--astro-code-token-keyword)",
       },
     },
 
@@ -139,12 +144,9 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // Numeric Type Indicators (must come after keywords to override storage.type)
     // ==========================================================================
     {
-      scope: [
-        'storage.type.number',
-        'storage.type.imaginary',
-      ],
+      scope: ["storage.type.number", "storage.type.imaginary"],
       settings: {
-        foreground: 'var(--astro-code-token-number)',
+        foreground: "var(--astro-code-token-number)",
       },
     },
 
@@ -153,16 +155,16 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // ==========================================================================
     {
       scope: [
-        'keyword.operator',
-        'keyword.operator.assignment',
-        'keyword.operator.arithmetic',
-        'keyword.operator.logical',
-        'keyword.operator.comparison',
-        'keyword.operator.ternary',
-        'punctuation.separator.key-value',
+        "keyword.operator",
+        "keyword.operator.assignment",
+        "keyword.operator.arithmetic",
+        "keyword.operator.logical",
+        "keyword.operator.comparison",
+        "keyword.operator.ternary",
+        "punctuation.separator.key-value",
       ],
       settings: {
-        foreground: 'var(--astro-code-token-operator)',
+        foreground: "var(--astro-code-token-operator)",
       },
     },
 
@@ -171,13 +173,13 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // ==========================================================================
     {
       scope: [
-        'entity.name.function',
-        'support.function',
-        'meta.function-call',
-        'variable.function',
+        "entity.name.function",
+        "support.function",
+        "meta.function-call",
+        "variable.function",
       ],
       settings: {
-        foreground: 'var(--astro-code-token-function)',
+        foreground: "var(--astro-code-token-function)",
       },
     },
 
@@ -185,9 +187,9 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // Parameters & Arguments
     // ==========================================================================
     {
-      scope: ['variable.parameter', 'meta.parameter'],
+      scope: ["variable.parameter", "meta.parameter"],
       settings: {
-        foreground: 'var(--astro-code-token-parameter)',
+        foreground: "var(--astro-code-token-parameter)",
       },
     },
 
@@ -196,14 +198,14 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // ==========================================================================
     {
       scope: [
-        'variable',
-        'variable.other',
-        'variable.other.readwrite',
-        'variable.other.object',
-        'variable.language.this',
+        "variable",
+        "variable.other",
+        "variable.other.readwrite",
+        "variable.other.object",
+        "variable.language.this",
       ],
       settings: {
-        foreground: 'var(--astro-code-token-variable)',
+        foreground: "var(--astro-code-token-variable)",
       },
     },
 
@@ -212,12 +214,12 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // ==========================================================================
     {
       scope: [
-        'variable.language.self',
-        'variable.language.special.self',
-        'keyword.other.self',
+        "variable.language.self",
+        "variable.language.special.self",
+        "keyword.other.self",
       ],
       settings: {
-        foreground: 'var(--astro-code-token-keyword)',
+        foreground: "var(--astro-code-token-keyword)",
       },
     },
 
@@ -226,14 +228,14 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // ==========================================================================
     {
       scope: [
-        'entity.name.type',
-        'entity.name.class',
-        'support.type',
-        'support.class',
-        'entity.other.inherited-class',
+        "entity.name.type",
+        "entity.name.class",
+        "support.type",
+        "support.class",
+        "entity.other.inherited-class",
       ],
       settings: {
-        foreground: 'var(--astro-code-token-type)',
+        foreground: "var(--astro-code-token-type)",
       },
     },
 
@@ -241,15 +243,15 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // HTML/XML Tags
     // ==========================================================================
     {
-      scope: ['entity.name.tag', 'punctuation.definition.tag'],
+      scope: ["entity.name.tag", "punctuation.definition.tag"],
       settings: {
-        foreground: 'var(--astro-code-token-tag)',
+        foreground: "var(--astro-code-token-tag)",
       },
     },
     {
-      scope: ['entity.other.attribute-name'],
+      scope: ["entity.other.attribute-name"],
       settings: {
-        foreground: 'var(--astro-code-token-attribute)',
+        foreground: "var(--astro-code-token-attribute)",
       },
     },
 
@@ -258,28 +260,31 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // ==========================================================================
     {
       scope: [
-        'support.type.property-name',
-        'support.type.vendored.property-name',
-        'meta.property-name',
+        "support.type.property-name",
+        "support.type.vendored.property-name",
+        "meta.property-name",
       ],
       settings: {
-        foreground: 'var(--astro-code-token-property)',
+        foreground: "var(--astro-code-token-property)",
       },
     },
     {
       scope: [
-        'support.constant.property-value',
-        'support.constant.color',
-        'meta.property-value',
+        "support.constant.property-value",
+        "support.constant.color",
+        "meta.property-value",
       ],
       settings: {
-        foreground: 'var(--astro-code-token-property-value)',
+        foreground: "var(--astro-code-token-property-value)",
       },
     },
     {
-      scope: ['entity.other.attribute-name.class.css', 'entity.other.attribute-name.id.css'],
+      scope: [
+        "entity.other.attribute-name.class.css",
+        "entity.other.attribute-name.id.css",
+      ],
       settings: {
-        foreground: 'var(--astro-code-token-selector)',
+        foreground: "var(--astro-code-token-selector)",
       },
     },
 
@@ -288,16 +293,16 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // ==========================================================================
     {
       scope: [
-        'punctuation',
-        'punctuation.definition.block',
-        'punctuation.definition.parameters',
-        'punctuation.section',
-        'punctuation.terminator',
-        'punctuation.separator',
-        'meta.brace',
+        "punctuation",
+        "punctuation.definition.block",
+        "punctuation.definition.parameters",
+        "punctuation.section",
+        "punctuation.terminator",
+        "punctuation.separator",
+        "meta.brace",
       ],
       settings: {
-        foreground: 'var(--astro-code-token-punctuation)',
+        foreground: "var(--astro-code-token-punctuation)",
       },
     },
 
@@ -305,9 +310,9 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // Links
     // ==========================================================================
     {
-      scope: ['markup.underline.link', 'string.other.link'],
+      scope: ["markup.underline.link", "string.other.link"],
       settings: {
-        foreground: 'var(--astro-code-token-link)',
+        foreground: "var(--astro-code-token-link)",
       },
     },
 
@@ -315,22 +320,22 @@ export const customCssVariablesTheme: ThemeRegistration = {
     // Markdown Specific
     // ==========================================================================
     {
-      scope: ['markup.heading', 'entity.name.section'],
+      scope: ["markup.heading", "entity.name.section"],
       settings: {
-        foreground: 'var(--astro-code-token-keyword)',
-        fontStyle: 'bold',
+        foreground: "var(--astro-code-token-keyword)",
+        fontStyle: "bold",
       },
     },
     {
-      scope: ['markup.bold'],
+      scope: ["markup.bold"],
       settings: {
-        fontStyle: 'bold',
+        fontStyle: "bold",
       },
     },
     {
-      scope: ['markup.italic'],
+      scope: ["markup.italic"],
       settings: {
-        fontStyle: 'italic',
+        fontStyle: "italic",
       },
     },
   ],

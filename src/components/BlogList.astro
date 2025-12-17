@@ -6,7 +6,7 @@
  * Posts are shown in reverse chronological order.
  */
 
-import SheenText from './SheenText.astro';
+import SheenText from "./SheenText.astro";
 
 interface Post {
   title: string;
@@ -25,9 +25,9 @@ const {posts} = Astro.props;
  */
 const formatMonthLabel = (dateString: string): string => {
   const date = new Date(dateString);
-  return new Intl.DateTimeFormat('en-GB', {
-    month: 'long',
-    year: 'numeric',
+  return new Intl.DateTimeFormat("en-GB", {
+    month: "long",
+    year: "numeric",
   }).format(date);
 };
 
@@ -37,7 +37,7 @@ const formatMonthLabel = (dateString: string): string => {
 const formatPostDate = (dateString: string): string => {
   const date = new Date(dateString);
   const day = date.getDate();
-  const month = new Intl.DateTimeFormat('en-GB', {month: 'short'}).format(date);
+  const month = new Intl.DateTimeFormat("en-GB", {month: "short"}).format(date);
   return `${day} ${month}`;
 };
 
@@ -55,7 +55,7 @@ const groupPostsByMonth = (posts: Post[]): Map<string, Post[]> => {
 
   for (const post of sortedPosts) {
     const date = new Date(post.date);
-    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}`;
 
     if (!groups.has(key)) {
       groups.set(key, []);
@@ -70,27 +70,29 @@ const groupedPosts = groupPostsByMonth(posts);
 ---
 
 <div class="blog-list">
-  {posts.length === 0 ? (
-    <p class="empty-state">No blog posts to display.</p>
-  ) : (
-    Array.from(groupedPosts.entries()).map(([_key, monthPosts]) => (
-      <section class="blog-month-group">
-        <h2 class="month-label">{formatMonthLabel(monthPosts[0].date)}</h2>
-        <ul class="post-list">
-          {monthPosts.map((post) => (
-            <li class="post-item">
-              <a href={`/blog/${post.slug}`} class="post-link">
-                <span class="post-title">
-                  <SheenText text={post.title} tag="span" interval={12} />
-                </span>
-                <span class="post-date">{formatPostDate(post.date)}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </section>
-    ))
-  )}
+  {
+    posts.length === 0 ? (
+      <p class="empty-state">No blog posts to display.</p>
+    ) : (
+      Array.from(groupedPosts.entries()).map(([_key, monthPosts]) => (
+        <section class="blog-month-group">
+          <h2 class="month-label">{formatMonthLabel(monthPosts[0].date)}</h2>
+          <ul class="post-list">
+            {monthPosts.map((post) => (
+              <li class="post-item">
+                <a href={`/blog/${post.slug}`} class="post-link">
+                  <span class="post-title">
+                    <SheenText text={post.title} tag="span" interval={12} />
+                  </span>
+                  <span class="post-date">{formatPostDate(post.date)}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    )
+  }
 </div>
 
 <style>

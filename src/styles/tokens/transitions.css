@@ -7,9 +7,9 @@
 
 :root {
   /* Durations */
-  --duration-instant: 0.05s;    /* Sheen, rapid feedback */
-  --duration-fast: 0.2s;       /* Hovers, interactive elements */
-  --duration-slow: 0.3s;        /* Large movements, reveals */
+  --duration-instant: 0.05s; /* Sheen, rapid feedback */
+  --duration-fast: 0.2s; /* Hovers, interactive elements */
+  --duration-slow: 0.3s; /* Large movements, reveals */
 
   /* Easing - ease-out as default (natural deceleration) */
   --ease-default: ease-out;

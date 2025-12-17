@@ -11,32 +11,32 @@
    ========================================================================== */
 
 @font-face {
-  font-family: 'Switzer';
-  src: url('/fonts/Switzer-Variable.woff2') format('woff2-variations');
+  font-family: "Switzer";
+  src: url("/fonts/Switzer-Variable.woff2") format("woff2-variations");
   font-weight: 100 900;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'Switzer';
-  src: url('/fonts/Switzer-VariableItalic.woff2') format('woff2-variations');
+  font-family: "Switzer";
+  src: url("/fonts/Switzer-VariableItalic.woff2") format("woff2-variations");
   font-weight: 100 900;
   font-style: italic;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'CommitMono';
-  src: url('/fonts/CommitMono-PersonalSite-400-Regular.otf') format('opentype');
+  font-family: "CommitMono";
+  src: url("/fonts/CommitMono-PersonalSite-400-Regular.otf") format("opentype");
   font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
-  font-family: 'CommitMono';
-  src: url('/fonts/CommitMono-PersonalSite-700-Regular.otf') format('opentype');
+  font-family: "CommitMono";
+  src: url("/fonts/CommitMono-PersonalSite-700-Regular.otf") format("opentype");
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -48,20 +48,20 @@
 
 :root {
   /* Font families */
-  --font-sans: 'Switzer', system-ui, -apple-system, sans-serif;
-  --font-mono: 'CommitMono', 'JetBrains Mono', ui-monospace, monospace;
+  --font-sans: "Switzer", system-ui, -apple-system, sans-serif;
+  --font-mono: "CommitMono", "JetBrains Mono", ui-monospace, monospace;
 
   /* Type scale - Minor Third (1.2 ratio)
      Base: 16px
      Scale: 11 → 13 → 16 → 19 → 23 → 28 → 33 → 40 */
-  --text-xs: 0.6875rem;   /* 11px */
-  --text-sm: 0.8125rem;   /* 13px */
-  --text-base: 1rem;      /* 16px */
-  --text-md: 1.1875rem;   /* 19px */
-  --text-lg: 1.4375rem;   /* 23px */
-  --text-xl: 1.75rem;     /* 28px */
-  --text-2xl: 2.0625rem;  /* 33px */
-  --text-3xl: 2.5rem;     /* 40px */
+  --text-xs: 0.6875rem; /* 11px */
+  --text-sm: 0.8125rem; /* 13px */
+  --text-base: 1rem; /* 16px */
+  --text-md: 1.1875rem; /* 19px */
+  --text-lg: 1.4375rem; /* 23px */
+  --text-xl: 1.75rem; /* 28px */
+  --text-2xl: 2.0625rem; /* 33px */
+  --text-3xl: 2.5rem; /* 40px */
 
   /* Font weights */
   --font-regular: 400;
@@ -71,20 +71,20 @@
   --font-extrabold: 800;
 
   /* Letter spacing */
-  --tracking-display: -0.03em;  /* Headings, large text */
-  --tracking-labels: 0.1em;     /* Uppercase labels, small caps */
-  --tracking-body: 0.01em;      /* Body text */
+  --tracking-display: -0.03em; /* Headings, large text */
+  --tracking-labels: 0.1em; /* Uppercase labels, small caps */
+  --tracking-body: 0.01em; /* Body text */
 
   /* Line heights - fixed values aligned to 8px grid */
-  --leading-16: 1rem;      /* 16px - 2 grid units */
-  --leading-24: 1.5rem;    /* 24px - 3 grid units */
-  --leading-32: 2rem;      /* 32px - 4 grid units */
-  --leading-40: 2.5rem;    /* 40px - 5 grid units */
-  --leading-48: 3rem;      /* 48px - 6 grid units */
-  --leading-56: 3.5rem;    /* 56px - 7 grid units */
+  --leading-16: 1rem; /* 16px - 2 grid units */
+  --leading-24: 1.5rem; /* 24px - 3 grid units */
+  --leading-32: 2rem; /* 32px - 4 grid units */
+  --leading-40: 2.5rem; /* 40px - 5 grid units */
+  --leading-48: 3rem; /* 48px - 6 grid units */
+  --leading-56: 3.5rem; /* 56px - 7 grid units */
 
   /* Unitless line heights (for display type and legacy compatibility) */
-  --leading-tighter: 0.833;  /* 5/6 - tight display type */
+  --leading-tighter: 0.833; /* 5/6 - tight display type */
   --leading-none: 1;
   --leading-tight: 1.25;
   --leading-snug: 1.375;

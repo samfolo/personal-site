@@ -1,35 +1,32 @@
 // @ts-check
-import mdx from '@astrojs/mdx';
-import node from '@astrojs/node';
+import mdx from "@astrojs/mdx";
+import node from "@astrojs/node";
 import {
   transformerNotationDiff,
   transformerNotationHighlight,
   transformerNotationFocus,
   transformerNotationWordHighlight,
-} from '@shikijs/transformers';
-import tailwindcss from '@tailwindcss/vite';
-import {defineConfig} from 'astro/config';
+} from "@shikijs/transformers";
+import tailwindcss from "@tailwindcss/vite";
+import {defineConfig} from "astro/config";
 
-import {customCssVariablesTheme} from './src/lib/shiki-theme';
-import rehypeCodeBlocks from './src/plugins/rehype-code-blocks';
-import rehypeHeadingAnchors from './src/plugins/rehype-heading-anchors';
+import {customCssVariablesTheme} from "./src/lib/shiki-theme";
+import rehypeCodeBlocks from "./src/plugins/rehype-code-blocks";
+import rehypeHeadingAnchors from "./src/plugins/rehype-heading-anchors";
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://samfolorunsho.com',
-  trailingSlash: 'never',
-  output: 'server',
+  site: "https://samfolorunsho.com",
+  trailingSlash: "never",
+  output: "server",
   adapter: node({
-    mode: 'standalone'
+    mode: "standalone",
   }),
 
   integrations: [mdx()],
 
   markdown: {
-    rehypePlugins: [
-      rehypeHeadingAnchors,
-      rehypeCodeBlocks,
-    ],
+    rehypePlugins: [rehypeHeadingAnchors, rehypeCodeBlocks],
     shikiConfig: {
       theme: customCssVariablesTheme,
       defaultColor: false,
@@ -46,15 +43,15 @@ export default defineConfig({
   vite: {
     plugins: [tailwindcss()],
     ssr: {
-      external: ['@resvg/resvg-js']
+      external: ["@resvg/resvg-js"],
     },
     build: {
       rollupOptions: {
-        external: ['@resvg/resvg-js']
-      }
+        external: ["@resvg/resvg-js"],
+      },
     },
     optimizeDeps: {
-      exclude: ['@resvg/resvg-js']
-    }
-  }
+      exclude: ["@resvg/resvg-js"],
+    },
+  },
 });

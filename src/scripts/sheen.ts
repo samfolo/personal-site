@@ -13,12 +13,12 @@ import {
   startAnimation,
   stopAnimation,
   createState,
-} from './sheen-core';
+} from "./sheen-core";
 
 // Elements pre-split at build time (preferred)
-const SHEEN_READY_SELECTOR = '[data-sheen-ready]';
+const SHEEN_READY_SELECTOR = "[data-sheen-ready]";
 // Legacy: elements that need runtime splitting
-const SHEEN_TEXT_SELECTOR = '[data-sheen-text]';
+const SHEEN_TEXT_SELECTOR = "[data-sheen-text]";
 
 // Track state for each sheen element
 const sheenStates = new WeakMap<HTMLElement, SheenState>();
@@ -38,11 +38,11 @@ const initElement = (element: HTMLElement): void => {
     return;
   }
 
-  const interval = parseInt(element.dataset.sheenInterval ?? '15', 10);
-  const spread = parseInt(element.dataset.sheenSpread ?? '2', 10);
+  const interval = parseInt(element.dataset.sheenInterval ?? "15", 10);
+  const spread = parseInt(element.dataset.sheenSpread ?? "2", 10);
 
   // Use pre-split chars if available, otherwise split at runtime
-  const isPreSplit = element.hasAttribute('data-sheen-ready');
+  const isPreSplit = element.hasAttribute("data-sheen-ready");
   let chars: HTMLSpanElement[];
 
   if (isPreSplit) {
@@ -64,7 +64,7 @@ const initElement = (element: HTMLElement): void => {
   const state = createState(chars, interval, spread);
   sheenStates.set(element, state);
 
-  element.addEventListener('mouseenter', () => {
+  element.addEventListener("mouseenter", () => {
     const s = sheenStates.get(element);
 
     if (s) {
@@ -72,7 +72,7 @@ const initElement = (element: HTMLElement): void => {
     }
   });
 
-  element.addEventListener('mouseleave', () => {
+  element.addEventListener("mouseleave", () => {
     const s = sheenStates.get(element);
 
     if (s) {
@@ -93,4 +93,4 @@ const init = (): void => {
 
 // Initialise on load and after Astro page transitions
 init();
-document.addEventListener('astro:after-swap', init);
+document.addEventListener("astro:after-swap", init);

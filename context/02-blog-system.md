@@ -8,7 +8,7 @@ Blog posts use Astro 5's Content Layer API with a glob loader.
 
 ```typescript
 const blog = defineCollection({
-  loader: glob({ pattern: '**/*.mdx', base: './src/content/blog' }),
+  loader: glob({pattern: "**/*.mdx", base: "./src/content/blog"}),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -23,14 +23,15 @@ const blog = defineCollection({
 ### Frontmatter Template
 
 Every blog post requires this frontmatter:
+
 ```yaml
 ---
 title: "Post Title"
 description: "Description for SEO and RSS"
 publishDate: 2024-12-08
-updatedDate: 2024-12-10  # Optional
+updatedDate: 2024-12-10 # Optional
 tags: ["tag1", "tag2"]
-draft: false  # Hides post in production when true
+draft: false # Hides post in production when true
 ---
 ```
 
@@ -40,7 +41,7 @@ draft: false  # Hides post in production when true
 - Production: Drafts filtered out at query time
 - Pattern used throughout:
   ```typescript
-  const posts = await getCollection('blog', ({ data }) => {
+  const posts = await getCollection("blog", ({data}) => {
     return import.meta.env.PROD ? !data.draft : true;
   });
   ```
@@ -48,12 +49,14 @@ draft: false  # Hides post in production when true
 ## Blog Routes
 
 ### Blog Index (`/blog`)
+
 - Fetches all non-draft posts
 - Sorts by publish date (newest first)
 - Groups posts by month using `BlogList` component
 - Uses Base layout
 
 ### Individual Posts (`/blog/[slug]`)
+
 - Dynamic SSR route (not static generation)
 - Fetches post by slug from URL parameter
 - Calculates reading time from content
@@ -85,6 +88,7 @@ Client Scripts:
 ## Rehype Plugins
 
 ### `rehype-heading-anchors.ts`
+
 - Processes h2-h6 elements
 - Generates URL-safe slugs using `github-slugger`
 - Adds `id` attribute to headings
@@ -92,6 +96,7 @@ Client Scripts:
 - Styling in `prose.css`
 
 ### `rehype-code-blocks.ts`
+
 - Wraps `<pre>` elements containing code
 - Creates `.code-block` wrapper div
 - Adds floating `.code-lang` label (populated client-side)
@@ -101,12 +106,14 @@ Client Scripts:
 ## Syntax Highlighting
 
 ### Custom Shiki Theme (`src/lib/shiki-theme.ts`)
+
 - TextMate theme mapping scopes to CSS variables
 - Uses `--astro-code-*` variable naming convention
 - Supports granular token types for different languages
 - Theme variations defined in `src/styles/components/shiki.css`
 
 ### Token Variable Cascade
+
 ```
 :root (global defaults)
     ↓
@@ -116,13 +123,16 @@ Client Scripts:
 ```
 
 ### Shiki Transformers (in `astro.config.mjs`)
+
 Code blocks support annotations:
+
 - `[!code highlight]` - Highlight lines
 - `[!code ++]` / `[!code --]` - Diff styling
 - `[!code focus]` - Focus mode (blur unfocused lines)
 - `[!code word:term]` - Highlight specific words
 
 Example:
+
 ````markdown
 ```typescript
 const foo = "bar"; // [!code highlight]
@@ -134,12 +144,14 @@ const new = "value"; // [!code ++]
 ## Utilities
 
 ### Reading Time (`src/utils/readingTime.ts`)
+
 - Strips MDX components and code blocks
 - Calculates word count
 - Uses 200 WPM reading speed
 - Returns format: "X min read"
 
 ### Date Formatting (`src/utils/formatDate.ts`)
+
 - Uses British English locale (`en-GB`)
 - Format: "12 December 2024"
 - Also provides `formatUpdatedDate()` returning "Updated 12 December 2024"
@@ -147,6 +159,7 @@ const new = "value"; // [!code ++]
 ## BlogList Component
 
 Groups posts by month with visual hierarchy:
+
 - Month labels (uppercase, muted colour)
 - Post links with title and date
 - SheenText effect on hover
@@ -155,6 +168,7 @@ Groups posts by month with visual hierarchy:
 ## Post Navigation
 
 At bottom of each post:
+
 - Previous post link (older)
 - Next post link (newer)
 - Based on chronological sort order
@@ -175,6 +189,7 @@ At bottom of each post:
 ## Post Slug Convention
 
 The filename (without `.mdx`) becomes the URL slug:
+
 - `structured-outputs-with-claude.mdx` → `/blog/structured-outputs-with-claude`
 - Use lowercase with hyphens
 - Keep concise but descriptive

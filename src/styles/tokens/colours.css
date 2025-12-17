@@ -15,8 +15,8 @@
   --bg: oklch(0.18 0.01 250);
   --fg: oklch(0.95 0.01 90);
   --muted: oklch(0.55 0.01 250);
-  --rule: oklch(0.30 0.01 250);
-  --highlight: oklch(0.60 0.12 220);
+  --rule: oklch(0.3 0.01 250);
+  --highlight: oklch(0.6 0.12 220);
   --emphasis: oklch(0.98 0.02 90);
 }
 
@@ -46,14 +46,16 @@
   --fg: oklch(0.9851 0 0);
   --muted: oklch(0.6268 0 0);
   --rule: oklch(0.3715 0 0);
-  --highlight: oklch(0.85 0.00 0);
+  --highlight: oklch(0.85 0 0);
   --emphasis: oklch(1 0 0);
 }
 
 /* Theme: Teal (with coral foreground exception) */
 .theme-teal {
   --bg: oklch(0.2239 0.0239 195.58);
-  --fg: oklch(0.76 0.1687 34.05); /* Coral - increased lightness for readability */
+  --fg: oklch(
+    0.76 0.1687 34.05
+  ); /* Coral - increased lightness for readability */
   --muted: oklch(0.555 0.0365 196.15);
   --rule: oklch(0.3243 0.0378 195.45);
   --highlight: oklch(0.8447 0.0861 33.1);

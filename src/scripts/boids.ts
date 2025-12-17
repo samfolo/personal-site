@@ -5,7 +5,7 @@
  * network lines, and scatter/respawn tied to scroll position.
  */
 
-import p5 from 'p5';
+import p5 from "p5";
 
 // =============================================================================
 // Constants
@@ -48,8 +48,8 @@ const FRAME_RATE = 30;
 const MOBILE_BREAKPOINT = 768;
 
 // Element IDs
-const CANVAS_CONTAINER_ID = 'boids-canvas';
-const HERO_WORDMARK_ID = 'hero-wordmark';
+const CANVAS_CONTAINER_ID = "boids-canvas";
+const HERO_WORDMARK_ID = "hero-wordmark";
 
 // =============================================================================
 // Colour Utilities
@@ -67,10 +67,10 @@ interface RGBColour {
  */
 const parseComputedColour = (cssValue: string): RGBColour => {
   // Use canvas to force colour conversion - fillStyle always returns hex or rgb
-  const canvas = document.createElement('canvas');
+  const canvas = document.createElement("canvas");
   canvas.width = 1;
   canvas.height = 1;
-  const ctx = canvas.getContext('2d');
+  const ctx = canvas.getContext("2d");
 
   if (ctx) {
     ctx.fillStyle = cssValue;
@@ -91,7 +91,9 @@ const parseComputedColour = (cssValue: string): RGBColour => {
  * Read CSS custom property and parse to RGB
  */
 const getColourFromProperty = (propertyName: string): RGBColour => {
-  const value = getComputedStyle(document.documentElement).getPropertyValue(propertyName).trim();
+  const value = getComputedStyle(document.documentElement)
+    .getPropertyValue(propertyName)
+    .trim();
   return parseComputedColour(value);
 };
 
@@ -131,7 +133,7 @@ class Boid {
   acceleration: p5.Vector;
   opacity: number;
   isScattering: boolean;
-  private targetEdge: { x: number; y: number; d: number } | null;
+  private targetEdge: {x: number; y: number; d: number} | null;
   private hasExited: boolean;
 
   constructor(p: p5) {
@@ -259,7 +261,9 @@ class Boid {
    * Begin scatter behaviour - find nearest edge
    */
   startScatter(): void {
-    if (this.isScattering) {return;}
+    if (this.isScattering) {
+      return;
+    }
     this.isScattering = true;
     this.hasExited = false;
 
@@ -271,7 +275,7 @@ class Boid {
       {x: this.p.width + 50, y: this.position.y},
     ];
 
-    this.targetEdge = edges.reduce(
+    this.targetEdge = edges.reduce<{x: number; y: number; d: number}>(
       (nearest, edge) => {
         const d = this.p.dist(this.position.x, this.position.y, edge.x, edge.y);
         return d < nearest.d ? {x: edge.x, y: edge.y, d} : nearest;
@@ -305,7 +309,9 @@ class Boid {
    * Update opacity and exit state during scatter
    */
   private updateScatterState(): void {
-    if (!this.isScattering || this.hasExited) {return;}
+    if (!this.isScattering || this.hasExited) {
+      return;
+    }
 
     // Calculate distance to nearest edge for fade
     const distToEdge = Math.min(
@@ -343,7 +349,10 @@ class Boid {
    * Reset boid to random position for respawn
    */
   reset(): void {
-    this.position = this.p.createVector(this.p.random(this.p.width), this.p.random(this.p.height));
+    this.position = this.p.createVector(
+      this.p.random(this.p.width),
+      this.p.random(this.p.height)
+    );
     this.velocity = p5.Vector.random2D().mult(this.p.random(1, MAX_SPEED));
     this.acceleration = this.p.createVector(0, 0);
     this.opacity = 0;
@@ -359,7 +368,9 @@ class Boid {
     this.velocity.add(this.acceleration);
 
     // Allow faster movement during scatter
-    const speedLimit = this.isScattering ? MAX_SPEED * SCATTER_SPEED_BOOST : MAX_SPEED;
+    const speedLimit = this.isScattering
+      ? MAX_SPEED * SCATTER_SPEED_BOOST
+      : MAX_SPEED;
     this.velocity.limit(speedLimit);
 
     this.position.add(this.velocity);
@@ -375,27 +386,42 @@ class Boid {
    * Wrap around edges (only when not scattering)
    */
   edges(): void {
-    if (this.isScattering) {return;}
+    if (this.isScattering) {
+      return;
+    }
 
-    if (this.position.x > this.p.width) {this.position.x = 0;}
-    else if (this.position.x < 0) {this.position.x = this.p.width;}
+    if (this.position.x > this.p.width) {
+      this.position.x = 0;
+    } else if (this.position.x < 0) {
+      this.position.x = this.p.width;
+    }
 
-    if (this.position.y > this.p.height) {this.position.y = 0;}
-    else if (this.position.y < 0) {this.position.y = this.p.height;}
+    if (this.position.y > this.p.height) {
+      this.position.y = 0;
+    } else if (this.position.y < 0) {
+      this.position.y = this.p.height;
+    }
   }
 
   /**
    * Draw the boid as a paper aeroplane shape with indent
    */
   show(colour: RGBColour): void {
-    if (this.opacity <= 0) {return;}
+    if (this.opacity <= 0) {
+      return;
+    }
 
     const p = this.p;
 
     // Calculate opacity reduction based on proximity to centre vertical axis
-    const centreOpacityFactor = getCentreOpacityFactor(this.position.x, p.width);
+    const centreOpacityFactor = getCentreOpacityFactor(
+      this.position.x,
+      p.width
+    );
     const finalOpacity = this.opacity * centreOpacityFactor;
-    if (finalOpacity <= 0) {return;}
+    if (finalOpacity <= 0) {
+      return;
+    }
 
     p.push();
     p.translate(this.position.x, this.position.y);
@@ -455,7 +481,7 @@ const state: BoidsState = {
  * Update colour based on current theme's --rule property
  */
 const updateColours = (): void => {
-  state.colour = getColourFromProperty('--rule');
+  state.colour = getColourFromProperty("--rule");
 };
 
 /**
@@ -480,13 +506,17 @@ const drawNetworkLines = (p: p5, boids: Boid[], colour: RGBColour): void => {
   const maxRange = PERCEPTION_RADIUS * NETWORK_RANGE_MULTIPLIER;
 
   for (const boid of boids) {
-    if (boid.opacity <= 0) {continue;}
+    if (boid.opacity <= 0) {
+      continue;
+    }
 
     // Find nearby boids with distances
-    const nearby: Array<{ boid: Boid; distance: number }> = [];
+    const nearby: Array<{boid: Boid; distance: number}> = [];
 
     for (const other of boids) {
-      if (other === boid || other.opacity <= 0) {continue;}
+      if (other === boid || other.opacity <= 0) {
+        continue;
+      }
       const d = p5.Vector.dist(boid.position, other.position);
       if (d < maxRange) {
         nearby.push({boid: other, distance: d});
@@ -501,13 +531,26 @@ const drawNetworkLines = (p: p5, boids: Boid[], colour: RGBColour): void => {
     const boidCentreFactor = getCentreOpacityFactor(boid.position.x, p.width);
 
     for (const conn of connections) {
-      const connCentreFactor = getCentreOpacityFactor(conn.boid.position.x, p.width);
+      const connCentreFactor = getCentreOpacityFactor(
+        conn.boid.position.x,
+        p.width
+      );
       const opacity = p.map(conn.distance, 0, maxRange, NETWORK_OPACITY, 0);
-      const finalOpacity = opacity * boid.opacity * conn.boid.opacity * boidCentreFactor * connCentreFactor;
+      const finalOpacity =
+        opacity *
+        boid.opacity *
+        conn.boid.opacity *
+        boidCentreFactor *
+        connCentreFactor;
 
       p.stroke(colour.r, colour.g, colour.b, finalOpacity);
       p.strokeWeight(0.5);
-      p.line(boid.position.x, boid.position.y, conn.boid.position.x, conn.boid.position.y);
+      p.line(
+        boid.position.x,
+        boid.position.y,
+        conn.boid.position.x,
+        conn.boid.position.y
+      );
     }
   }
 };
@@ -655,7 +698,7 @@ const setupScrollObserver = (): void => {
       });
     },
     {
-      rootMargin: '-80px 0px 0px 0px',
+      rootMargin: "-80px 0px 0px 0px",
     }
   );
 
@@ -674,7 +717,7 @@ const setupThemeObserver = (): void => {
 
   state.mutationObserver = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
-      if (mutation.attributeName === 'class') {
+      if (mutation.attributeName === "class") {
         updateColours();
       }
     });
@@ -682,7 +725,7 @@ const setupThemeObserver = (): void => {
 
   state.mutationObserver.observe(document.documentElement, {
     attributes: true,
-    attributeFilter: ['class'],
+    attributeFilter: ["class"],
   });
 };
 
@@ -729,4 +772,4 @@ const init = (): void => {
 
 // Initialise on load and after Astro page transitions
 init();
-document.addEventListener('astro:after-swap', init);
+document.addEventListener("astro:after-swap", init);

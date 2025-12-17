@@ -10,14 +10,14 @@
  * - RSS feed discovery
  */
 
-import {SITE} from '../config';
+import {SITE} from "../config";
 
 interface Props {
   title: string;
   description?: string;
   canonicalUrl?: string;
   ogImage?: string;
-  ogType?: 'website' | 'article';
+  ogType?: "website" | "article";
   publishDate?: Date;
   updatedDate?: Date;
   tags?: string[];
@@ -26,8 +26,8 @@ interface Props {
 const {
   title,
   description = SITE.description,
-  ogImage = '/og/default.png',
-  ogType = 'website',
+  ogImage = "/og/default.png",
+  ogType = "website",
   publishDate,
   updatedDate,
   tags = [],
@@ -35,7 +35,8 @@ const {
 
 // Canonical URL: strip query params and hash, use path only
 const canonicalUrl =
-  Astro.props.canonicalUrl ?? new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
+  Astro.props.canonicalUrl ??
+  new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
 const fullImageUrl = new URL(ogImage, Astro.site ?? SITE.url).href;
 ---
 
@@ -59,15 +60,31 @@ const fullImageUrl = new URL(ogImage, Astro.site ?? SITE.url).href;
 <meta name="twitter:image" content={fullImageUrl} />
 
 <!-- Article meta -->
-{ogType === 'article' && publishDate && (
-  <meta property="article:published_time" content={publishDate.toISOString()} />
-)}
-{ogType === 'article' && updatedDate && (
-  <meta property="article:modified_time" content={updatedDate.toISOString()} />
-)}
-{ogType === 'article' && tags.map((tag) => (
-  <meta property="article:tag" content={tag} />
-))}
+{
+  ogType === "article" && publishDate && (
+    <meta
+      property="article:published_time"
+      content={publishDate.toISOString()}
+    />
+  )
+}
+{
+  ogType === "article" && updatedDate && (
+    <meta
+      property="article:modified_time"
+      content={updatedDate.toISOString()}
+    />
+  )
+}
+{
+  ogType === "article" &&
+    tags.map((tag) => <meta property="article:tag" content={tag} />)
+}
 
 <!-- RSS discovery -->
-<link rel="alternate" type="application/rss+xml" title={`${SITE.name} RSS`} href="/rss.xml" />
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={`${SITE.name} RSS`}
+  href="/rss.xml"
+/>

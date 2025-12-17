@@ -8,4 +8,4 @@
  * Available colour themes.
  * Corresponds to CSS classes: .theme-steel, .theme-purple, etc.
  */
-export type Theme = 'steel' | 'purple' | 'charcoal' | 'teal';
+export type Theme = "steel" | "purple" | "charcoal" | "teal";

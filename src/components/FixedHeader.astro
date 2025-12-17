@@ -6,27 +6,37 @@
  * Contains wordmark, navigation, and theme switcher.
  */
 
-import LogoMark from './LogoMark.astro';
-import NavLink from './NavLink.astro';
-import ThemeSwitcher from './ThemeSwitcher.astro';
+import LogoMark from "./LogoMark.astro";
+import NavLink from "./NavLink.astro";
+import ThemeSwitcher from "./ThemeSwitcher.astro";
 
 const navLinks = [
-  {href: '/blog', label: 'Blog'},
-  {href: '/about', label: 'About'},
-  {href: '/uses', label: 'Uses'},
+  {href: "/blog", label: "Blog"},
+  {href: "/about", label: "About"},
+  {href: "/uses", label: "Uses"},
 ] as const;
 ---
 
-<header id="fixed-header" class="fixed-header" transition:persist transition:name="header">
+<header
+  id="fixed-header"
+  class="fixed-header"
+  transition:persist
+  transition:name="header"
+>
   <div class="header-inner">
     <div class="header-left">
-      <LogoMark href="/" label="Go to home" container="page" onClick="scrollToTop" />
+      <LogoMark
+        href="/"
+        label="Go to home"
+        container="page"
+        onClick="scrollToTop"
+      />
       <nav class="nav" aria-label="Main navigation">
-        {navLinks.map((link) => (
-          <NavLink href={link.href}>
-            {link.label}
-          </NavLink>
-        ))}
+        {
+          navLinks.map((link) => (
+            <NavLink href={link.href}>{link.label}</NavLink>
+          ))
+        }
       </nav>
     </div>
     <div class="header-right">
@@ -95,16 +105,18 @@ const navLinks = [
 
 <script>
   const initScrollToTop = () => {
-    const logomark = document.querySelector('.logomark[data-onclick="scrollToTop"]');
+    const logomark = document.querySelector(
+      '.logomark[data-onclick="scrollToTop"]'
+    );
 
-    logomark?.addEventListener('click', (e) => {
-      if (window.location.pathname === '/') {
+    logomark?.addEventListener("click", (e) => {
+      if (window.location.pathname === "/") {
         e.preventDefault();
-        window.scrollTo({top: 0, behavior: 'smooth'});
+        window.scrollTo({top: 0, behavior: "smooth"});
       }
     });
   };
 
   initScrollToTop();
-  document.addEventListener('astro:after-swap', initScrollToTop);
+  document.addEventListener("astro:after-swap", initScrollToTop);
 </script>

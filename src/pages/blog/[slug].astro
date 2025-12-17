@@ -6,27 +6,27 @@
  * Fetches post by slug from URL parameter (SSR compatible).
  */
 
-import { getCollection, getEntry, render } from 'astro:content';
-import Post from '../../layouts/Post.astro';
-import { calculateReadingTime } from '../../utils/reading-time';
+import {getCollection, getEntry, render} from "astro:content";
+import Post from "../../layouts/Post.astro";
+import {calculateReadingTime} from "../../utils/reading-time";
 
-const { slug } = Astro.params;
+const {slug} = Astro.params;
 
 // Fetch the post by slug
-const post = await getEntry('blog', slug!);
+const post = await getEntry("blog", slug!);
 
 // Handle 404
 if (!post) {
-  return Astro.redirect('/404');
+  return Astro.redirect("/404");
 }
 
 // Check draft status in production
 if (import.meta.env.PROD && post.data.draft) {
-  return Astro.redirect('/404');
+  return Astro.redirect("/404");
 }
 
 // Fetch all posts for prev/next navigation
-const allPosts = await getCollection('blog', ({ data }) => {
+const allPosts = await getCollection("blog", ({data}) => {
   return import.meta.env.PROD ? !data.draft : true;
 });
 
@@ -38,17 +38,28 @@ const sortedPosts = allPosts.sort(
 // Find current post index and calculate prev/next
 const currentIndex = sortedPosts.findIndex((p) => p.id === post.id);
 const prevPost = sortedPosts[currentIndex + 1]
-  ? { slug: sortedPosts[currentIndex + 1].id, title: sortedPosts[currentIndex + 1].data.title }
+  ? {
+      slug: sortedPosts[currentIndex + 1].id,
+      title: sortedPosts[currentIndex + 1].data.title,
+    }
   : null;
 const nextPost = sortedPosts[currentIndex - 1]
-  ? { slug: sortedPosts[currentIndex - 1].id, title: sortedPosts[currentIndex - 1].data.title }
+  ? {
+      slug: sortedPosts[currentIndex - 1].id,
+      title: sortedPosts[currentIndex - 1].data.title,
+    }
   : null;
 
 // Render the post content
-const { Content } = await render(post);
-const readingTime = calculateReadingTime(post.body || '');
+const {Content} = await render(post);
+const readingTime = calculateReadingTime(post.body || "");
 ---
 
-<Post post={post} readingTime={readingTime} prevPost={prevPost} nextPost={nextPost}>
+<Post
+  post={post}
+  readingTime={readingTime}
+  prevPost={prevPost}
+  nextPost={nextPost}
+>
   <Content />
 </Post>

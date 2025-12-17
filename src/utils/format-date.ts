@@ -6,10 +6,10 @@
  */
 
 export const formatDate = (date: Date): string =>
-  new Intl.DateTimeFormat('en-GB', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
+  new Intl.DateTimeFormat("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
   }).format(date);
 
 export const formatUpdatedDate = (date: Date): string =>

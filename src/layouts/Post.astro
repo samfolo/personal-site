@@ -6,20 +6,19 @@
  * Displays title, metadata, content, and post navigation.
  */
 
-import type {CollectionEntry} from 'astro:content';
+import type {CollectionEntry} from "astro:content";
 
-import JsonLd from '../components/JsonLd.astro';
-import SheenText from '../components/SheenText.astro';
-import {formatDate, formatUpdatedDate} from '../utils/format-date';
+import JsonLd from "../components/JsonLd.astro";
+import SheenText from "../components/SheenText.astro";
+import {formatDate, formatUpdatedDate} from "../utils/format-date";
 
-import Base from './Base.astro';
-
+import Base from "./Base.astro";
 
 interface Props {
-  post: CollectionEntry<'blog'>;
+  post: CollectionEntry<"blog">;
   readingTime: string;
-  prevPost?: { slug: string; title: string } | null;
-  nextPost?: { slug: string; title: string } | null;
+  prevPost?: {slug: string; title: string} | null;
+  nextPost?: {slug: string; title: string} | null;
 }
 
 const {post, readingTime, prevPost, nextPost} = Astro.props;
@@ -49,27 +48,35 @@ const {title, description, publishDate, updatedDate, tags} = post.data;
     <article class="post">
       <!-- Post Header -->
       <header class="post-header">
-        <SheenText text={title} tag="h1" class="post-title" id="post-title" spread={3} />
+        <SheenText
+          text={title}
+          tag="h1"
+          class="post-title"
+          id="post-title"
+          spread={3}
+        />
 
         <div class="post-meta">
           <time datetime={publishDate.toISOString()}>
             {formatDate(publishDate)}
           </time>
-          {updatedDate && (
-            <span class="post-updated">
-              {formatUpdatedDate(updatedDate)}
-            </span>
-          )}
+          {
+            updatedDate && (
+              <span class="post-updated">{formatUpdatedDate(updatedDate)}</span>
+            )
+          }
           <span class="post-reading-time">{readingTime}</span>
         </div>
 
-        {tags.length > 0 && (
-          <ul class="post-tags">
-            {tags.map((tag) => (
-              <li class="post-tag">{tag}</li>
-            ))}
-          </ul>
-        )}
+        {
+          tags.length > 0 && (
+            <ul class="post-tags">
+              {tags.map((tag) => (
+                <li class="post-tag">{tag}</li>
+              ))}
+            </ul>
+          )
+        }
       </header>
 
       <!-- Post Content -->
@@ -79,31 +86,33 @@ const {title, description, publishDate, updatedDate, tags} = post.data;
     </article>
 
     <!-- Post Navigation -->
-    {(prevPost || nextPost) && (
-      <nav class="post-nav" aria-label="Post navigation">
-        <div class="post-nav-item post-nav-prev">
-          {prevPost && (
-            <>
-              <span class="post-nav-label">Previous</span>
-              <a href={`/blog/${prevPost.slug}`} class="post-nav-link">
-                {prevPost.title}
-              </a>
-            </>
-          )}
-        </div>
+    {
+      (prevPost || nextPost) && (
+        <nav class="post-nav" aria-label="Post navigation">
+          <div class="post-nav-item post-nav-prev">
+            {prevPost && (
+              <>
+                <span class="post-nav-label">Previous</span>
+                <a href={`/blog/${prevPost.slug}`} class="post-nav-link">
+                  {prevPost.title}
+                </a>
+              </>
+            )}
+          </div>
 
-        <div class="post-nav-item post-nav-next">
-          {nextPost && (
-            <>
-              <span class="post-nav-label">Next</span>
-              <a href={`/blog/${nextPost.slug}`} class="post-nav-link">
-                {nextPost.title}
-              </a>
-            </>
-          )}
-        </div>
-      </nav>
-    )}
+          <div class="post-nav-item post-nav-next">
+            {nextPost && (
+              <>
+                <span class="post-nav-label">Next</span>
+                <a href={`/blog/${nextPost.slug}`} class="post-nav-link">
+                  {nextPost.title}
+                </a>
+              </>
+            )}
+          </div>
+        </nav>
+      )
+    }
   </main>
 </Base>
 
@@ -111,7 +120,8 @@ const {title, description, publishDate, updatedDate, tags} = post.data;
   .post-container {
     max-width: var(--container-max);
     margin: 0 auto;
-    padding: calc(var(--header-height) + var(--space-8)) var(--container-px) var(--space-9);
+    padding: calc(var(--header-height) + var(--space-8)) var(--container-px)
+      var(--space-9);
   }
 
   .post-header {
@@ -136,7 +146,7 @@ const {title, description, publishDate, updatedDate, tags} = post.data;
   }
 
   .post-meta > *:not(:last-child)::after {
-    content: '·';
+    content: "·";
     margin-left: var(--space-3);
   }
 
@@ -220,8 +230,8 @@ const {title, description, publishDate, updatedDate, tags} = post.data;
 </style>
 
 <script>
-  import '../scripts/code-copy.ts';
-  import '../scripts/heading-anchors.ts';
-  import '../scripts/sheen-headings.ts';
-  import '../scripts/sheen-links.ts';
+  import "../scripts/code-copy.ts";
+  import "../scripts/heading-anchors.ts";
+  import "../scripts/sheen-headings.ts";
+  import "../scripts/sheen-links.ts";
 </script>

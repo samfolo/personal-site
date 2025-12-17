@@ -10,10 +10,11 @@ import {
   startAnimation,
   stopAnimation,
   createState,
-} from './sheen-core';
+} from "./sheen-core";
 
-const PROSE_HEADING_SELECTOR = '.prose h1, .prose h2, .prose h3, .prose h4, .prose h5';
-const INITIALISED_ATTR = 'data-sheen-heading';
+const PROSE_HEADING_SELECTOR =
+  ".prose h1, .prose h2, .prose h3, .prose h4, .prose h5";
+const INITIALISED_ATTR = "data-sheen-heading";
 
 // Settings for prose headings - wider spread for larger text
 const HEADING_INTERVAL = 18;
@@ -30,10 +31,10 @@ const getHeadingText = (heading: HTMLElement): string => {
   const clone = heading.cloneNode(true) as HTMLElement;
 
   // Remove anchor links from the clone
-  const anchors = clone.querySelectorAll('.heading-anchor');
-  anchors.forEach(anchor => anchor.remove());
+  const anchors = clone.querySelectorAll(".heading-anchor");
+  anchors.forEach((anchor) => anchor.remove());
 
-  return clone.textContent?.trim() || '';
+  return clone.textContent?.trim() || "";
 };
 
 /**
@@ -52,7 +53,7 @@ const initHeading = (heading: HTMLElement): void => {
   }
 
   // Preserve the anchor link if present
-  const anchor = heading.querySelector('.heading-anchor');
+  const anchor = heading.querySelector(".heading-anchor");
 
   // Split the text into chars
   const chars = splitIntoChars(heading, text);
@@ -64,9 +65,9 @@ const initHeading = (heading: HTMLElement): void => {
 
   const state = createState(chars, HEADING_INTERVAL, HEADING_SPREAD);
   headingStates.set(heading, state);
-  heading.setAttribute(INITIALISED_ATTR, '');
+  heading.setAttribute(INITIALISED_ATTR, "");
 
-  heading.addEventListener('mouseenter', () => {
+  heading.addEventListener("mouseenter", () => {
     const s = headingStates.get(heading);
 
     if (s) {
@@ -74,7 +75,7 @@ const initHeading = (heading: HTMLElement): void => {
     }
   });
 
-  heading.addEventListener('mouseleave', () => {
+  heading.addEventListener("mouseleave", () => {
     const s = headingStates.get(heading);
 
     if (s) {
@@ -87,10 +88,12 @@ const initHeading = (heading: HTMLElement): void => {
  * Initialise all prose headings
  */
 const init = (): void => {
-  const headings = document.querySelectorAll<HTMLElement>(PROSE_HEADING_SELECTOR);
+  const headings = document.querySelectorAll<HTMLElement>(
+    PROSE_HEADING_SELECTOR
+  );
   headings.forEach(initHeading);
 };
 
 // Initialise on load and after Astro page transitions
 init();
-document.addEventListener('astro:after-swap', init);
+document.addEventListener("astro:after-swap", init);

@@ -97,8 +97,15 @@ const sharedRules = {
   "object-shorthand": ["error", "always"],
   // Don't initialise to undefined explicitly
   "no-undef-init": "error",
-  // 2-space indentation
-  indent: ["error", 2, {SwitchCase: 1}],
+  // 2-space indentation (ignores template literals for Prettier compatibility)
+  indent: [
+    "error",
+    2,
+    {
+      SwitchCase: 1,
+      ignoredNodes: ["TemplateLiteral *", "TaggedTemplateExpression *"],
+    },
+  ],
 
   // === Function Declarations ===
   // Ban function declarations - use const arrow functions instead.
@@ -223,6 +230,8 @@ const eslintConfig = [
     },
     rules: {
       ...sharedRules,
+      // Disable indent rule for Astro - prettier-plugin-astro handles formatting
+      indent: "off",
 
       // === File Naming Conventions ===
       // Note: Dynamic route files like [slug].astro are not validated
