@@ -6,12 +6,7 @@
  * Updates dynamically when theme changes.
  */
 
-const themeLabels: Record<string, string> = {
-  steel: "STEEL GREY + WARM CREAM",
-  purple: "DARK PURPLE + GOLD",
-  charcoal: "WARM CHARCOAL + OFF-WHITE",
-  teal: "DARK TEAL + CORAL",
-};
+import {THEME_LABELS} from "../config/themes";
 ---
 
 <footer
@@ -25,8 +20,8 @@ const themeLabels: Record<string, string> = {
   </div>
 </footer>
 
-<script define:vars={{themeLabels}}>
-  window.__themeLabels = themeLabels;
+<script define:vars={{THEME_LABELS}}>
+  window.__themeLabels = THEME_LABELS;
 </script>
 
 <style>

@@ -9,11 +9,10 @@
 
 import {html} from "satori-html";
 
+import {THEME_LABELS} from "../../config/themes";
 import type {Theme} from "../../types";
 
 import {THEME_COLOURS} from "../theme";
-
-import {THEME_LABELS} from "./theme";
 
 /**
  * Canvas dimensions for OG images.

@@ -4,20 +4,8 @@
  * Deterministically selects a theme based on title hash.
  */
 
+import {THEME_ORDER} from "../../config/themes";
 import type {Theme} from "../../types";
-
-export const THEMES: Theme[] = ["steel", "purple", "charcoal", "teal"];
-
-/**
- * Theme labels for OG images.
- * Uppercase descriptive names shown below the date divider.
- */
-export const THEME_LABELS: Record<Theme, string> = {
-  steel: "STEEL GREY + WARM CREAM",
-  purple: "DARK PURPLE + GOLD",
-  charcoal: "WARM CHARCOAL + OFF-WHITE",
-  teal: "DARK TEAL + CORAL",
-};
 
 /**
  * Simple hash function for strings.
@@ -39,6 +27,6 @@ const hashString = (str: string): number => {
  */
 export const getThemeFromTitle = (title: string): Theme => {
   const hash = hashString(title);
-  const index = hash % THEMES.length;
-  return THEMES[index];
+  const index = hash % THEME_ORDER.length;
+  return THEME_ORDER[index];
 };

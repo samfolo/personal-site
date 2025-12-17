@@ -13,6 +13,7 @@ import FixedHeader from "../components/FixedHeader.astro";
 import JsonLd from "../components/JsonLd.astro";
 import SEO from "../components/SEO.astro";
 import ThemeSwitcher from "../components/ThemeSwitcher.astro";
+import {THEME_CLASSES} from "../config/themes";
 import "../styles/global.css";
 import type {Theme} from "../types";
 
@@ -105,15 +106,9 @@ const {
     <ClientRouter />
   </head>
   <body class="@container/page min-h-dvh">
-    <script is:inline>
+    <script is:inline define:vars={{THEME_CLASSES}}>
       (function () {
         const THEME_KEY = "theme";
-        const THEME_CLASSES = [
-          "theme-steel",
-          "theme-purple",
-          "theme-charcoal",
-          "theme-teal",
-        ];
 
         const applyStoredTheme = () => {
           const saved = localStorage.getItem(THEME_KEY);
