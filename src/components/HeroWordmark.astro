@@ -1,0 +1,57 @@
+---
+/**
+ * HeroWordmark Component
+ *
+ * The main wordmark displayed in the hero section.
+ * Includes data-scroll-trigger attribute for scroll-header.ts
+ * to toggle fixed header visibility.
+ */
+
+import SheenText from "./SheenText.astro";
+
+/** Interval between sheen animations on each character (ms) */
+const SHEEN_INTERVAL_MS = 30;
+
+interface Props {
+  class?: string;
+}
+
+const {class: className} = Astro.props;
+---
+
+<h1
+  id="hero-wordmark"
+  class:list={["hero-wordmark", className]}
+  data-scroll-trigger
+>
+  <span class="hero-wordmark-line">
+    <SheenText text="Sam" tag="span" interval={SHEEN_INTERVAL_MS} />
+  </span>
+  <span class="hero-wordmark-line">
+    <SheenText text="Folorunsho." tag="span" interval={SHEEN_INTERVAL_MS} />
+  </span>
+</h1>
+
+<style>
+  .hero-wordmark {
+    display: flex;
+    flex-direction: column;
+    font-size: clamp(48px, 12vw, 96px);
+    font-weight: var(--font-extrabold);
+    line-height: var(--leading-tighter);
+    letter-spacing: var(--tracking-display);
+    margin-bottom: var(--space-4);
+  }
+
+  .hero-wordmark-line {
+    display: block;
+    line-height: inherit;
+  }
+
+  /* Ensure sheen elements maintain tight line-height */
+  .hero-wordmark :global(.sheen-text),
+  .hero-wordmark :global(.sheen-word),
+  .hero-wordmark :global(.sheen-char) {
+    line-height: inherit;
+  }
+</style>

@@ -14,11 +14,16 @@ import {formatDate, formatUpdatedDate} from "../utils/format-date";
 
 import Base from "./Base.astro";
 
+interface PostNavLink {
+  slug: string;
+  title: string;
+}
+
 interface Props {
   post: CollectionEntry<"blog">;
   readingTime: string;
-  prevPost?: {slug: string; title: string} | null;
-  nextPost?: {slug: string; title: string} | null;
+  prevPost?: PostNavLink | null;
+  nextPost?: PostNavLink | null;
 }
 
 const {post, readingTime, prevPost, nextPost} = Astro.props;

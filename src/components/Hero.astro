@@ -9,8 +9,8 @@
 
 import {NAV_LINKS} from "../config/navigation";
 
+import HeroWordmark from "./HeroWordmark.astro";
 import Nav from "./Nav.astro";
-import SheenText from "./SheenText.astro";
 
 interface Props {
   class?: string;
@@ -27,14 +27,7 @@ const {class: className} = Astro.props;
     </div>
 
     <!-- Wordmark (observed by scroll-header.ts via data-scroll-trigger) -->
-    <h1 id="hero-wordmark" class="hero-wordmark" data-scroll-trigger>
-      <span class="wordmark-line">
-        <SheenText text="Sam" tag="span" interval={30} />
-      </span>
-      <span class="wordmark-line">
-        <SheenText text="Folorunsho." tag="span" interval={30} />
-      </span>
-    </h1>
+    <HeroWordmark />
 
     <!-- Tagline -->
     <p class="hero-tagline">
@@ -82,29 +75,6 @@ const {class: className} = Astro.props;
     justify-content: flex-end;
     width: 100%;
     margin-bottom: var(--space-6);
-  }
-
-  /* Wordmark */
-  .hero-wordmark {
-    display: flex;
-    flex-direction: column;
-    font-size: clamp(48px, 12vw, 96px);
-    font-weight: var(--font-extrabold);
-    line-height: var(--leading-tighter);
-    letter-spacing: var(--tracking-display);
-    margin-bottom: var(--space-4);
-  }
-
-  .wordmark-line {
-    display: block;
-    line-height: inherit;
-  }
-
-  /* Ensure sheen elements maintain tight line-height */
-  .hero-wordmark :global(.sheen-text),
-  .hero-wordmark :global(.sheen-word),
-  .hero-wordmark :global(.sheen-char) {
-    line-height: inherit;
   }
 
   /* Tagline */

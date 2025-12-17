@@ -126,6 +126,13 @@ const getCentreOpacityFactor = (x: number, screenWidth: number): number => {
 // Boid Class
 // =============================================================================
 
+/** Target edge point for scatter behaviour */
+interface TargetEdge {
+  x: number;
+  y: number;
+  d: number;
+}
+
 class Boid {
   private p: p5;
   position: p5.Vector;
@@ -133,7 +140,7 @@ class Boid {
   acceleration: p5.Vector;
   opacity: number;
   isScattering: boolean;
-  private targetEdge: {x: number; y: number; d: number} | null;
+  private targetEdge: TargetEdge | null;
   private hasExited: boolean;
 
   constructor(p: p5) {

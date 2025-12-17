@@ -139,6 +139,48 @@ const sharedRules = {
       message:
         "Define interfaces separately instead of using inline type literals.",
     },
+    // Generic type constraints: <T extends {foo: string}>
+    {
+      selector: "TSTypeParameter TSTypeLiteral",
+      message:
+        "Define interfaces separately instead of using inline type literals in generic constraints.",
+    },
+    // Array element types: {foo: string}[]
+    {
+      selector: "TSArrayType > TSTypeLiteral",
+      message:
+        "Define interfaces separately instead of using inline type literals in array types.",
+    },
+    // Union type members: {a: string} | {b: number}
+    {
+      selector: "TSUnionType > TSTypeLiteral",
+      message:
+        "Define interfaces separately instead of using inline type literals in union types.",
+    },
+    // Intersection type members: {a: string} & {b: number}
+    {
+      selector: "TSIntersectionType > TSTypeLiteral",
+      message:
+        "Define interfaces separately instead of using inline type literals in intersection types.",
+    },
+    // Function type parameters: (arg: {foo: string}) => void
+    {
+      selector: "TSFunctionType TSTypeLiteral",
+      message:
+        "Define interfaces separately instead of using inline type literals in function types.",
+    },
+    // Mapped type value types: {[K in Keys]: {value: K}}
+    {
+      selector: "TSMappedType TSTypeLiteral",
+      message:
+        "Define interfaces separately instead of using inline type literals in mapped types.",
+    },
+    // Generic type arguments: Record<string, {value: number}>, Promise<{data: T}>
+    {
+      selector: "TSTypeParameterInstantiation TSTypeLiteral",
+      message:
+        "Define interfaces separately instead of using inline type literals in generic type arguments.",
+    },
   ],
 };
 
