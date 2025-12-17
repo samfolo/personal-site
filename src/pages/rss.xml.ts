@@ -4,7 +4,7 @@ import {getCollection} from 'astro:content';
 
 import {SITE} from '../config';
 
-export async function GET(context: APIContext) {
+export const GET = async (context: APIContext) => {
   const site = context.site ?? new URL(SITE.url);
   const posts = await getCollection('blog', ({data}) => !data.draft);
 
@@ -26,4 +26,4 @@ export async function GET(context: APIContext) {
     customData: `<language>en-gb</language>`,
     stylesheet: '/rss/styles.xsl',
   });
-}
+};

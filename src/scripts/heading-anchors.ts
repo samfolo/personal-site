@@ -5,7 +5,7 @@
  * Also handles hash navigation on page load.
  */
 
-function init(): void {
+const init = (): void => {
   const anchors = document.querySelectorAll<HTMLAnchorElement>('[data-heading-anchor]');
 
   anchors.forEach((anchor) => {
@@ -13,7 +13,10 @@ function init(): void {
       event.preventDefault();
 
       const href = anchor.getAttribute('href');
-      if (!href) {return;}
+
+      if (!href) {
+        return;
+      }
 
       // Build full URL
       const url = new URL(href, window.location.href);
@@ -34,13 +37,15 @@ function init(): void {
       }
     });
   });
-}
+};
 
 /**
  * Smooth scroll to heading if URL has a hash on page load
  */
-function handleInitialHash(): void {
-  if (!window.location.hash) {return;}
+const handleInitialHash = (): void => {
+  if (!window.location.hash) {
+    return;
+  }
 
   const targetId = window.location.hash.slice(1);
   const target = document.getElementById(targetId);
@@ -51,7 +56,7 @@ function handleInitialHash(): void {
       target.scrollIntoView({behavior: 'smooth'});
     });
   }
-}
+};
 
 // Initialise on load
 init();

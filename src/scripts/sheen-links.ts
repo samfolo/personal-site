@@ -25,14 +25,22 @@ const linkStates = new WeakMap<HTMLAnchorElement, SheenState>();
 /**
  * Initialise a single link
  */
-function initLink(link: HTMLAnchorElement): void {
+const initLink = (link: HTMLAnchorElement): void => {
   // Skip if already initialised or if link contains non-text content
-  if (link.hasAttribute(INITIALISED_ATTR)) {return;}
-  if (link.querySelector('img, svg, code')) {return;}
+  if (link.hasAttribute(INITIALISED_ATTR)) {
+    return;
+  }
+
+  if (link.querySelector('img, svg, code')) {
+    return;
+  }
 
   // Only process links with simple text content
   const text = link.textContent?.trim();
-  if (!text) {return;}
+
+  if (!text) {
+    return;
+  }
 
   const chars = splitIntoChars(link, text);
   const state = createState(chars, LINK_INTERVAL, LINK_SPREAD);
@@ -42,22 +50,28 @@ function initLink(link: HTMLAnchorElement): void {
 
   link.addEventListener('mouseenter', () => {
     const s = linkStates.get(link);
-    if (s) {startAnimation(s);}
+
+    if (s) {
+      startAnimation(s);
+    }
   });
 
   link.addEventListener('mouseleave', () => {
     const s = linkStates.get(link);
-    if (s) {stopAnimation(s);}
+
+    if (s) {
+      stopAnimation(s);
+    }
   });
-}
+};
 
 /**
  * Initialise all prose links
  */
-function init(): void {
+const init = (): void => {
   const links = document.querySelectorAll<HTMLAnchorElement>(PROSE_LINK_SELECTOR);
   links.forEach(initLink);
-}
+};
 
 // Initialise on load and after Astro page transitions
 init();

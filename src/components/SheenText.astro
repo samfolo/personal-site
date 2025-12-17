@@ -44,17 +44,23 @@ const tokens = text.split(/( )/);
   data-sheen-ready
   {...attrs}
 >
-  {tokens.map((token) =>
-    token === ' ' ? (
-      <span class="sheen-char">&nbsp;</span>
-    ) : token.length > 0 ? (
-      <span class="sheen-word">
-        {[...token].map((char) => (
-          <span class="sheen-char">{char}</span>
-        ))}
-      </span>
-    ) : null
-  )}
+  {tokens.map((token) => {
+    if (token === ' ') {
+      return <span class="sheen-char">&nbsp;</span>;
+    }
+
+    if (token.length > 0) {
+      return (
+        <span class="sheen-word">
+          {[...token].map((char) => (
+            <span class="sheen-char">{char}</span>
+          ))}
+        </span>
+      );
+    }
+
+    return null;
+  })}
 </Tag>
 
 <script src="../scripts/sheen.ts"></script>

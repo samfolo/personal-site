@@ -70,7 +70,7 @@ const themeLabels: Record<string, string> = {
     }
   }
 
-  function getThemeLabel(): string {
+  const getThemeLabel = (): string => {
     for (const cls of document.documentElement.classList) {
       if (cls.startsWith('theme-')) {
         const themeId = cls.replace('theme-', '');
@@ -78,17 +78,17 @@ const themeLabels: Record<string, string> = {
       }
     }
     return 'STEEL GREY + WARM CREAM';
-  }
+  };
 
-  function updateThemeName(): void {
+  const updateThemeName = (): void => {
     const themeNameEl = document.getElementById('theme-name');
     if (themeNameEl) {
       themeNameEl.textContent = getThemeLabel();
     }
-  }
+  };
 
   // Observe html element class changes for theme updates
-  function observeThemeChanges(): void {
+  const observeThemeChanges = (): void => {
     const observer = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === 'class') {
@@ -101,12 +101,12 @@ const themeLabels: Record<string, string> = {
       attributes: true,
       attributeFilter: ['class'],
     });
-  }
+  };
 
-  function init(): void {
+  const init = (): void => {
     updateThemeName();
     observeThemeChanges();
-  }
+  };
 
   init();
   document.addEventListener('astro:after-swap', init);

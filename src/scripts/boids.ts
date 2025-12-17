@@ -65,7 +65,7 @@ interface RGBColour {
  * Parse CSS colour value to RGB using canvas
  * This forces the browser to convert any colour format (including OKLCH) to RGB
  */
-function parseComputedColour(cssValue: string): RGBColour {
+const parseComputedColour = (cssValue: string): RGBColour => {
   // Use canvas to force colour conversion - fillStyle always returns hex or rgb
   const canvas = document.createElement('canvas');
   canvas.width = 1;
@@ -85,44 +85,21 @@ function parseComputedColour(cssValue: string): RGBColour {
 
   // Fallback to dark grey if canvas fails
   return {r: 50, g: 50, b: 50};
-}
+};
 
 /**
  * Read CSS custom property and parse to RGB
  */
-function getColourFromProperty(propertyName: string): RGBColour {
+const getColourFromProperty = (propertyName: string): RGBColour => {
   const value = getComputedStyle(document.documentElement).getPropertyValue(propertyName).trim();
   return parseComputedColour(value);
-}
-
-/**
- * Adjust an RGB colour by a given amount
- * Positive = brighten (towards 255), Negative = darken (towards 0)
- */
-function adjustColour(colour: RGBColour, amount: number): RGBColour {
-  if (amount >= 0) {
-    // Brighten: move towards 255
-    return {
-      r: Math.min(255, Math.round(colour.r + (255 - colour.r) * amount)),
-      g: Math.min(255, Math.round(colour.g + (255 - colour.g) * amount)),
-      b: Math.min(255, Math.round(colour.b + (255 - colour.b) * amount)),
-    };
-  } else {
-    // Darken: move towards 0
-    const darkenAmount = Math.abs(amount);
-    return {
-      r: Math.max(0, Math.round(colour.r * (1 - darkenAmount))),
-      g: Math.max(0, Math.round(colour.g * (1 - darkenAmount))),
-      b: Math.max(0, Math.round(colour.b * (1 - darkenAmount))),
-    };
-  }
-}
+};
 
 /**
  * Calculate opacity factor based on distance from centre vertical axis
  * Returns CENTRE_MIN_OPACITY within the clear zone, scaling to 1.0 at screen edges
  */
-function getCentreOpacityFactor(x: number, screenWidth: number): number {
+const getCentreOpacityFactor = (x: number, screenWidth: number): number => {
   const centreX = screenWidth / 2;
   const distanceFromCentre = Math.abs(x - centreX);
 
@@ -135,11 +112,13 @@ function getCentreOpacityFactor(x: number, screenWidth: number): number {
   const distanceBeyondZone = distanceFromCentre - CENTRE_CLEAR_ZONE;
   const maxDistanceBeyondZone = centreX - CENTRE_CLEAR_ZONE;
 
-  if (maxDistanceBeyondZone <= 0) {return 1;} // Screen narrower than clear zone
+  if (maxDistanceBeyondZone <= 0) {
+    return 1;
+  } // Screen narrower than clear zone
 
   const factor = distanceBeyondZone / maxDistanceBeyondZone;
   return CENTRE_MIN_OPACITY + factor * (1 - CENTRE_MIN_OPACITY);
-}
+};
 
 // =============================================================================
 // Boid Class
@@ -475,16 +454,15 @@ const state: BoidsState = {
 /**
  * Update colour based on current theme's --rule property
  */
-function updateColours(): void {
+const updateColours = (): void => {
   state.colour = getColourFromProperty('--rule');
-}
+};
 
 /**
  * Get population based on screen width
  */
-function getPopulation(): number {
-  return window.innerWidth < MOBILE_BREAKPOINT ? POPULATION_MOBILE : POPULATION;
-}
+const getPopulation = (): number =>
+  window.innerWidth < MOBILE_BREAKPOINT ? POPULATION_MOBILE : POPULATION;
 
 // =============================================================================
 // Network Lines
@@ -493,9 +471,11 @@ function getPopulation(): number {
 /**
  * Draw network lines connecting nearby boids
  */
-function drawNetworkLines(p: p5, boids: Boid[], colour: RGBColour): void {
+const drawNetworkLines = (p: p5, boids: Boid[], colour: RGBColour): void => {
   // Skip during scatter for performance
-  if (state.isScattered && !state.isRespawning) {return;}
+  if (state.isScattered && !state.isRespawning) {
+    return;
+  }
 
   const maxRange = PERCEPTION_RADIUS * NETWORK_RANGE_MULTIPLIER;
 
@@ -530,16 +510,19 @@ function drawNetworkLines(p: p5, boids: Boid[], colour: RGBColour): void {
       p.line(boid.position.x, boid.position.y, conn.boid.position.x, conn.boid.position.y);
     }
   }
-}
+};
 
 // =============================================================================
 // P5.js Sketch
 // =============================================================================
 
-function sketch(p: p5): void {
+const sketch = (p: p5): void => {
   p.setup = (): void => {
     const container = document.getElementById(CANVAS_CONTAINER_ID);
-    if (!container) {return;}
+
+    if (!container) {
+      return;
+    }
 
     const canvas = p.createCanvas(p.windowWidth, p.windowHeight);
     canvas.parent(container);
@@ -558,10 +541,14 @@ function sketch(p: p5): void {
 
   p.draw = (): void => {
     // Skip if document is hidden (tab not visible)
-    if (document.hidden) {return;}
+    if (document.hidden) {
+      return;
+    }
 
     // Skip if all boids have exited during scatter
-    if (state.allExited && !state.isRespawning) {return;}
+    if (state.allExited && !state.isRespawning) {
+      return;
+    }
 
     p.clear();
 
@@ -599,7 +586,7 @@ function sketch(p: p5): void {
   p.windowResized = (): void => {
     p.resizeCanvas(p.windowWidth, p.windowHeight);
   };
-}
+};
 
 // =============================================================================
 // Scatter and Respawn Control
@@ -608,8 +595,10 @@ function sketch(p: p5): void {
 /**
  * Trigger scatter behaviour for all boids
  */
-function triggerScatter(): void {
-  if (state.isScattered) {return;}
+const triggerScatter = (): void => {
+  if (state.isScattered) {
+    return;
+  }
 
   state.isScattered = true;
   state.allExited = false;
@@ -617,13 +606,15 @@ function triggerScatter(): void {
   for (const boid of state.boids) {
     boid.startScatter();
   }
-}
+};
 
 /**
  * Trigger respawn - reset all boids and fade in
  */
-function triggerRespawn(): void {
-  if (!state.isScattered) {return;}
+const triggerRespawn = (): void => {
+  if (!state.isScattered) {
+    return;
+  }
 
   state.isScattered = false;
   state.isRespawning = true;
@@ -633,15 +624,18 @@ function triggerRespawn(): void {
   for (const boid of state.boids) {
     boid.reset();
   }
-}
+};
 
 // =============================================================================
 // Intersection Observer for Scatter/Respawn
 // =============================================================================
 
-function setupScrollObserver(): void {
+const setupScrollObserver = (): void => {
   const heroWordmark = document.getElementById(HERO_WORDMARK_ID);
-  if (!heroWordmark) {return;}
+
+  if (!heroWordmark) {
+    return;
+  }
 
   // Clean up existing observer
   if (state.observer) {
@@ -666,13 +660,13 @@ function setupScrollObserver(): void {
   );
 
   state.observer.observe(heroWordmark);
-}
+};
 
 // =============================================================================
 // Theme Change Observer
 // =============================================================================
 
-function setupThemeObserver(): void {
+const setupThemeObserver = (): void => {
   // Clean up existing observer
   if (state.mutationObserver) {
     state.mutationObserver.disconnect();
@@ -690,13 +684,13 @@ function setupThemeObserver(): void {
     attributes: true,
     attributeFilter: ['class'],
   });
-}
+};
 
 // =============================================================================
 // Initialisation and Cleanup
 // =============================================================================
 
-function cleanup(): void {
+const cleanup = (): void => {
   if (state.p5Instance) {
     state.p5Instance.remove();
     state.p5Instance = null;
@@ -713,11 +707,14 @@ function cleanup(): void {
   state.isScattered = false;
   state.isRespawning = false;
   state.allExited = false;
-}
+};
 
-function init(): void {
+const init = (): void => {
   const container = document.getElementById(CANVAS_CONTAINER_ID);
-  if (!container) {return;}
+
+  if (!container) {
+    return;
+  }
 
   // Clean up any existing instance
   cleanup();
@@ -728,7 +725,7 @@ function init(): void {
   // Set up observers
   setupScrollObserver();
   setupThemeObserver();
-}
+};
 
 // Initialise on load and after Astro page transitions
 init();

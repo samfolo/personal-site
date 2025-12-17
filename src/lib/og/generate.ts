@@ -21,7 +21,7 @@ const HEIGHT = 630;
  * @param options - Template options (title, date, theme)
  * @returns PNG image as Buffer
  */
-export async function generateOgImage(options: OgTemplateOptions): Promise<Buffer> {
+export const generateOgImage = async (options: OgTemplateOptions): Promise<Buffer> => {
   const template = createOgTemplate(options);
 
   const svg = await satori(template, {
@@ -40,4 +40,4 @@ export async function generateOgImage(options: OgTemplateOptions): Promise<Buffe
 
   const pngData = resvg.render();
   return pngData.asPng();
-}
+};

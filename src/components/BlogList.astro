@@ -23,28 +23,28 @@ const {posts} = Astro.props;
 /**
  * Formats a date string as "December 2024" for month labels
  */
-function formatMonthLabel(dateString: string): string {
+const formatMonthLabel = (dateString: string): string => {
   const date = new Date(dateString);
   return new Intl.DateTimeFormat('en-GB', {
     month: 'long',
     year: 'numeric',
   }).format(date);
-}
+};
 
 /**
  * Formats a date string as "12 Dec" for post dates
  */
-function formatPostDate(dateString: string): string {
+const formatPostDate = (dateString: string): string => {
   const date = new Date(dateString);
   const day = date.getDate();
   const month = new Intl.DateTimeFormat('en-GB', {month: 'short'}).format(date);
   return `${day} ${month}`;
-}
+};
 
 /**
  * Groups posts by month-year and returns in reverse chronological order
  */
-function groupPostsByMonth(posts: Post[]): Map<string, Post[]> {
+const groupPostsByMonth = (posts: Post[]): Map<string, Post[]> => {
   // Sort posts by date (newest first)
   const sortedPosts = [...posts].sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
@@ -64,7 +64,7 @@ function groupPostsByMonth(posts: Post[]): Map<string, Post[]> {
   }
 
   return groups;
-}
+};
 
 const groupedPosts = groupPostsByMonth(posts);
 ---

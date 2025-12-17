@@ -19,7 +19,7 @@ export const WORD_CLASS = 'sheen-word';
 /**
  * Split text into individual character spans, grouped by words to prevent mid-word breaks
  */
-export function splitIntoChars(element: HTMLElement, text: string): HTMLSpanElement[] {
+export const splitIntoChars = (element: HTMLElement, text: string): HTMLSpanElement[] => {
   const chars: HTMLSpanElement[] = [];
   element.innerHTML = '';
 
@@ -52,22 +52,22 @@ export function splitIntoChars(element: HTMLElement, text: string): HTMLSpanElem
   }
 
   return chars;
-}
+};
 
 /**
  * Reset all characters to default styles
  */
-export function resetStyles(chars: HTMLSpanElement[]): void {
+export const resetStyles = (chars: HTMLSpanElement[]): void => {
   for (const char of chars) {
     char.style.color = '';
   }
-}
+};
 
 /**
  * Apply sheen colours at the current frame position
  * Creates a gradient from centre (100% highlight) to edges
  */
-export function applyFrame(chars: HTMLSpanElement[], frame: number, spread: number): void {
+export const applyFrame = (chars: HTMLSpanElement[], frame: number, spread: number): void => {
   for (let i = 0; i < chars.length; i++) {
     const distance = Math.abs(i - frame);
 
@@ -83,12 +83,12 @@ export function applyFrame(chars: HTMLSpanElement[], frame: number, spread: numb
       chars[i].style.color = '';
     }
   }
-}
+};
 
 /**
  * Start the sheen animation on an element
  */
-export function startAnimation(state: SheenState): void {
+export const startAnimation = (state: SheenState): void => {
   // Cancel any existing animation
   if (state.animationId !== null) {
     clearInterval(state.animationId);
@@ -110,33 +110,31 @@ export function startAnimation(state: SheenState): void {
       resetStyles(state.chars);
     }
   }, state.interval);
-}
+};
 
 /**
  * Stop the sheen animation and reset styles
  */
-export function stopAnimation(state: SheenState): void {
+export const stopAnimation = (state: SheenState): void => {
   if (state.animationId !== null) {
     clearInterval(state.animationId);
     state.animationId = null;
   }
 
   resetStyles(state.chars);
-}
+};
 
 /**
  * Create a new sheen state object
  */
-export function createState(
+export const createState = (
   chars: HTMLSpanElement[],
   interval: number = 15,
   spread: number = 2
-): SheenState {
-  return {
-    chars,
-    interval,
-    spread,
-    animationId: null,
-    frame: 0,
-  };
-}
+): SheenState => ({
+  chars,
+  interval,
+  spread,
+  animationId: null,
+  frame: 0,
+});

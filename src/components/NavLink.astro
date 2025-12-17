@@ -36,7 +36,7 @@ const isExactMatch = pathname === href;
    * Sync nav link active states with current URL
    * Required because header uses transition:persist, so DOM isn't replaced on navigation
    */
-  function syncNavLinkStates(): void {
+  const syncNavLinkStates = (): void => {
     const pathname = window.location.pathname;
 
     document.querySelectorAll<HTMLAnchorElement>('a.nav-link').forEach((link) => {
@@ -62,12 +62,12 @@ const isExactMatch = pathname === href;
         link.removeAttribute('data-nav-exact');
       }
     });
-  }
+  };
 
   /**
    * Prevent navigation when clicking on exact match links
    */
-  function initActiveLinks(): void {
+  const initActiveLinks = (): void => {
     document.querySelectorAll<HTMLAnchorElement>('a.nav-link').forEach((link) => {
       // Remove existing listeners by cloning (prevents duplicates on re-init)
       const newLink = link.cloneNode(true) as HTMLAnchorElement;

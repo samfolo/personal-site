@@ -12,38 +12,38 @@ import {visit} from 'unist-util-visit';
 
 const HEADING_TAGS = new Set(['h2', 'h3', 'h4', 'h5', 'h6']);
 
-export default function rehypeHeadingAnchors() {
-  return (tree: Root) => {
-    const slugger = new GithubSlugger();
+const rehypeHeadingAnchors = () => (tree: Root) => {
+  const slugger = new GithubSlugger();
 
-    visit(tree, 'element', (node: Element) => {
-      // Only process h2-h6
-      if (!HEADING_TAGS.has(node.tagName)) {
-        return;
-      }
+  visit(tree, 'element', (node: Element) => {
+    // Only process h2-h6
+    if (!HEADING_TAGS.has(node.tagName)) {
+      return;
+    }
 
-      const text = toString(node);
-      const id = slugger.slug(text);
+    const text = toString(node);
+    const id = slugger.slug(text);
 
-      // Add id to the heading
-      node.properties = node.properties || {};
-      node.properties.id = id;
+    // Add id to the heading
+    node.properties = node.properties || {};
+    node.properties.id = id;
 
-      // Create anchor link element
-      const anchor: Element = {
-        type: 'element',
-        tagName: 'a',
-        properties: {
-          href: `#${id}`,
-          className: ['heading-anchor'],
-          'aria-label': `Link to section: ${text}`,
-          'data-heading-anchor': '',
-        },
-        children: [{type: 'text', value: '§'}],
-      };
+    // Create anchor link element
+    const anchor: Element = {
+      type: 'element',
+      tagName: 'a',
+      properties: {
+        href: `#${id}`,
+        className: ['heading-anchor'],
+        'aria-label': `Link to section: ${text}`,
+        'data-heading-anchor': '',
+      },
+      children: [{type: 'text', value: '§'}],
+    };
 
-      // Prepend anchor to heading children
-      node.children.unshift(anchor);
-    });
-  };
-}
+    // Prepend anchor to heading children
+    node.children.unshift(anchor);
+  });
+};
+
+export default rehypeHeadingAnchors;

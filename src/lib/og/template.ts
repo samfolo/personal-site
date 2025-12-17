@@ -13,7 +13,7 @@ import type {Theme} from '../../types';
 
 import {THEME_COLOURS} from '../theme';
 
-import {THEME_LABELS, THEMES} from './theme';
+import {THEME_LABELS} from './theme';
 
 /**
  * Canvas dimensions for OG images.
@@ -54,29 +54,29 @@ export interface OgTemplateOptions {
 /**
  * Format date as DD.MM.YYYY
  */
-function formatOgDate(date: Date): string {
-  return date
+const formatOgDate = (date: Date): string =>
+  date
     .toLocaleDateString('en-GB', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric',
     })
     .replace(/\//g, '.');
-}
 
 
 /**
  * Get button outline style if this is the active theme.
  */
-function getButtonStyle(theme: Theme, activeTheme: Theme, activeFg: string): string {
+const getButtonStyle = (theme: Theme, activeTheme: Theme, activeFg: string): string => {
   // Use border instead of outline since Satori doesn't support outline well
   // Active button gets a border with padding to create offset effect
   if (theme === activeTheme) {
     return `border: ${BUTTON.border}px solid ${activeFg}; padding: ${BUTTON.border}px;`;
   }
+
   // Inactive buttons get transparent border to maintain consistent sizing
   return `border: ${BUTTON.border}px solid transparent; padding: ${BUTTON.border}px;`;
-}
+};
 
 /**
  * Create HTML template for OG image.
@@ -84,7 +84,7 @@ function getButtonStyle(theme: Theme, activeTheme: Theme, activeFg: string): str
  * @param options - Title, optional date, and theme
  * @returns satori-html virtual DOM node
  */
-export function createOgTemplate(options: OgTemplateOptions): ReturnType<typeof html> {
+export const createOgTemplate = (options: OgTemplateOptions): ReturnType<typeof html> => {
   const {title, date, theme} = options;
   const colours = THEME_COLOURS[theme];
 
@@ -179,4 +179,4 @@ export function createOgTemplate(options: OgTemplateOptions): ReturnType<typeof 
       </div>
     </div>
   `;
-}
+};

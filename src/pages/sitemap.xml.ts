@@ -3,7 +3,7 @@ import {getCollection} from 'astro:content';
 
 import {SITE} from '../config';
 
-export async function GET(context: APIContext) {
+export const GET = async (context: APIContext) => {
   const site = context.site ?? new URL(SITE.url);
   const posts = await getCollection('blog', ({data}) => !data.draft);
 
@@ -40,4 +40,4 @@ ${allPages
   return new Response(xml.trim(), {
     headers: {'Content-Type': 'application/xml'},
   });
-}
+};

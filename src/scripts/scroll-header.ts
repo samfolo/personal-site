@@ -12,7 +12,7 @@ const HEADER_ID = 'fixed-header';
 const SCROLL_TRIGGER_SELECTOR = '[data-scroll-trigger]';
 const INITIAL_SWITCHER_ID = 'initial-theme-switcher';
 
-function init(): void {
+const init = (): void => {
   const header = document.getElementById(HEADER_ID);
   const scrollTrigger = document.querySelector<HTMLElement>(SCROLL_TRIGGER_SELECTOR);
   const initialSwitcher = document.getElementById(INITIAL_SWITCHER_ID);
@@ -52,7 +52,7 @@ function init(): void {
   );
 
   observer.observe(scrollTrigger);
-}
+};
 
 // Initialise on load and after Astro page transitions
 init();

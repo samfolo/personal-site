@@ -26,16 +26,17 @@ const sheenStates = new WeakMap<HTMLElement, SheenState>();
 /**
  * Collect existing character spans from a pre-split element
  */
-function collectChars(element: HTMLElement): HTMLSpanElement[] {
-  return Array.from(element.querySelectorAll<HTMLSpanElement>(`.${CHAR_CLASS}`));
-}
+const collectChars = (element: HTMLElement): HTMLSpanElement[] =>
+  Array.from(element.querySelectorAll<HTMLSpanElement>(`.${CHAR_CLASS}`));
 
 /**
  * Initialise a single sheen element
  */
-function initElement(element: HTMLElement): void {
+const initElement = (element: HTMLElement): void => {
   // Skip if already initialised
-  if (sheenStates.has(element)) {return;}
+  if (sheenStates.has(element)) {
+    return;
+  }
 
   const interval = parseInt(element.dataset.sheenInterval ?? '15', 10);
   const spread = parseInt(element.dataset.sheenSpread ?? '2', 10);
@@ -48,35 +49,47 @@ function initElement(element: HTMLElement): void {
     chars = collectChars(element);
   } else {
     const text = element.dataset.sheenText;
-    if (!text) {return;}
+
+    if (!text) {
+      return;
+    }
+
     chars = splitIntoChars(element, text);
   }
 
-  if (chars.length === 0) {return;}
+  if (chars.length === 0) {
+    return;
+  }
 
   const state = createState(chars, interval, spread);
   sheenStates.set(element, state);
 
   element.addEventListener('mouseenter', () => {
     const s = sheenStates.get(element);
-    if (s) {startAnimation(s);}
+
+    if (s) {
+      startAnimation(s);
+    }
   });
 
   element.addEventListener('mouseleave', () => {
     const s = sheenStates.get(element);
-    if (s) {stopAnimation(s);}
+
+    if (s) {
+      stopAnimation(s);
+    }
   });
-}
+};
 
 /**
  * Initialise all sheen elements on the page
  */
-function init(): void {
+const init = (): void => {
   const elements = document.querySelectorAll<HTMLElement>(
     `${SHEEN_READY_SELECTOR}, ${SHEEN_TEXT_SELECTOR}`
   );
   elements.forEach(initElement);
-}
+};
 
 // Initialise on load and after Astro page transitions
 init();

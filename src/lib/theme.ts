@@ -20,10 +20,10 @@ export interface ThemeColours {
  * Convert OKLCH values to hex string.
  * Maps to the OKLCH values in src/styles/tokens/colours.css
  */
-function oklchToHex(l: number, c: number, h: number): string {
+const oklchToHex = (l: number, c: number, h: number): string => {
   const color = oklch({mode: 'oklch', l, c, h});
   return formatHex(color) ?? '#000000';
-}
+};
 
 /**
  * OKLCH values from src/styles/tokens/colours.css

@@ -90,23 +90,23 @@ const themes: Array<{ id: ThemeId; label: string }> = [
   const THEME_ORDER = Object.keys(THEME_LABELS);
   const THEME_CLASSES = THEME_ORDER.map((id) => `theme-${id}`);
 
-  function setTheme(themeId: string): void {
+  const setTheme = (themeId: string): void => {
     document.documentElement.classList.remove(...THEME_CLASSES);
     document.documentElement.classList.add(`theme-${themeId}`);
     localStorage.setItem(THEME_KEY, themeId);
     setFavicon(themeId);
     setThemeColor(themeId);
     updateActiveStates(themeId);
-  }
+  };
 
-  function cycleTheme(): void {
+  const cycleTheme = (): void => {
     const current = getCurrentTheme();
     const currentIndex = THEME_ORDER.indexOf(current);
     const nextIndex = (currentIndex + 1) % THEME_ORDER.length;
     setTheme(THEME_ORDER[nextIndex]);
-  }
+  };
 
-  function updateActiveStates(activeTheme: string): void {
+  const updateActiveStates = (activeTheme: string): void => {
     document.querySelectorAll('.theme-button').forEach((button) => {
       const isActive = button.getAttribute('data-theme') === activeTheme;
       button.setAttribute('data-active', String(isActive));
@@ -117,18 +117,18 @@ const themes: Array<{ id: ThemeId; label: string }> = [
     document.querySelectorAll('.theme-toggle-mobile').forEach((button) => {
       button.setAttribute('aria-label', `Cycle colour theme, currently ${label}`);
     });
-  }
+  };
 
-  function getCurrentTheme(): string {
+  const getCurrentTheme = (): string => {
     for (const cls of document.documentElement.classList) {
       if (cls.startsWith('theme-')) {
         return cls.replace('theme-', '');
       }
     }
     return 'steel';
-  }
+  };
 
-  function init(): void {
+  const init = (): void => {
     const currentTheme = getCurrentTheme();
     updateActiveStates(currentTheme);
 
@@ -146,7 +146,7 @@ const themes: Array<{ id: ThemeId; label: string }> = [
     document.querySelectorAll('.theme-toggle-mobile').forEach((button) => {
       button.addEventListener('click', cycleTheme);
     });
-  }
+  };
 
   // Initialise on DOM ready and after Astro page transitions
   init();

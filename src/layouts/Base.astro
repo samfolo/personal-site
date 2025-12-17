@@ -8,12 +8,12 @@
 
 import {ClientRouter} from 'astro:transitions';
 
-import '../styles/global.css';
 import FixedFooter from '../components/FixedFooter.astro';
 import FixedHeader from '../components/FixedHeader.astro';
 import JsonLd from '../components/JsonLd.astro';
 import SEO from '../components/SEO.astro';
 import ThemeSwitcher from '../components/ThemeSwitcher.astro';
+import '../styles/global.css';
 import type {Theme} from '../types';
 
 interface Props {
@@ -59,11 +59,11 @@ const {
       (function() {
         const colours = {steel: '#191d21', purple: '#1e1a24', charcoal: '#212121', teal: '#0d1f1f'};
 
-        function applyThemeColour() {
+        const applyThemeColour = () => {
           const theme = localStorage.getItem('theme') || 'steel';
           const meta = document.querySelector('meta[data-theme-color]');
           if (meta && colours[theme]) {meta.content = colours[theme];}
-        }
+        };
 
         applyThemeColour();
         document.addEventListener('astro:after-swap', applyThemeColour);
@@ -101,13 +101,13 @@ const {
         const THEME_KEY = 'theme';
         const THEME_CLASSES = ['theme-steel', 'theme-purple', 'theme-charcoal', 'theme-teal'];
 
-        function applyStoredTheme() {
+        const applyStoredTheme = () => {
           const saved = localStorage.getItem(THEME_KEY);
           if (saved && THEME_CLASSES.indexOf('theme-' + saved) !== -1) {
-            document.documentElement.classList.remove.apply(document.documentElement.classList, THEME_CLASSES);
+            document.documentElement.classList.remove(...THEME_CLASSES);
             document.documentElement.classList.add('theme-' + saved);
           }
-        }
+        };
 
         // Apply on initial load
         applyStoredTheme();

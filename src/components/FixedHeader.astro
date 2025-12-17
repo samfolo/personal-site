@@ -94,7 +94,7 @@ const navLinks = [
 </style>
 
 <script>
-  function initScrollToTop() {
+  const initScrollToTop = () => {
     const logomark = document.querySelector('.logomark[data-onclick="scrollToTop"]');
 
     logomark?.addEventListener('click', (e) => {
@@ -103,7 +103,7 @@ const navLinks = [
         window.scrollTo({top: 0, behavior: 'smooth'});
       }
     });
-  }
+  };
 
   initScrollToTop();
   document.addEventListener('astro:after-swap', initScrollToTop);

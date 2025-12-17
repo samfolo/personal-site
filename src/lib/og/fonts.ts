@@ -20,14 +20,16 @@ const FONT_NAME = 'Switzer';
 /**
  * Convert base64 string to ArrayBuffer.
  */
-function base64ToArrayBuffer(base64: string): ArrayBuffer {
+const base64ToArrayBuffer = (base64: string): ArrayBuffer => {
   const binary = atob(base64);
   const bytes = new Uint8Array(binary.length);
+
   for (let i = 0; i < binary.length; i++) {
     bytes[i] = binary.charCodeAt(i);
   }
+
   return bytes.buffer;
-}
+};
 
 /**
  * Font data decoded from embedded base64.
