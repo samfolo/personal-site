@@ -21,17 +21,6 @@ const PERCEPTION_RADIUS = 70;
 const MAX_SPEED = 3.2;
 const MAX_FORCE = 0.12;
 
-// Theme colour mapping for boids and network lines (RGB values)
-const THEME_COLOURS: Record<string, RGBColour> = {
-  steel: { r: 58, g: 64, b: 74 },
-  purple: { r: 41, g: 32, b: 54 },
-  charcoal: { r: 75, g: 75, b: 75 },
-  teal: { r: 45, g: 65, b: 65 },
-};
-
-// Fallback colour if theme not found
-const DEFAULT_BOID_COLOUR: RGBColour = { r: 60, g: 60, b: 60 };
-
 // Appearance
 const BOID_SIZE = 6.5;
 const BOID_WIDTH = 1.15;
@@ -474,7 +463,7 @@ interface BoidsState {
 const state: BoidsState = {
   p5Instance: null,
   boids: [],
-  colour: DEFAULT_BOID_COLOUR,
+  colour: { r: 50, g: 50, b: 50 }, // Placeholder, updated on init
   isScattered: false,
   isRespawning: false,
   respawnStartTime: 0,
@@ -484,23 +473,10 @@ const state: BoidsState = {
 };
 
 /**
- * Get current theme ID from body class
- */
-function getCurrentTheme(): string {
-  for (const cls of document.body.classList) {
-    if (cls.startsWith('theme-')) {
-      return cls.replace('theme-', '');
-    }
-  }
-  return 'steel';
-}
-
-/**
- * Update colour based on current theme
+ * Update colour based on current theme's --rule property
  */
 function updateColours(): void {
-  const theme = getCurrentTheme();
-  state.colour = THEME_COLOURS[theme] ?? DEFAULT_BOID_COLOUR;
+  state.colour = getColourFromProperty('--rule');
 }
 
 /**
@@ -710,7 +686,7 @@ function setupThemeObserver(): void {
     });
   });
 
-  state.mutationObserver.observe(document.body, {
+  state.mutationObserver.observe(document.documentElement, {
     attributes: true,
     attributeFilter: ['class'],
   });
