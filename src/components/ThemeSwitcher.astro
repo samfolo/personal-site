@@ -4,6 +4,23 @@
  *
  * Four-button theme selector with diagonal colour preview.
  * Persists selection to localStorage and updates body class.
+ *
+ * Component Split:
+ * ThemeSwitcher orchestrates theme selection, handles desktop/mobile responsive
+ * behaviour, and manages state via script tag. ThemeSwitcherButton renders
+ * individual buttons with visual styling for both desktop (four buttons) and
+ * mobile (single cycle button).
+ *
+ * :global() Usage:
+ * The .theme-toggle-mobile class uses :global() because the button is rendered
+ * by ThemeSwitcherButton (child component) and Astro scopes styles to the
+ * component where they're defined. We need to style the child's output from
+ * the parent for responsive logic coordination.
+ *
+ * Breakpoint Note:
+ * The 32rem breakpoint is hardcoded because CSS custom properties cannot be
+ * used in @container queries (CSS limitation). This value is aligned with
+ * --container-lg for consistency.
  */
 
 import {THEME_LABELS, THEME_ORDER} from "../config/themes";

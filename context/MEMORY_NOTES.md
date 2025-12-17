@@ -111,6 +111,29 @@ npm run preview   # Preview production build
 
 ## Content Guidelines
 
+### Documentation Style
+
+Component and code documentation should follow the style established in ThemeSwitcher.astro:
+
+- Plain text section headings (no decoration, colons, or markdown headers in docblocks)
+- Concise conversational prose that explains the why, not just the what
+- Group related information under clear topic labels
+- Reference CSS or design token names directly without extra context
+
+Example structure from ThemeSwitcher.astro:
+```
+Component Split:
+ThemeSwitcher orchestrates theme selection, handles desktop/mobile responsive
+behaviour, and manages state via script tag. ThemeSwitcherButton renders
+individual buttons with visual styling.
+
+:global() Usage:
+The .theme-toggle-mobile class uses :global() because the button is rendered
+by ThemeSwitcherButton (child component) and Astro scopes styles...
+```
+
+This style keeps documentation scannable while providing enough context to understand design decisions.
+
 ### British English
 
 This project uses British English throughout:

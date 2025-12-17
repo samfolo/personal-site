@@ -181,6 +181,13 @@ const sharedRules = {
       message:
         "Define interfaces separately instead of using inline type literals in generic type arguments.",
     },
+    // Inline string literal unions in type annotations: size?: "sm" | "md"
+    // Does not match type alias declarations: type Size = "sm" | "md"
+    {
+      selector: "TSTypeAnnotation TSUnionType > TSLiteralType",
+      message:
+        "Define named type aliases instead of inline string literal unions.",
+    },
   ],
 };
 

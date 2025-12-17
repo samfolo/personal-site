@@ -7,8 +7,9 @@
  */
 
 import {MEDIUM_SHEEN} from "../config/sheen";
+
+import type {SheenState} from "./sheen-core";
 import {
-  type SheenState,
   CHAR_CLASS,
   splitIntoChars,
   startAnimation,

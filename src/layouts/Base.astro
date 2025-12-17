@@ -15,14 +15,14 @@ import SEO from "../components/SEO.astro";
 import ThemeSwitcher from "../components/ThemeSwitcher.astro";
 import {THEME_CLASSES} from "../config/themes";
 import "../styles/global.css";
-import type {Theme} from "../types";
+import type {OGType, Theme} from "../types";
 
 interface Props {
   title: string;
   description?: string;
   theme?: Theme;
   ogImage?: string;
-  ogType?: "website" | "article";
+  ogType?: OGType;
   publishDate?: Date;
   updatedDate?: Date;
   tags?: string[];

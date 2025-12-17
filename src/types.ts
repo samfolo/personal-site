@@ -11,6 +11,26 @@
 export type Theme = "steel" | "purple" | "charcoal" | "teal";
 
 /**
+ * ThemeSwitcher size variants.
+ */
+export type ThemeSwitcherSize = "sm" | "md";
+
+/**
+ * Open Graph content type.
+ */
+export type OGType = "website" | "article";
+
+/**
+ * Font weight values for OG image generation.
+ */
+export type FontWeight = 400 | 700;
+
+/**
+ * Font style values for OG image generation.
+ */
+export type FontStyle = "normal";
+
+/**
  * JSON-LD Types
  *
  * Minimal schema.org types for structured data used in the site.
