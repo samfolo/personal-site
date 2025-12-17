@@ -9,7 +9,7 @@ This document provides comprehensive context for the personal-site project. It s
 | Blog Content | `src/content/blog/*.mdx` | Regular |
 | RSS Feed | `src/pages/rss.xml.ts` | Automatic |
 | Sitemap | `src/pages/sitemap.xml.ts` | Semi-automatic |
-| OG Images | `public/og-default.svg` | Manual |
+| OG Images | `src/pages/og/[...slug].png.ts`, `src/lib/og/` | Automatic |
 | SEO | `src/components/SEO.astro`, `JsonLd.astro` | Automatic |
 | Deployment | `.github/workflows/deploy.yml` | Rare |
 | Theming | `src/styles/tokens/colours.css`, `shiki.css` | Rare |
@@ -61,19 +61,19 @@ This document provides comprehensive context for the personal-site project. It s
 2. **Must also update**: Syntax highlighting in `src/styles/components/shiki.css`
 3. **Must also update**: Boids colours in `src/scripts/boids.ts` (THEME_COLOURS constant)
 4. **Consider updating**: RSS stylesheet in `public/rss/styles.xsl` (uses steel theme colours)
-5. **Consider updating**: OG image in `public/og-default.svg` (uses steel theme colours)
+5. **Consider updating**: OG image theme colours in `src/lib/og/theme.ts`
 
-### OG Image Maintenance
+### OG Image Generation
 
-Current OG image (`public/og-default.svg`) is a placeholder SVG with:
-- Dimensions: 1200x630px (standard OG image size)
-- Steel theme colours: `#2a2e37` background, `#f5f2eb` text
-- System font fallback (no custom fonts)
+OG images are generated dynamically via SSR endpoint:
+- **Endpoint**: `/og/default.png` (site) or `/og/blog/[slug].png` (posts)
+- **Dimensions**: 1200x630px
+- **Theme**: Deterministic from title hash (purple, teal, charcoal, steel)
+- **Caching**: 1-year `max-age` with `immutable`
 
-**To create a proper OG image:**
-1. Design a 1200x630px PNG/SVG
-2. Replace `public/og-default.svg` or add `public/og-default.png`
-3. Update SEO component if changing file extension/path
+**Key files:**
+- `src/pages/og/[...slug].png.ts` - API endpoint
+- `src/lib/og/` - Generation utilities (satori + @resvg/resvg-js)
 
 **Testing OG images:**
 - Use [OpenGraph.xyz](https://www.opengraph.xyz/) to preview

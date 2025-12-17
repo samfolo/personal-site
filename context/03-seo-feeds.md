@@ -107,16 +107,29 @@ Additional schema for posts via Post layout:
 
 ## OG Image
 
-### Current Implementation
-- File: `public/og-default.svg`
-- Dimensions: 1200x630px
-- Static placeholder with name and job title
-- Uses steel theme colours
+### Dynamic Generation
+OG images are generated dynamically at request time via SSR endpoint:
+- **Endpoint**: `src/pages/og/[...slug].png.ts`
+- **Library**: `src/lib/og/` (satori + @resvg/resvg-js)
+- **Dimensions**: 1200x630px
+- **Format**: PNG
 
-### Improvement Opportunities
-1. Per-post dynamic OG images
-2. Higher quality PNG replacement
-3. Include post title in image
+### URL Patterns
+| Page Type | OG Image URL |
+|-----------|--------------|
+| Site default | `/og/default.png` |
+| Blog posts | `/og/blog/[slug].png` |
+
+### Features
+- **Title display**: Shows page/post title with proper truncation
+- **Theme colours**: Deterministic theme selection based on title hash
+- **Caching**: 1-year `max-age` with `immutable`
+- **Font**: Switzer Variable (OTF loaded at runtime)
+
+### Pipeline
+1. `satori-html` creates React-like JSX structure
+2. `satori` renders JSX to SVG
+3. `@resvg/resvg-js` converts SVG to PNG
 
 ### Testing OG Images
 - [OpenGraph.xyz](https://www.opengraph.xyz/)
