@@ -12,7 +12,7 @@ const COPIED_DURATION = 2000;
  * e.g., "typescript" -> "Typescript", "html" -> "Html"
  */
 function toSentenceCase(str: string): string {
-  if (!str) return '';
+  if (!str) {return '';}
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
@@ -31,10 +31,10 @@ function init(): void {
       langLabel.textContent = toSentenceCase(lang);
     }
 
-    if (!code || !copyButton) return;
+    if (!code || !copyButton) {return;}
 
     // Skip if already initialised
-    if (copyButton.dataset.copyInit) return;
+    if (copyButton.dataset.copyInit) {return;}
     copyButton.dataset.copyInit = 'true';
 
     copyButton.addEventListener('click', async () => {

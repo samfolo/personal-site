@@ -27,12 +27,12 @@ const linkStates = new WeakMap<HTMLAnchorElement, SheenState>();
  */
 function initLink(link: HTMLAnchorElement): void {
   // Skip if already initialised or if link contains non-text content
-  if (link.hasAttribute(INITIALISED_ATTR)) return;
-  if (link.querySelector('img, svg, code')) return;
+  if (link.hasAttribute(INITIALISED_ATTR)) {return;}
+  if (link.querySelector('img, svg, code')) {return;}
 
   // Only process links with simple text content
   const text = link.textContent?.trim();
-  if (!text) return;
+  if (!text) {return;}
 
   const chars = splitIntoChars(link, text);
   const state = createState(chars, LINK_INTERVAL, LINK_SPREAD);
@@ -42,12 +42,12 @@ function initLink(link: HTMLAnchorElement): void {
 
   link.addEventListener('mouseenter', () => {
     const s = linkStates.get(link);
-    if (s) startAnimation(s);
+    if (s) {startAnimation(s);}
   });
 
   link.addEventListener('mouseleave', () => {
     const s = linkStates.get(link);
-    if (s) stopAnimation(s);
+    if (s) {stopAnimation(s);}
   });
 }
 

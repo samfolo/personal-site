@@ -7,19 +7,19 @@
  * to toggle the fixed header visibility.
  */
 
-import SheenText from './SheenText.astro';
 import NavLink from './NavLink.astro';
+import SheenText from './SheenText.astro';
 
 interface Props {
   class?: string;
 }
 
-const { class: className } = Astro.props;
+const {class: className} = Astro.props;
 
 const navLinks = [
-  { href: '/blog', label: 'Blog' },
-  { href: '/about', label: 'About' },
-  { href: '/uses', label: 'Uses' },
+  {href: '/blog', label: 'Blog'},
+  {href: '/about', label: 'About'},
+  {href: '/uses', label: 'Uses'},
 ] as const;
 ---
 

@@ -4,7 +4,7 @@
  * Deterministically selects a theme based on title hash.
  */
 
-import type { Theme } from '../../types';
+import type {Theme} from '../../types';
 
 export const THEMES: Theme[] = ['steel', 'purple', 'charcoal', 'teal'];
 

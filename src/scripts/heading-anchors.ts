@@ -13,7 +13,7 @@ function init(): void {
       event.preventDefault();
 
       const href = anchor.getAttribute('href');
-      if (!href) return;
+      if (!href) {return;}
 
       // Build full URL
       const url = new URL(href, window.location.href);
@@ -29,7 +29,7 @@ function init(): void {
       const targetId = href.slice(1);
       const target = document.getElementById(targetId);
       if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
+        target.scrollIntoView({behavior: 'smooth'});
         history.pushState(null, '', href);
       }
     });
@@ -40,7 +40,7 @@ function init(): void {
  * Smooth scroll to heading if URL has a hash on page load
  */
 function handleInitialHash(): void {
-  if (!window.location.hash) return;
+  if (!window.location.hash) {return;}
 
   const targetId = window.location.hash.slice(1);
   const target = document.getElementById(targetId);
@@ -48,7 +48,7 @@ function handleInitialHash(): void {
   if (target) {
     // Small delay to ensure layout is complete
     requestAnimationFrame(() => {
-      target.scrollIntoView({ behavior: 'smooth' });
+      target.scrollIntoView({behavior: 'smooth'});
     });
   }
 }

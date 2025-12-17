@@ -18,7 +18,7 @@ interface Props {
   posts: Post[];
 }
 
-const { posts } = Astro.props;
+const {posts} = Astro.props;
 
 /**
  * Formats a date string as "December 2024" for month labels
@@ -37,7 +37,7 @@ function formatMonthLabel(dateString: string): string {
 function formatPostDate(dateString: string): string {
   const date = new Date(dateString);
   const day = date.getDate();
-  const month = new Intl.DateTimeFormat('en-GB', { month: 'short' }).format(date);
+  const month = new Intl.DateTimeFormat('en-GB', {month: 'short'}).format(date);
   return `${day} ${month}`;
 }
 

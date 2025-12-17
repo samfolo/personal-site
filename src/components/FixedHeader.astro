@@ -6,14 +6,14 @@
  * Contains wordmark, navigation, and theme switcher.
  */
 
-import ThemeSwitcher from './ThemeSwitcher.astro';
-import NavLink from './NavLink.astro';
 import LogoMark from './LogoMark.astro';
+import NavLink from './NavLink.astro';
+import ThemeSwitcher from './ThemeSwitcher.astro';
 
 const navLinks = [
-  { href: '/blog', label: 'Blog' },
-  { href: '/about', label: 'About' },
-  { href: '/uses', label: 'Uses' },
+  {href: '/blog', label: 'Blog'},
+  {href: '/about', label: 'About'},
+  {href: '/uses', label: 'Uses'},
 ] as const;
 ---
 
@@ -100,7 +100,7 @@ const navLinks = [
     logomark?.addEventListener('click', (e) => {
       if (window.location.pathname === '/') {
         e.preventDefault();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({top: 0, behavior: 'smooth'});
       }
     });
   }

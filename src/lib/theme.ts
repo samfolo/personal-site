@@ -5,9 +5,9 @@
  * Converts OKLCH values to hex for use across the application.
  */
 
-import { formatHex, oklch } from 'culori';
+import {formatHex, oklch} from 'culori';
 
-import type { Theme } from '../types';
+import type {Theme} from '../types';
 
 export interface ThemeColours {
   bg: string;
@@ -21,7 +21,7 @@ export interface ThemeColours {
  * Maps to the OKLCH values in src/styles/tokens/colours.css
  */
 function oklchToHex(l: number, c: number, h: number): string {
-  const color = oklch({ mode: 'oklch', l, c, h });
+  const color = oklch({mode: 'oklch', l, c, h});
   return formatHex(color) ?? '#000000';
 }
 

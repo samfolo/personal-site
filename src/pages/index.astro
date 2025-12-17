@@ -6,16 +6,16 @@
  * Fetches posts from content collection.
  */
 
-import Base from '../layouts/Base.astro';
-import Hero from '../components/Hero.astro';
+import {getCollection} from 'astro:content';
+
 import BlogList from '../components/BlogList.astro';
 import Boids from '../components/Boids.astro';
-import { getCollection } from 'astro:content';
+import Hero from '../components/Hero.astro';
+import Base from '../layouts/Base.astro';
+
 
 // Fetch published posts from content collection
-const allPosts = await getCollection('blog', ({ data }) => {
-  return import.meta.env.PROD ? !data.draft : true;
-});
+const allPosts = await getCollection('blog', ({data}) => import.meta.env.PROD ? !data.draft : true);
 
 // Sort by publish date and map to BlogList format
 const posts = allPosts

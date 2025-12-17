@@ -5,8 +5,8 @@
  * Font weights 400 (regular) and 700 (bold) are included.
  */
 
-import { SWITZER_REGULAR_B64 } from './switzer-regular';
-import { SWITZER_BOLD_B64 } from './switzer-bold';
+import {SWITZER_BOLD_B64} from './switzer-bold';
+import {SWITZER_REGULAR_B64} from './switzer-regular';
 
 export interface FontData {
   name: string;

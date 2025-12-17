@@ -6,11 +6,14 @@
  * Displays title, metadata, content, and post navigation.
  */
 
-import Base from './Base.astro';
+import type {CollectionEntry} from 'astro:content';
+
 import JsonLd from '../components/JsonLd.astro';
 import SheenText from '../components/SheenText.astro';
-import { formatDate, formatUpdatedDate } from '../utils/format-date';
-import type { CollectionEntry } from 'astro:content';
+import {formatDate, formatUpdatedDate} from '../utils/format-date';
+
+import Base from './Base.astro';
+
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -19,8 +22,8 @@ interface Props {
   nextPost?: { slug: string; title: string } | null;
 }
 
-const { post, readingTime, prevPost, nextPost } = Astro.props;
-const { title, description, publishDate, updatedDate, tags } = post.data;
+const {post, readingTime, prevPost, nextPost} = Astro.props;
+const {title, description, publishDate, updatedDate, tags} = post.data;
 ---
 
 <Base

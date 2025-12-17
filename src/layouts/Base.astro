@@ -6,15 +6,15 @@
  * All pages should use this layout for consistent styling.
  */
 
-import { ClientRouter } from 'astro:transitions';
-import '../styles/global.css';
-import FixedHeader from '../components/FixedHeader.astro';
-import FixedFooter from '../components/FixedFooter.astro';
-import ThemeSwitcher from '../components/ThemeSwitcher.astro';
-import SEO from '../components/SEO.astro';
-import JsonLd from '../components/JsonLd.astro';
+import {ClientRouter} from 'astro:transitions';
 
-import type { Theme } from '../types';
+import '../styles/global.css';
+import FixedFooter from '../components/FixedFooter.astro';
+import FixedHeader from '../components/FixedHeader.astro';
+import JsonLd from '../components/JsonLd.astro';
+import SEO from '../components/SEO.astro';
+import ThemeSwitcher from '../components/ThemeSwitcher.astro';
+import type {Theme} from '../types';
 
 interface Props {
   title: string;
@@ -49,20 +49,20 @@ const {
     <meta name="theme-color" content="#191d21" data-theme-color />
     <script is:inline>
       (function() {
-        var theme = localStorage.getItem('theme') || 'steel';
-        var favicon = document.querySelector('link[data-favicon]');
-        if (favicon) favicon.href = '/sf-' + theme + '.ico';
+        const theme = localStorage.getItem('theme') || 'steel';
+        const favicon = document.querySelector('link[data-favicon]');
+        if (favicon) {favicon.href = '/sf-' + theme + '.ico';}
       })();
     </script>
     <script is:inline>
       // Hex values from src/lib/theme.ts THEME_COLOURS.bg
       (function() {
-        var colours = { steel: '#191d21', purple: '#1e1a24', charcoal: '#212121', teal: '#0d1f1f' };
+        const colours = {steel: '#191d21', purple: '#1e1a24', charcoal: '#212121', teal: '#0d1f1f'};
 
         function applyThemeColour() {
-          var theme = localStorage.getItem('theme') || 'steel';
-          var meta = document.querySelector('meta[data-theme-color]');
-          if (meta && colours[theme]) meta.content = colours[theme];
+          const theme = localStorage.getItem('theme') || 'steel';
+          const meta = document.querySelector('meta[data-theme-color]');
+          if (meta && colours[theme]) {meta.content = colours[theme];}
         }
 
         applyThemeColour();
@@ -98,11 +98,11 @@ const {
   <body class="@container/page min-h-dvh">
     <script is:inline>
       (function () {
-        var THEME_KEY = 'theme';
-        var THEME_CLASSES = ['theme-steel', 'theme-purple', 'theme-charcoal', 'theme-teal'];
+        const THEME_KEY = 'theme';
+        const THEME_CLASSES = ['theme-steel', 'theme-purple', 'theme-charcoal', 'theme-teal'];
 
         function applyStoredTheme() {
-          var saved = localStorage.getItem(THEME_KEY);
+          const saved = localStorage.getItem(THEME_KEY);
           if (saved && THEME_CLASSES.indexOf('theme-' + saved) !== -1) {
             document.documentElement.classList.remove.apply(document.documentElement.classList, THEME_CLASSES);
             document.documentElement.classList.add('theme-' + saved);
@@ -116,9 +116,9 @@ const {
         document.addEventListener('astro:after-swap', applyStoredTheme);
 
         // Preserve favicon href during View Transitions (avoid re-fetching)
-        document.addEventListener('astro:before-swap', function(e) {
-          var currentFavicon = document.querySelector('link[data-favicon]');
-          var newFavicon = e.newDocument.querySelector('link[data-favicon]');
+        document.addEventListener('astro:before-swap', (e) => {
+          const currentFavicon = document.querySelector('link[data-favicon]');
+          const newFavicon = e.newDocument.querySelector('link[data-favicon]');
           if (currentFavicon && currentFavicon.href && newFavicon) {
             newFavicon.href = currentFavicon.href;
           }

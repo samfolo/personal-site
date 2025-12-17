@@ -5,10 +5,10 @@
  * Shows section symbol (§) on hover for linking to specific sections.
  */
 
-import { visit } from 'unist-util-visit';
-import { toString } from 'hast-util-to-string';
 import GithubSlugger from 'github-slugger';
-import type { Root, Element } from 'hast';
+import type {Root, Element} from 'hast';
+import {toString} from 'hast-util-to-string';
+import {visit} from 'unist-util-visit';
 
 const HEADING_TAGS = new Set(['h2', 'h3', 'h4', 'h5', 'h6']);
 
@@ -39,7 +39,7 @@ export default function rehypeHeadingAnchors() {
           'aria-label': `Link to section: ${text}`,
           'data-heading-anchor': '',
         },
-        children: [{ type: 'text', value: '§' }],
+        children: [{type: 'text', value: '§'}],
       };
 
       // Prepend anchor to heading children

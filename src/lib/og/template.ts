@@ -7,11 +7,13 @@
  * Canvas: 1200×630px, 56px padding
  */
 
-import { html } from 'satori-html';
+import {html} from 'satori-html';
 
-import type { Theme } from '../../types';
-import { THEME_COLOURS } from '../theme';
-import { THEME_LABELS, THEMES } from './theme';
+import type {Theme} from '../../types';
+
+import {THEME_COLOURS} from '../theme';
+
+import {THEME_LABELS, THEMES} from './theme';
 
 /**
  * Canvas dimensions for OG images.
@@ -36,11 +38,11 @@ const BUTTON = {
  */
 const TYPOGRAPHY = {
   wordmark: {
-    lg: { size: 128, weight: 700, lineHeight: 0.833, letterSpacing: '-0.03em' },
-    sm: { size: 64, weight: 700, lineHeight: 0.833, letterSpacing: '-0.03em' },
+    lg: {size: 128, weight: 700, lineHeight: 0.833, letterSpacing: '-0.03em'},
+    sm: {size: 64, weight: 700, lineHeight: 0.833, letterSpacing: '-0.03em'},
   },
-  title: { size: 88, weight: 700, lineHeight: 1, letterSpacing: '-0.03em' },
-  meta: { size: 24, weight: 600, letterSpacing: '0.08em' },
+  title: {size: 88, weight: 700, lineHeight: 1, letterSpacing: '-0.03em'},
+  meta: {size: 24, weight: 600, letterSpacing: '0.08em'},
 } as const;
 
 export interface OgTemplateOptions {
@@ -83,7 +85,7 @@ function getButtonStyle(theme: Theme, activeTheme: Theme, activeFg: string): str
  * @returns satori-html virtual DOM node
  */
 export function createOgTemplate(options: OgTemplateOptions): ReturnType<typeof html> {
-  const { title, date, theme } = options;
+  const {title, date, theme} = options;
   const colours = THEME_COLOURS[theme];
 
   // Check if this is the default (site-level) OG image

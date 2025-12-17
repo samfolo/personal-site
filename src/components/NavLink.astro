@@ -12,7 +12,7 @@ interface Props {
   class?: string;
 }
 
-const { href, class: className } = Astro.props;
+const {href, class: className} = Astro.props;
 const pathname = Astro.url.pathname;
 
 // Check if this link is the current page
@@ -24,7 +24,7 @@ const isExactMatch = pathname === href;
 
 <a
   href={href}
-  class:list={['nav-link', { active: isActive }, className]}
+  class:list={['nav-link', {active: isActive}, className]}
   aria-current={isActive ? 'page' : undefined}
   data-nav-exact={isExactMatch ? 'true' : undefined}
 >
@@ -41,7 +41,7 @@ const isExactMatch = pathname === href;
 
     document.querySelectorAll<HTMLAnchorElement>('a.nav-link').forEach((link) => {
       const href = link.getAttribute('href');
-      if (!href) return;
+      if (!href) {return;}
 
       // Check for active state (exact match or nested route)
       const isActive = pathname === href || pathname.startsWith(`${href}/`);

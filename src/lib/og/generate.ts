@@ -5,12 +5,12 @@
  * Pipeline: satori-html → satori (SVG) → resvg-js (PNG)
  */
 
-import { Resvg } from '@resvg/resvg-js';
+import {Resvg} from '@resvg/resvg-js';
 import satori from 'satori';
 
-import { FONTS } from './fonts';
-import { createOgTemplate } from './template';
-import type { OgTemplateOptions } from './template';
+import {FONTS} from './fonts';
+import {createOgTemplate} from './template';
+import type {OgTemplateOptions} from './template';
 
 const WIDTH = 1200;
 const HEIGHT = 630;

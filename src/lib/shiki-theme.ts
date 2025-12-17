@@ -8,7 +8,7 @@
  * These are mapped to --shiki-* in src/styles/components/shiki.css
  */
 
-import type { ThemeRegistration } from 'shiki';
+import type {ThemeRegistration} from 'shiki';
 
 export const customCssVariablesTheme: ThemeRegistration = {
   name: 'custom-css-variables',

@@ -84,7 +84,7 @@ function parseComputedColour(cssValue: string): RGBColour {
   }
 
   // Fallback to dark grey if canvas fails
-  return { r: 50, g: 50, b: 50 };
+  return {r: 50, g: 50, b: 50};
 }
 
 /**
@@ -135,7 +135,7 @@ function getCentreOpacityFactor(x: number, screenWidth: number): number {
   const distanceBeyondZone = distanceFromCentre - CENTRE_CLEAR_ZONE;
   const maxDistanceBeyondZone = centreX - CENTRE_CLEAR_ZONE;
 
-  if (maxDistanceBeyondZone <= 0) return 1; // Screen narrower than clear zone
+  if (maxDistanceBeyondZone <= 0) {return 1;} // Screen narrower than clear zone
 
   const factor = distanceBeyondZone / maxDistanceBeyondZone;
   return CENTRE_MIN_OPACITY + factor * (1 - CENTRE_MIN_OPACITY);
@@ -280,24 +280,24 @@ class Boid {
    * Begin scatter behaviour - find nearest edge
    */
   startScatter(): void {
-    if (this.isScattering) return;
+    if (this.isScattering) {return;}
     this.isScattering = true;
     this.hasExited = false;
 
     // Find nearest edge and set target position beyond it
     const edges = [
-      { x: this.position.x, y: -50 },
-      { x: this.position.x, y: this.p.height + 50 },
-      { x: -50, y: this.position.y },
-      { x: this.p.width + 50, y: this.position.y },
+      {x: this.position.x, y: -50},
+      {x: this.position.x, y: this.p.height + 50},
+      {x: -50, y: this.position.y},
+      {x: this.p.width + 50, y: this.position.y},
     ];
 
     this.targetEdge = edges.reduce(
       (nearest, edge) => {
         const d = this.p.dist(this.position.x, this.position.y, edge.x, edge.y);
-        return d < nearest.d ? { x: edge.x, y: edge.y, d } : nearest;
+        return d < nearest.d ? {x: edge.x, y: edge.y, d} : nearest;
       },
-      { x: 0, y: 0, d: Infinity }
+      {x: 0, y: 0, d: Infinity}
     );
   }
 
@@ -326,7 +326,7 @@ class Boid {
    * Update opacity and exit state during scatter
    */
   private updateScatterState(): void {
-    if (!this.isScattering || this.hasExited) return;
+    if (!this.isScattering || this.hasExited) {return;}
 
     // Calculate distance to nearest edge for fade
     const distToEdge = Math.min(
@@ -396,27 +396,27 @@ class Boid {
    * Wrap around edges (only when not scattering)
    */
   edges(): void {
-    if (this.isScattering) return;
+    if (this.isScattering) {return;}
 
-    if (this.position.x > this.p.width) this.position.x = 0;
-    else if (this.position.x < 0) this.position.x = this.p.width;
+    if (this.position.x > this.p.width) {this.position.x = 0;}
+    else if (this.position.x < 0) {this.position.x = this.p.width;}
 
-    if (this.position.y > this.p.height) this.position.y = 0;
-    else if (this.position.y < 0) this.position.y = this.p.height;
+    if (this.position.y > this.p.height) {this.position.y = 0;}
+    else if (this.position.y < 0) {this.position.y = this.p.height;}
   }
 
   /**
    * Draw the boid as a paper aeroplane shape with indent
    */
   show(colour: RGBColour): void {
-    if (this.opacity <= 0) return;
+    if (this.opacity <= 0) {return;}
 
     const p = this.p;
 
     // Calculate opacity reduction based on proximity to centre vertical axis
     const centreOpacityFactor = getCentreOpacityFactor(this.position.x, p.width);
     const finalOpacity = this.opacity * centreOpacityFactor;
-    if (finalOpacity <= 0) return;
+    if (finalOpacity <= 0) {return;}
 
     p.push();
     p.translate(this.position.x, this.position.y);
@@ -463,7 +463,7 @@ interface BoidsState {
 const state: BoidsState = {
   p5Instance: null,
   boids: [],
-  colour: { r: 50, g: 50, b: 50 }, // Placeholder, updated on init
+  colour: {r: 50, g: 50, b: 50}, // Placeholder, updated on init
   isScattered: false,
   isRespawning: false,
   respawnStartTime: 0,
@@ -495,21 +495,21 @@ function getPopulation(): number {
  */
 function drawNetworkLines(p: p5, boids: Boid[], colour: RGBColour): void {
   // Skip during scatter for performance
-  if (state.isScattered && !state.isRespawning) return;
+  if (state.isScattered && !state.isRespawning) {return;}
 
   const maxRange = PERCEPTION_RADIUS * NETWORK_RANGE_MULTIPLIER;
 
   for (const boid of boids) {
-    if (boid.opacity <= 0) continue;
+    if (boid.opacity <= 0) {continue;}
 
     // Find nearby boids with distances
     const nearby: Array<{ boid: Boid; distance: number }> = [];
 
     for (const other of boids) {
-      if (other === boid || other.opacity <= 0) continue;
+      if (other === boid || other.opacity <= 0) {continue;}
       const d = p5.Vector.dist(boid.position, other.position);
       if (d < maxRange) {
-        nearby.push({ boid: other, distance: d });
+        nearby.push({boid: other, distance: d});
       }
     }
 
@@ -539,7 +539,7 @@ function drawNetworkLines(p: p5, boids: Boid[], colour: RGBColour): void {
 function sketch(p: p5): void {
   p.setup = (): void => {
     const container = document.getElementById(CANVAS_CONTAINER_ID);
-    if (!container) return;
+    if (!container) {return;}
 
     const canvas = p.createCanvas(p.windowWidth, p.windowHeight);
     canvas.parent(container);
@@ -558,10 +558,10 @@ function sketch(p: p5): void {
 
   p.draw = (): void => {
     // Skip if document is hidden (tab not visible)
-    if (document.hidden) return;
+    if (document.hidden) {return;}
 
     // Skip if all boids have exited during scatter
-    if (state.allExited && !state.isRespawning) return;
+    if (state.allExited && !state.isRespawning) {return;}
 
     p.clear();
 
@@ -609,7 +609,7 @@ function sketch(p: p5): void {
  * Trigger scatter behaviour for all boids
  */
 function triggerScatter(): void {
-  if (state.isScattered) return;
+  if (state.isScattered) {return;}
 
   state.isScattered = true;
   state.allExited = false;
@@ -623,7 +623,7 @@ function triggerScatter(): void {
  * Trigger respawn - reset all boids and fade in
  */
 function triggerRespawn(): void {
-  if (!state.isScattered) return;
+  if (!state.isScattered) {return;}
 
   state.isScattered = false;
   state.isRespawning = true;
@@ -641,7 +641,7 @@ function triggerRespawn(): void {
 
 function setupScrollObserver(): void {
   const heroWordmark = document.getElementById(HERO_WORDMARK_ID);
-  if (!heroWordmark) return;
+  if (!heroWordmark) {return;}
 
   // Clean up existing observer
   if (state.observer) {
@@ -717,7 +717,7 @@ function cleanup(): void {
 
 function init(): void {
   const container = document.getElementById(CANVAS_CONTAINER_ID);
-  if (!container) return;
+  if (!container) {return;}
 
   // Clean up any existing instance
   cleanup();

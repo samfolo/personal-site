@@ -41,10 +41,10 @@ function getHeadingText(heading: HTMLElement): string {
  */
 function initHeading(heading: HTMLElement): void {
   // Skip if already initialised
-  if (heading.hasAttribute(INITIALISED_ATTR)) return;
+  if (heading.hasAttribute(INITIALISED_ATTR)) {return;}
 
   const text = getHeadingText(heading);
-  if (!text) return;
+  if (!text) {return;}
 
   // Preserve the anchor link if present
   const anchor = heading.querySelector('.heading-anchor');
@@ -63,12 +63,12 @@ function initHeading(heading: HTMLElement): void {
 
   heading.addEventListener('mouseenter', () => {
     const s = headingStates.get(heading);
-    if (s) startAnimation(s);
+    if (s) {startAnimation(s);}
   });
 
   heading.addEventListener('mouseleave', () => {
     const s = headingStates.get(heading);
-    if (s) stopAnimation(s);
+    if (s) {stopAnimation(s);}
   });
 }
 

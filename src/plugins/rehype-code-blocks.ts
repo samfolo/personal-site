@@ -10,15 +10,15 @@
  * by structure (pre > code) rather than by class name.
  */
 
-import { visit } from 'unist-util-visit';
-import type { Root, Element, ElementContent } from 'hast';
+import type {Root, Element, ElementContent} from 'hast';
+import {visit} from 'unist-util-visit';
 
 /**
  * Check if a pre element contains a code element as its first child.
  * This is the standard markdown code fence structure.
  */
 function isCodeBlock(node: Element): boolean {
-  if (node.tagName !== 'pre') return false;
+  if (node.tagName !== 'pre') {return false;}
 
   const firstChild = node.children[0];
   return (
@@ -31,15 +31,15 @@ export default function rehypeCodeBlocks() {
   return (tree: Root) => {
     visit(tree, 'element', (node: Element, index, parent) => {
       // Only process pre elements containing code
-      if (!isCodeBlock(node)) return;
+      if (!isCodeBlock(node)) {return;}
 
-      if (typeof index !== 'number' || !parent) return;
+      if (typeof index !== 'number' || !parent) {return;}
 
       // Create floating language label (populated by client-side script)
       const langLabel: Element = {
         type: 'element',
         tagName: 'span',
-        properties: { className: ['code-lang'] },
+        properties: {className: ['code-lang']},
         children: [],
       };
 
@@ -52,7 +52,7 @@ export default function rehypeCodeBlocks() {
           className: ['code-copy'],
           'aria-label': 'Copy code to clipboard',
         },
-        children: [{ type: 'text', value: 'Copy' }],
+        children: [{type: 'text', value: 'Copy'}],
       };
 
       // Create wrapper

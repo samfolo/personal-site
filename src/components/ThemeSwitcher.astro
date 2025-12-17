@@ -6,19 +6,19 @@
  * Persists selection to localStorage and updates body class.
  */
 
-import ThemeSwitcherButton, { type ThemeId } from './ThemeSwitcherButton.astro';
+import ThemeSwitcherButton, {type ThemeId} from './ThemeSwitcherButton.astro';
 
 interface Props {
   size?: 'sm' | 'md';
 }
 
-const { size = 'md' } = Astro.props;
+const {size = 'md'} = Astro.props;
 
 const themes: Array<{ id: ThemeId; label: string }> = [
-  { id: 'steel', label: 'Steel grey + warm cream' },
-  { id: 'purple', label: 'Dark purple + gold' },
-  { id: 'charcoal', label: 'Warm charcoal + off-white' },
-  { id: 'teal', label: 'Dark teal + coral' },
+  {id: 'steel', label: 'Steel grey + warm cream'},
+  {id: 'purple', label: 'Dark purple + gold'},
+  {id: 'charcoal', label: 'Warm charcoal + off-white'},
+  {id: 'teal', label: 'Dark teal + coral'},
 ];
 ---
 
@@ -77,8 +77,8 @@ const themes: Array<{ id: ThemeId; label: string }> = [
 </style>
 
 <script>
-  import { setFavicon } from '../scripts/favicon';
-  import { setThemeColor } from '../scripts/theme-color';
+  import {setFavicon} from '../scripts/favicon';
+  import {setThemeColor} from '../scripts/theme-color';
 
   const THEME_KEY = 'theme';
   const THEME_LABELS: Record<string, string> = {

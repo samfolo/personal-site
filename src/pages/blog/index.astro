@@ -6,14 +6,13 @@
  * Uses BlogList component with content collection data.
  */
 
-import Base from '../../layouts/Base.astro';
+import {getCollection} from 'astro:content';
+
 import BlogList from '../../components/BlogList.astro';
-import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
 
 // Fetch all non-draft posts (or all posts in development)
-const allPosts = await getCollection('blog', ({ data }) => {
-  return import.meta.env.PROD ? !data.draft : true;
-});
+const allPosts = await getCollection('blog', ({data}) => import.meta.env.PROD ? !data.draft : true);
 
 // Sort by publish date (newest first) and map to BlogList format
 const posts = allPosts

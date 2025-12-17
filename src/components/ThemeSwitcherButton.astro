@@ -6,7 +6,7 @@
  * Used by ThemeSwitcher for both desktop buttons and mobile toggle.
  */
 
-import type { Theme } from '../types';
+import type {Theme} from '../types';
 
 interface Props {
   /** Button size: sm (24px) or md (32px) */
@@ -21,7 +21,7 @@ interface Props {
   class?: string;
 }
 
-const { size = 'md', theme, isActive = false, label, class: className } = Astro.props;
+const {size = 'md', theme, isActive = false, label, class: className} = Astro.props;
 
 const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
 ---
@@ -40,7 +40,7 @@ const buttonSize = size === 'sm' ? '1.5rem' : '2rem';
   <span class="theme-switcher-button-visual" />
 </button>
 
-<style define:vars={{ buttonSize }}>
+<style define:vars={{buttonSize}}>
   .theme-switcher-button {
     display: flex;
     align-items: center;
