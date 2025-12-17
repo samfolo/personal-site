@@ -4,7 +4,7 @@
  * Barrel export for OG image generation utilities.
  */
 
-export { loadFonts } from './fonts';
+export { FONTS } from './fonts';
 export { generateOgImage } from './generate';
 export { createOgTemplate } from './template';
 export { getThemeFromTitle, THEME_COLOURS, THEME_LABELS, THEMES } from './theme';
