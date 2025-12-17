@@ -10,7 +10,37 @@
 import { html } from 'satori-html';
 
 import type { Theme } from '../../types';
-import { THEME_COLOURS, THEME_LABELS } from './theme';
+import { THEME_COLOURS, THEME_LABELS, THEMES } from './theme';
+
+/**
+ * Canvas dimensions for OG images.
+ */
+const OG = {
+  width: 1200,
+  height: 630,
+  padding: 56,
+} as const;
+
+/**
+ * Theme button dimensions.
+ */
+const BUTTON = {
+  inner: 60,
+  border: 4,
+  gap: 4,
+} as const;
+
+/**
+ * Typography scales for OG images.
+ */
+const TYPOGRAPHY = {
+  wordmark: {
+    lg: { size: 128, weight: 700, lineHeight: 0.833, letterSpacing: '-0.03em' },
+    sm: { size: 64, weight: 700, lineHeight: 0.833, letterSpacing: '-0.03em' },
+  },
+  title: { size: 88, weight: 700, lineHeight: 1, letterSpacing: '-0.03em' },
+  meta: { size: 24, weight: 600, letterSpacing: '0.08em' },
+} as const;
 
 export interface OgTemplateOptions {
   title: string;
@@ -37,12 +67,12 @@ function formatOgDate(date: Date): string {
  */
 function getButtonStyle(theme: Theme, activeTheme: Theme, activeFg: string): string {
   // Use border instead of outline since Satori doesn't support outline well
-  // Active button gets a 4px border with 4px padding to create offset effect
+  // Active button gets a border with padding to create offset effect
   if (theme === activeTheme) {
-    return `border: 4px solid ${activeFg}; padding: 4px;`;
+    return `border: ${BUTTON.border}px solid ${activeFg}; padding: ${BUTTON.border}px;`;
   }
   // Inactive buttons get transparent border to maintain consistent sizing
-  return 'border: 4px solid transparent; padding: 4px;';
+  return `border: ${BUTTON.border}px solid transparent; padding: ${BUTTON.border}px;`;
 }
 
 /**
@@ -62,27 +92,27 @@ export function createOgTemplate(options: OgTemplateOptions): ReturnType<typeof 
   if (isDefault) {
     return html`
       <div
-        style="display: flex; flex-direction: column; width: 1200px; height: 630px; background-color: ${colours.bg}; padding: 56px; font-family: 'Switzer';"
+        style="display: flex; flex-direction: column; width: ${OG.width}px; height: ${OG.height}px; background-color: ${colours.bg}; padding: ${OG.padding}px; font-family: 'Switzer';"
       >
         <div style="display: flex; justify-content: flex-end;">
-          <div style="display: flex; gap: 4px;">
+          <div style="display: flex; gap: ${BUTTON.gap}px;">
             <div style="display: flex; ${getButtonStyle('steel', theme, colours.fg)}">
-              <div style="display: flex; width: 60px; height: 60px; border: 4px solid ${THEME_COLOURS.steel.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.steel.bg} 50%, ${THEME_COLOURS.steel.fg} 50%);"></div>
+              <div style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS.steel.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.steel.bg} 50%, ${THEME_COLOURS.steel.fg} 50%);"></div>
             </div>
             <div style="display: flex; ${getButtonStyle('purple', theme, colours.fg)}">
-              <div style="display: flex; width: 60px; height: 60px; border: 4px solid ${THEME_COLOURS.purple.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.purple.bg} 50%, ${THEME_COLOURS.purple.fg} 50%);"></div>
+              <div style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS.purple.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.purple.bg} 50%, ${THEME_COLOURS.purple.fg} 50%);"></div>
             </div>
             <div style="display: flex; ${getButtonStyle('charcoal', theme, colours.fg)}">
-              <div style="display: flex; width: 60px; height: 60px; border: 4px solid ${THEME_COLOURS.charcoal.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.charcoal.bg} 50%, ${THEME_COLOURS.charcoal.fg} 50%);"></div>
+              <div style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS.charcoal.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.charcoal.bg} 50%, ${THEME_COLOURS.charcoal.fg} 50%);"></div>
             </div>
             <div style="display: flex; ${getButtonStyle('teal', theme, colours.fg)}">
-              <div style="display: flex; width: 60px; height: 60px; border: 4px solid ${THEME_COLOURS.teal.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.teal.bg} 50%, ${THEME_COLOURS.teal.fg} 50%);"></div>
+              <div style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS.teal.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.teal.bg} 50%, ${THEME_COLOURS.teal.fg} 50%);"></div>
             </div>
           </div>
         </div>
         <div style="display: flex; flex: 1; align-items: flex-end;">
           <div
-            style="display: flex; flex-direction: column; color: ${colours.fg}; font-size: 128px; font-weight: 700; line-height: 0.833; letter-spacing: -0.03em;"
+            style="display: flex; flex-direction: column; color: ${colours.fg}; font-size: ${TYPOGRAPHY.wordmark.lg.size}px; font-weight: ${TYPOGRAPHY.wordmark.lg.weight}; line-height: ${TYPOGRAPHY.wordmark.lg.lineHeight}; letter-spacing: ${TYPOGRAPHY.wordmark.lg.letterSpacing};"
           >
             <div style="display: flex;">Sam</div>
             <div style="display: flex;">Folorunsho.</div>
@@ -98,39 +128,39 @@ export function createOgTemplate(options: OgTemplateOptions): ReturnType<typeof 
 
   return html`
     <div
-      style="display: flex; flex-direction: column; width: 1200px; height: 630px; background-color: ${colours.bg}; padding: 56px; font-family: 'Switzer';"
+      style="display: flex; flex-direction: column; width: ${OG.width}px; height: ${OG.height}px; background-color: ${colours.bg}; padding: ${OG.padding}px; font-family: 'Switzer';"
     >
       <div style="display: flex; justify-content: space-between; align-items: flex-start;">
         <div
-          style="display: flex; flex-direction: column; color: ${colours.fg}; font-size: 64px; font-weight: 700; line-height: 0.833; letter-spacing: -0.03em;"
+          style="display: flex; flex-direction: column; color: ${colours.fg}; font-size: ${TYPOGRAPHY.wordmark.sm.size}px; font-weight: ${TYPOGRAPHY.wordmark.sm.weight}; line-height: ${TYPOGRAPHY.wordmark.sm.lineHeight}; letter-spacing: ${TYPOGRAPHY.wordmark.sm.letterSpacing};"
         >
           <div style="display: flex;">Sam</div>
           <div style="display: flex;">Folorunsho.</div>
         </div>
-        <div style="display: flex; gap: 4px;">
-          <div style="display: flex; ${getButtonStyle('steel', theme, colours.fg)}">
-            <div style="display: flex; width: 60px; height: 60px; border: 4px solid ${THEME_COLOURS.steel.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.steel.bg} 50%, ${THEME_COLOURS.steel.fg} 50%);"></div>
+        <div style="display: flex; gap: ${BUTTON.gap}px;">
+            <div style="display: flex; ${getButtonStyle('steel', theme, colours.fg)}">
+              <div style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS.steel.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.steel.bg} 50%, ${THEME_COLOURS.steel.fg} 50%);"></div>
+            </div>
+            <div style="display: flex; ${getButtonStyle('purple', theme, colours.fg)}">
+              <div style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS.purple.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.purple.bg} 50%, ${THEME_COLOURS.purple.fg} 50%);"></div>
+            </div>
+            <div style="display: flex; ${getButtonStyle('charcoal', theme, colours.fg)}">
+              <div style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS.charcoal.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.charcoal.bg} 50%, ${THEME_COLOURS.charcoal.fg} 50%);"></div>
+            </div>
+            <div style="display: flex; ${getButtonStyle('teal', theme, colours.fg)}">
+              <div style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS.teal.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.teal.bg} 50%, ${THEME_COLOURS.teal.fg} 50%);"></div>
+            </div>
           </div>
-          <div style="display: flex; ${getButtonStyle('purple', theme, colours.fg)}">
-            <div style="display: flex; width: 60px; height: 60px; border: 4px solid ${THEME_COLOURS.purple.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.purple.bg} 50%, ${THEME_COLOURS.purple.fg} 50%);"></div>
-          </div>
-          <div style="display: flex; ${getButtonStyle('charcoal', theme, colours.fg)}">
-            <div style="display: flex; width: 60px; height: 60px; border: 4px solid ${THEME_COLOURS.charcoal.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.charcoal.bg} 50%, ${THEME_COLOURS.charcoal.fg} 50%);"></div>
-          </div>
-          <div style="display: flex; ${getButtonStyle('teal', theme, colours.fg)}">
-            <div style="display: flex; width: 60px; height: 60px; border: 4px solid ${THEME_COLOURS.teal.fg}; background: linear-gradient(135deg, ${THEME_COLOURS.teal.bg} 50%, ${THEME_COLOURS.teal.fg} 50%);"></div>
-          </div>
-        </div>
       </div>
       <div style="display: flex; flex-direction: column; flex: 1; justify-content: flex-end; gap: 16px;">
         <div
-          style="display: flex; color: ${colours.fg}; font-size: 88px; font-weight: 700; line-height: 1; letter-spacing: -0.03em;"
+          style="display: flex; color: ${colours.fg}; font-size: ${TYPOGRAPHY.title.size}px; font-weight: ${TYPOGRAPHY.title.weight}; line-height: ${TYPOGRAPHY.title.lineHeight}; letter-spacing: ${TYPOGRAPHY.title.letterSpacing};"
         >
           ${title}
         </div>
         <div style="display: flex; align-items: center; gap: 32px;">
           <div
-            style="display: flex; color: ${colours.muted}; font-size: 24px; font-weight: 600; font-variant-numeric: tabular-nums; letter-spacing: 0.08em;"
+            style="display: flex; color: ${colours.muted}; font-size: ${TYPOGRAPHY.meta.size}px; font-weight: ${TYPOGRAPHY.meta.weight}; font-variant-numeric: tabular-nums; letter-spacing: ${TYPOGRAPHY.meta.letterSpacing};"
           >
             ${formattedDate}
           </div>
@@ -138,7 +168,7 @@ export function createOgTemplate(options: OgTemplateOptions): ReturnType<typeof 
         </div>
         <div style="display: flex; justify-content: flex-end;">
           <div
-            style="display: flex; color: ${colours.muted}; font-size: 24px; font-weight: 600; letter-spacing: 0.08em;"
+            style="display: flex; color: ${colours.muted}; font-size: ${TYPOGRAPHY.meta.size}px; font-weight: ${TYPOGRAPHY.meta.weight}; letter-spacing: ${TYPOGRAPHY.meta.letterSpacing};"
           >
             ${themeLabel}
           </div>

@@ -56,7 +56,7 @@ export const THEME_COLOURS: Record<Theme, ThemeColours> = {
   },
 };
 
-const themes: Theme[] = ['steel', 'purple', 'charcoal', 'teal'];
+export const THEMES: Theme[] = ['steel', 'purple', 'charcoal', 'teal'];
 
 /**
  * Theme labels for OG images.
@@ -87,6 +87,6 @@ function hashString(str: string): number {
  */
 export function getThemeFromTitle(title: string): Theme {
   const hash = hashString(title);
-  const index = hash % themes.length;
-  return themes[index];
+  const index = hash % THEMES.length;
+  return THEMES[index];
 }
