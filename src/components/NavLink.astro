@@ -18,15 +18,31 @@ const pathname = Astro.url.pathname;
 // Check if this link is the current page
 // Handle both exact matches and nested routes (e.g., /blog matches /blog/post-slug)
 const isActive = pathname === href || pathname.startsWith(`${href}/`);
+// Exact match used for preventing refetch on current page
+const isExactMatch = pathname === href;
 ---
 
 <a
   href={href}
   class:list={['nav-link', { active: isActive }, className]}
   aria-current={isActive ? 'page' : undefined}
+  data-nav-exact={isExactMatch ? 'true' : undefined}
 >
   <slot />
 </a>
+
+<script>
+  function initActiveLinks(): void {
+    document.querySelectorAll<HTMLAnchorElement>('a[data-nav-exact="true"]').forEach((link) => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+      });
+    });
+  }
+
+  initActiveLinks();
+  document.addEventListener('astro:after-swap', initActiveLinks);
+</script>
 
 <style>
   .nav-link {

@@ -78,6 +78,7 @@ const themes: Array<{ id: ThemeId; label: string }> = [
 
 <script>
   import { setFavicon } from '../scripts/favicon';
+  import { setThemeColor } from '../scripts/theme-color';
 
   const THEME_KEY = 'theme';
   const THEME_LABELS: Record<string, string> = {
@@ -94,6 +95,7 @@ const themes: Array<{ id: ThemeId; label: string }> = [
     document.documentElement.classList.add(`theme-${themeId}`);
     localStorage.setItem(THEME_KEY, themeId);
     setFavicon(themeId);
+    setThemeColor(themeId);
     updateActiveStates(themeId);
   }
 
