@@ -32,16 +32,64 @@ const isExactMatch = pathname === href;
 </a>
 
 <script>
+  /**
+   * Sync nav link active states with current URL
+   * Required because header uses transition:persist, so DOM isn't replaced on navigation
+   */
+  function syncNavLinkStates(): void {
+    const pathname = window.location.pathname;
+
+    document.querySelectorAll<HTMLAnchorElement>('a.nav-link').forEach((link) => {
+      const href = link.getAttribute('href');
+      if (!href) return;
+
+      // Check for active state (exact match or nested route)
+      const isActive = pathname === href || pathname.startsWith(`${href}/`);
+      // Check for exact match (used for preventing refetch)
+      const isExactMatch = pathname === href;
+
+      // Update classes and attributes
+      link.classList.toggle('active', isActive);
+      if (isActive) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
+
+      if (isExactMatch) {
+        link.setAttribute('data-nav-exact', 'true');
+      } else {
+        link.removeAttribute('data-nav-exact');
+      }
+    });
+  }
+
+  /**
+   * Prevent navigation when clicking on exact match links
+   */
   function initActiveLinks(): void {
-    document.querySelectorAll<HTMLAnchorElement>('a[data-nav-exact="true"]').forEach((link) => {
-      link.addEventListener('click', (e) => {
-        e.preventDefault();
+    document.querySelectorAll<HTMLAnchorElement>('a.nav-link').forEach((link) => {
+      // Remove existing listeners by cloning (prevents duplicates on re-init)
+      const newLink = link.cloneNode(true) as HTMLAnchorElement;
+      link.parentNode?.replaceChild(newLink, link);
+
+      newLink.addEventListener('click', (e) => {
+        if (newLink.getAttribute('data-nav-exact') === 'true') {
+          e.preventDefault();
+        }
       });
     });
   }
 
+  // Initial setup
+  syncNavLinkStates();
   initActiveLinks();
-  document.addEventListener('astro:after-swap', initActiveLinks);
+
+  // Re-sync after Astro view transitions
+  document.addEventListener('astro:after-swap', () => {
+    syncNavLinkStates();
+    initActiveLinks();
+  });
 </script>
 
 <style>

@@ -1,86 +1,59 @@
 /**
  * View Transitions
  *
- * Custom animations for Astro View Transitions.
- * Uses sequential fade (out then in) to prevent text overlap.
- *
- * Transition modes:
- * - Full page (root): Used for home ↔ any page transitions
- * - Content only: Used for non-home ↔ non-home transitions
+ * Header and footer persist in place (no animation).
+ * Everything else fades via root transition.
  */
 
-@keyframes fadeOut {
-  from {
-    opacity: 1;
-  }
-  to {
-    opacity: 0;
-  }
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
-
-/* ==========================================================================
-   Full Page Transitions (default)
-   ========================================================================== */
-
-/* Persist background colour during transition */
+/* Preserve background colour during transition */
 ::view-transition-group(root) {
   background-color: var(--bg);
 }
 
-::view-transition-old(root) {
-  animation: fadeOut var(--duration-fast) var(--ease-default) forwards;
-}
-
-::view-transition-new(root) {
-  animation: fadeIn var(--duration-fast) var(--ease-default) var(--duration-fast) forwards;
-  opacity: 0;
-}
-
-/* ==========================================================================
-   Content-Only Transitions
-   Applied when navigating between non-home pages
-   ========================================================================== */
-
-/* Header persists without animation */
+/* Header and footer: no animation, stay in place */
+::view-transition-group(header),
+::view-transition-group(footer),
 ::view-transition-old(header),
-::view-transition-new(header) {
-  animation: none;
-}
-
-/* Footer persists without animation */
+::view-transition-new(header),
 ::view-transition-old(footer),
 ::view-transition-new(footer) {
   animation: none;
 }
 
-/* Content fades with sequential animation */
-::view-transition-old(main-content) {
-  animation: fadeOut var(--duration-fast) var(--ease-default) forwards;
+/* Sequential fade: out then in */
+::view-transition-old(root) {
+  animation: fade-out var(--duration-fast) var(--ease-default) forwards;
 }
 
-::view-transition-new(main-content) {
-  animation: fadeIn var(--duration-fast) var(--ease-default) var(--duration-fast) forwards;
+::view-transition-new(root) {
   opacity: 0;
+  animation: fade-in var(--duration-fast) var(--ease-default) var(--duration-fast) forwards;
 }
 
-/* ==========================================================================
-   Reduced Motion
-   ========================================================================== */
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
 
 @media (prefers-reduced-motion: reduce) {
   ::view-transition-old(root),
-  ::view-transition-new(root),
-  ::view-transition-old(main-content),
-  ::view-transition-new(main-content) {
+  ::view-transition-new(root) {
     animation: none;
+  }
+  ::view-transition-new(root) {
+    opacity: 1;
   }
 }
