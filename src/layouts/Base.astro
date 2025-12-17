@@ -10,7 +10,7 @@ import {ClientRouter} from "astro:transitions";
 
 import FixedFooter from "../components/FixedFooter.astro";
 import FixedHeader from "../components/FixedHeader.astro";
-import JsonLd from "../components/JsonLd.astro";
+import JSONLD from "../components/JSONLD.astro";
 import SEO from "../components/SEO.astro";
 import ThemeSwitcher from "../components/ThemeSwitcher.astro";
 import {THEME_CLASSES} from "../config/themes";
@@ -91,7 +91,7 @@ const {
       updatedDate={updatedDate}
       tags={tags}
     />
-    <JsonLd type="WebSite" />
+    <JSONLD type="WebSite" />
 
     <!-- Preload critical fonts -->
     <link
