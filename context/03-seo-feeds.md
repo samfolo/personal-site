@@ -31,7 +31,7 @@ Injected via Base layout, receives props from page:
 | `title` | string | required | Page title |
 | `description` | string | SITE.description | Meta description |
 | `canonicalUrl` | string | Current URL | Canonical link |
-| `ogImage` | string | `/og-default.svg` | Open Graph image path |
+| `ogImage` | string | `/og/default.png` | Open Graph image path |
 | `ogType` | `website` \| `article` | `website` | Content type |
 | `publishDate` | Date | - | Article publish date |
 | `updatedDate` | Date | - | Article modified date |
