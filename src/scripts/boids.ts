@@ -133,6 +133,12 @@ interface TargetEdge {
   d: number;
 }
 
+/** Nearby boid with distance for network line calculations */
+interface NearbyBoid {
+  boid: Boid;
+  distance: number;
+}
+
 class Boid {
   private p: p5;
   position: p5.Vector;
@@ -282,7 +288,7 @@ class Boid {
       {x: this.p.width + 50, y: this.position.y},
     ];
 
-    this.targetEdge = edges.reduce<{x: number; y: number; d: number}>(
+    this.targetEdge = edges.reduce<TargetEdge>(
       (nearest, edge) => {
         const d = this.p.dist(this.position.x, this.position.y, edge.x, edge.y);
         return d < nearest.d ? {x: edge.x, y: edge.y, d} : nearest;
@@ -518,7 +524,7 @@ const drawNetworkLines = (p: p5, boids: Boid[], colour: RGBColour): void => {
     }
 
     // Find nearby boids with distances
-    const nearby: Array<{boid: Boid; distance: number}> = [];
+    const nearby: NearbyBoid[] = [];
 
     for (const other of boids) {
       if (other === boid || other.opacity <= 0) {
