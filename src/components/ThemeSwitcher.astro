@@ -7,12 +7,12 @@
  */
 
 import {THEME_LABELS, THEME_ORDER} from "../config/themes";
-import type {Theme} from "../types";
+import type {Theme, ThemeSwitcherSize} from "../types";
 
 import ThemeSwitcherButton from "./ThemeSwitcherButton.astro";
 
 interface Props {
-  size?: "sm" | "md";
+  size?: ThemeSwitcherSize;
 }
 
 interface ThemeOption {

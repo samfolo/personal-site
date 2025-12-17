@@ -7,6 +7,7 @@
  */
 
 import SheenText from "./SheenText.astro";
+import {MEDIUM_SHEEN} from "../config/sheen";
 
 interface Props {
   title: string;
@@ -34,7 +35,12 @@ const formattedDate = formatPostDate(date);
 <li class="post-item">
   <a href={`/blog/${slug}`} class="post-link">
     <span class="post-title">
-      <SheenText text={title} tag="span" interval={12} />
+      <SheenText
+        text={title}
+        tag="span"
+        interval={MEDIUM_SHEEN.interval}
+        spread={MEDIUM_SHEEN.spread}
+      />
     </span>
     <span class="post-date">{formattedDate}</span>
   </a>

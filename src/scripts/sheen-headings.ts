@@ -4,6 +4,7 @@
  * Applies the sheen text animation effect to H1-H5 headings within prose content.
  */
 
+import {MEDIUM_SHEEN} from "../config/sheen";
 import {
   type SheenState,
   splitIntoChars,
@@ -15,10 +16,6 @@ import {
 const PROSE_HEADING_SELECTOR =
   ".prose h1, .prose h2, .prose h3, .prose h4, .prose h5";
 const INITIALISED_ATTR = "data-sheen-heading";
-
-// Settings for prose headings - wider spread for larger text
-const HEADING_INTERVAL = 18;
-const HEADING_SPREAD = 3;
 
 // Track state for each heading
 const headingStates = new WeakMap<HTMLElement, SheenState>();
@@ -63,7 +60,7 @@ const initHeading = (heading: HTMLElement): void => {
     heading.insertBefore(anchor, heading.firstChild);
   }
 
-  const state = createState(chars, HEADING_INTERVAL, HEADING_SPREAD);
+  const state = createState(chars, MEDIUM_SHEEN.interval, MEDIUM_SHEEN.spread);
   headingStates.set(heading, state);
   heading.setAttribute(INITIALISED_ATTR, "");
 

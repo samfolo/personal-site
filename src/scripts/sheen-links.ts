@@ -4,6 +4,7 @@
  * Applies the sheen text animation effect to all links within prose content.
  */
 
+import {MEDIUM_SHEEN} from "../config/sheen";
 import {
   type SheenState,
   splitIntoChars,
@@ -14,10 +15,6 @@ import {
 
 const PROSE_LINK_SELECTOR = ".prose a:not(.heading-anchor)";
 const INITIALISED_ATTR = "data-sheen-link";
-
-// Default settings for prose links
-const LINK_INTERVAL = 20;
-const LINK_SPREAD = 2;
 
 // Track state for each link
 const linkStates = new WeakMap<HTMLAnchorElement, SheenState>();
@@ -43,7 +40,7 @@ const initLink = (link: HTMLAnchorElement): void => {
   }
 
   const chars = splitIntoChars(link, text);
-  const state = createState(chars, LINK_INTERVAL, LINK_SPREAD);
+  const state = createState(chars, MEDIUM_SHEEN.interval, MEDIUM_SHEEN.spread);
 
   linkStates.set(link, state);
   link.setAttribute(INITIALISED_ATTR, "");

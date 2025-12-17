@@ -6,11 +6,11 @@
  * Used by ThemeSwitcher for both desktop buttons and mobile toggle.
  */
 
-import type {Theme} from "../types";
+import type {Theme, ThemeSwitcherSize} from "../types";
 
 interface Props {
   /** Button size: sm (24px) or md (32px) */
-  size?: "sm" | "md";
+  size?: ThemeSwitcherSize;
   /** Theme to preview. If omitted, shows current theme colours. */
   theme?: Theme;
   /** Whether outline is always visible (not just on focus) */
@@ -29,7 +29,7 @@ const {
   class: className,
 } = Astro.props;
 
-const buttonSize = size === "sm" ? "1.5rem" : "2rem";
+const buttonSize = size === "sm" ? "var(--size-6)" : "var(--size-7)";
 ---
 
 <button

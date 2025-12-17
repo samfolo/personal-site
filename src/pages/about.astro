@@ -6,6 +6,7 @@
  */
 
 import SheenText from "../components/SheenText.astro";
+import {LARGE_SHEEN} from "../config/sheen";
 import Base from "../layouts/Base.astro";
 ---
 
@@ -13,7 +14,11 @@ import Base from "../layouts/Base.astro";
   <main class="about-page">
     <header class="page-header">
       <h1 id="page-title" class="page-title">
-        <SheenText text="About" interval={30} />
+        <SheenText
+          text="About"
+          interval={LARGE_SHEEN.interval}
+          spread={LARGE_SHEEN.spread}
+        />
       </h1>
     </header>
 

@@ -12,3 +12,8 @@ export const SITE = {
     linkedin: "https://www.linkedin.com/in/sam-folorunsho",
   },
 } as const;
+
+/**
+ * Default Open Graph image path for social sharing.
+ */
+export const OG_DEFAULT_PATH = "/og/default.png";

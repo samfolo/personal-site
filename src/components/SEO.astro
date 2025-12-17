@@ -10,7 +10,7 @@
  * - RSS feed discovery
  */
 
-import {SITE} from "../config";
+import {OG_DEFAULT_PATH, SITE} from "../config";
 
 interface Props {
   title: string;
@@ -26,7 +26,7 @@ interface Props {
 const {
   title,
   description = SITE.description,
-  ogImage = "/og/default.png",
+  ogImage = OG_DEFAULT_PATH,
   ogType = "website",
   publishDate,
   updatedDate,

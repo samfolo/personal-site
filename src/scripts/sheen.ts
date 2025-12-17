@@ -6,6 +6,7 @@
  * or [data-sheen-text] attribute (split at runtime).
  */
 
+import {MEDIUM_SHEEN} from "../config/sheen";
 import {
   type SheenState,
   CHAR_CLASS,
@@ -38,8 +39,12 @@ const initElement = (element: HTMLElement): void => {
     return;
   }
 
-  const interval = parseInt(element.dataset.sheenInterval ?? "15", 10);
-  const spread = parseInt(element.dataset.sheenSpread ?? "2", 10);
+  const interval = element.dataset.sheenInterval
+    ? parseInt(element.dataset.sheenInterval, 10)
+    : MEDIUM_SHEEN.interval;
+  const spread = element.dataset.sheenSpread
+    ? parseInt(element.dataset.sheenSpread, 10)
+    : MEDIUM_SHEEN.spread;
 
   // Use pre-split chars if available, otherwise split at runtime
   const isPreSplit = element.hasAttribute("data-sheen-ready");

@@ -8,9 +8,7 @@
  */
 
 import SheenText from "./SheenText.astro";
-
-/** Interval between sheen animations on each character (ms) */
-const SHEEN_INTERVAL_MS = 30;
+import {LARGE_SHEEN} from "../config/sheen";
 
 interface Props {
   class?: string;
@@ -25,10 +23,20 @@ const {class: className} = Astro.props;
   data-scroll-trigger
 >
   <span class="hero-wordmark-line">
-    <SheenText text="Sam" tag="span" interval={SHEEN_INTERVAL_MS} />
+    <SheenText
+      text="Sam"
+      tag="span"
+      interval={LARGE_SHEEN.interval}
+      spread={LARGE_SHEEN.spread}
+    />
   </span>
   <span class="hero-wordmark-line">
-    <SheenText text="Folorunsho." tag="span" interval={SHEEN_INTERVAL_MS} />
+    <SheenText
+      text="Folorunsho."
+      tag="span"
+      interval={LARGE_SHEEN.interval}
+      spread={LARGE_SHEEN.spread}
+    />
   </span>
 </h1>
 

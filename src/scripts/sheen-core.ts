@@ -137,8 +137,8 @@ export const stopAnimation = (state: SheenState): void => {
  */
 export const createState = (
   chars: HTMLSpanElement[],
-  interval: number = 15,
-  spread: number = 2
+  interval: number,
+  spread: number
 ): SheenState => ({
   chars,
   interval,

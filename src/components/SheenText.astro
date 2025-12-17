@@ -13,23 +13,23 @@
  *
  * @param text - The text to display
  * @param tag - The HTML tag to render (default: 'span')
- * @param interval - Animation speed in ms per character (default: 15)
- * @param spread - Number of characters to highlight on each side (default: 2)
+ * @param interval - Animation speed in ms per character
+ * @param spread - Number of characters to highlight on each side
  */
 
 interface Props extends astroHTML.JSX.HTMLAttributes {
   text: string;
   tag?: keyof HTMLElementTagNameMap;
-  interval?: number;
-  spread?: number;
+  interval: number;
+  spread: number;
 }
 
 const {
   text,
   tag: Tag = "span",
   class: className,
-  interval = 15,
-  spread = 2,
+  interval,
+  spread,
   ...attrs
 } = Astro.props;
 

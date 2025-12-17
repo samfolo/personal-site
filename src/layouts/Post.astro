@@ -10,6 +10,7 @@ import type {CollectionEntry} from "astro:content";
 
 import JSONLD from "../components/JSONLD.astro";
 import SheenText from "../components/SheenText.astro";
+import {MEDIUM_SHEEN} from "../config/sheen";
 import {formatDate, formatUpdatedDate} from "../utils/format-date";
 
 import Base from "./Base.astro";
@@ -58,7 +59,8 @@ const {title, description, publishDate, updatedDate, tags} = post.data;
           tag="h1"
           class="post-title"
           id="post-title"
-          spread={3}
+          interval={MEDIUM_SHEEN.interval}
+          spread={MEDIUM_SHEEN.spread}
         />
 
         <div class="post-meta">
