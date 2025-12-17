@@ -1,0 +1,92 @@
+---
+/**
+ * BlogListItem Component
+ *
+ * Individual blog post entry for the blog list.
+ * Displays title with sheen effect and formatted date.
+ */
+
+import SheenText from "./SheenText.astro";
+
+interface Props {
+  title: string;
+  date: string;
+  slug: string;
+}
+
+const {title, date, slug} = Astro.props;
+
+/**
+ * Formats a date string as "12 Dec" for post dates
+ */
+const formatPostDate = (dateString: string): string => {
+  const dateObj = new Date(dateString);
+  const day = dateObj.getDate();
+  const month = new Intl.DateTimeFormat("en-GB", {month: "short"}).format(
+    dateObj
+  );
+  return `${day} ${month}`;
+};
+
+const formattedDate = formatPostDate(date);
+---
+
+<li class="post-item">
+  <a href={`/blog/${slug}`} class="post-link">
+    <span class="post-title">
+      <SheenText text={title} tag="span" interval={12} />
+    </span>
+    <span class="post-date">{formattedDate}</span>
+  </a>
+</li>
+
+<style>
+  .post-item {
+    border-bottom: var(--border-hairline) solid var(--rule);
+  }
+
+  .post-item:last-child {
+    border-bottom: none;
+  }
+
+  .post-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: var(--space-3) 0;
+    padding-left: 0;
+    transition: padding-left var(--transition-fast);
+  }
+
+  .post-link:hover {
+    padding-left: var(--space-2);
+  }
+
+  .post-link:focus-visible {
+    outline: var(--outline-width) solid var(--fg);
+    outline-offset: var(--outline-offset);
+  }
+
+  .post-title {
+    font-size: var(--text-md);
+    font-weight: var(--font-medium);
+    line-height: var(--leading-24);
+    color: var(--fg);
+  }
+
+  .post-date {
+    font-size: var(--text-sm);
+    line-height: var(--leading-16);
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+    flex-shrink: 0;
+    margin-left: var(--space-4);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .post-link {
+      transition: none;
+    }
+  }
+</style>
