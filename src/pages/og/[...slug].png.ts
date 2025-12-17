@@ -15,17 +15,6 @@ import type { OgTemplateOptions } from '../../lib/og';
 
 const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
 
-/**
- * Format date as "12 Dec 2024"
- */
-function formatDate(date: Date): string {
-  return date.toLocaleDateString('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-  });
-}
-
 export const GET: APIRoute = async ({ params }) => {
   const slugParts = params.slug?.split('/') ?? [];
 
@@ -54,7 +43,7 @@ export const GET: APIRoute = async ({ params }) => {
 
     options = {
       title: post.data.title,
-      date: formatDate(post.data.publishDate),
+      date: post.data.publishDate,
       theme: getThemeFromTitle(post.data.title),
     };
   } else {

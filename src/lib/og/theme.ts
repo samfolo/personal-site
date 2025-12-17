@@ -13,6 +13,7 @@ export interface ThemeColours {
   bg: string;
   fg: string;
   muted: string;
+  rule: string;
 }
 
 /**
@@ -28,30 +29,45 @@ function oklchToHex(l: number, c: number, h: number): string {
  * OKLCH values from src/styles/tokens/colours.css
  * Converted to hex at runtime to stay in sync with CSS definitions.
  */
-export const themeColours: Record<Theme, ThemeColours> = {
+export const THEME_COLOURS: Record<Theme, ThemeColours> = {
   steel: {
     bg: oklchToHex(0.2293, 0.009, 255.6),
     fg: oklchToHex(0.9615, 0.0098, 87.47),
     muted: oklchToHex(0.6334, 0, 0),
+    rule: oklchToHex(0.359, 0.0095, 260.72),
   },
   purple: {
     bg: oklchToHex(0.227, 0.0199, 303.08),
     fg: oklchToHex(0.9251, 0.041, 91.72),
     muted: oklchToHex(0.6432, 0.0302, 67.25),
+    rule: oklchToHex(0.3369, 0.0255, 304.52),
   },
   charcoal: {
     bg: oklchToHex(0.2478, 0, 0),
     fg: oklchToHex(0.9851, 0, 0),
     muted: oklchToHex(0.6268, 0, 0),
+    rule: oklchToHex(0.3715, 0, 0),
   },
   teal: {
     bg: oklchToHex(0.2239, 0.0239, 195.58),
     fg: oklchToHex(0.76, 0.1687, 34.05),
     muted: oklchToHex(0.555, 0.0365, 196.15),
+    rule: oklchToHex(0.3243, 0.0378, 195.45),
   },
 };
 
 const themes: Theme[] = ['steel', 'purple', 'charcoal', 'teal'];
+
+/**
+ * Theme labels for OG images.
+ * Uppercase descriptive names shown below the date divider.
+ */
+export const THEME_LABELS: Record<Theme, string> = {
+  steel: 'STEEL GREY + WARM CREAM',
+  purple: 'DARK PURPLE + GOLD',
+  charcoal: 'WARM CHARCOAL + OFF-WHITE',
+  teal: 'DARK TEAL + CORAL',
+};
 
 /**
  * Simple hash function for strings.
