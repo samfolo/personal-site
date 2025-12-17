@@ -10,6 +10,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@astrojs/check": "^0.9.6",
     "@astrojs/mdx": "^4.3.12",
     "@astrojs/node": "^9.5.1",
     "@astrojs/rss": "^4.0.14",
@@ -26,6 +27,7 @@
     "satori": "^0.18.3",
     "satori-html": "^0.3.2",
     "tailwindcss": "^4.1.17",
+    "typescript": "^5.9.3",
     "unist-util-visit": "^5.0.0"
   },
   "devDependencies": {
