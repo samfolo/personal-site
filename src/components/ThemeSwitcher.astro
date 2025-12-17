@@ -6,7 +6,7 @@
  * Persists selection to localStorage and updates body class.
  */
 
-import {THEME_CLASSES, THEME_LABELS, THEME_ORDER} from "../config/themes";
+import {THEME_LABELS, THEME_ORDER} from "../config/themes";
 import type {Theme} from "../types";
 
 import ThemeSwitcherButton from "./ThemeSwitcherButton.astro";
@@ -88,10 +88,11 @@ const THEMES: ThemeOption[] = THEME_ORDER.map((id) => ({
   import {THEME_CLASSES, THEME_LABELS, THEME_ORDER} from "../config/themes";
   import {setFavicon} from "../scripts/favicon";
   import {setThemeColor} from "../scripts/theme-color";
+  import type {Theme} from "../types";
 
   const THEME_KEY = "theme";
 
-  const setTheme = (themeId: string): void => {
+  const setTheme = (themeId: Theme): void => {
     document.documentElement.classList.remove(...THEME_CLASSES);
     document.documentElement.classList.add(`theme-${themeId}`);
     localStorage.setItem(THEME_KEY, themeId);
@@ -107,14 +108,14 @@ const THEMES: ThemeOption[] = THEME_ORDER.map((id) => ({
     setTheme(THEME_ORDER[nextIndex]);
   };
 
-  const updateActiveStates = (activeTheme: string): void => {
+  const updateActiveStates = (activeTheme: Theme): void => {
     document.querySelectorAll(".theme-button").forEach((button) => {
       const isActive = button.getAttribute("data-theme") === activeTheme;
       button.setAttribute("data-active", String(isActive));
     });
 
     // Update mobile toggle aria-label
-    const label = THEME_LABELS[activeTheme] ?? activeTheme;
+    const label = THEME_LABELS[activeTheme];
     document.querySelectorAll(".theme-toggle-mobile").forEach((button) => {
       button.setAttribute(
         "aria-label",
@@ -123,10 +124,10 @@ const THEMES: ThemeOption[] = THEME_ORDER.map((id) => ({
     });
   };
 
-  const getCurrentTheme = (): string => {
+  const getCurrentTheme = (): Theme => {
     for (const cls of document.documentElement.classList) {
       if (cls.startsWith("theme-")) {
-        return cls.replace("theme-", "");
+        return cls.replace("theme-", "") as Theme;
       }
     }
     return "steel";
@@ -139,7 +140,7 @@ const THEMES: ThemeOption[] = THEME_ORDER.map((id) => ({
     // Desktop: individual theme buttons
     document.querySelectorAll(".theme-button").forEach((button) => {
       button.addEventListener("click", () => {
-        const themeId = button.getAttribute("data-theme");
+        const themeId = button.getAttribute("data-theme") as Theme | null;
         if (themeId) {
           setTheme(themeId);
         }
