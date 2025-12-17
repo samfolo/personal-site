@@ -69,7 +69,11 @@ const groupedPosts = groupPostsByMonth(posts);
           <h2 class="month-label">{formatMonthLabel(monthPosts[0].date)}</h2>
           <ul class="post-list">
             {monthPosts.map((post) => (
-              <BlogListItem title={post.title} date={post.date} slug={post.slug} />
+              <BlogListItem
+                title={post.title}
+                date={post.date}
+                slug={post.slug}
+              />
             ))}
           </ul>
         </section>
