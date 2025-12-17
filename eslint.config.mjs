@@ -130,22 +130,14 @@ const sharedRules = {
     // Ban inline interface definitions - require separate interface declarations
     // This improves readability and reusability of type definitions
     {
-      selector:
-        "VariableDeclarator[init.typeAnnotation.typeAnnotation.type='TSTypeLiteral']",
+      selector: "VariableDeclarator > TSTypeAnnotation TSTypeLiteral",
       message:
         "Define interfaces separately instead of using inline type literals. Create a named interface above the variable declaration.",
     },
     {
-      selector:
-        "FunctionDeclaration > :matches(TSTypeParameterDeclaration, TSTypeAnnotation) TSTypeLiteral",
+      selector: "TSTypeAnnotation > TSTypeLiteral",
       message:
-        "Define interfaces separately instead of using inline type literals in function signatures.",
-    },
-    {
-      selector:
-        "ArrowFunctionExpression > :matches(TSTypeParameterDeclaration, TSTypeAnnotation) TSTypeLiteral",
-      message:
-        "Define interfaces separately instead of using inline type literals in function signatures.",
+        "Define interfaces separately instead of using inline type literals.",
     },
   ],
 };

@@ -19,8 +19,8 @@ import ThemeSwitcher from "./ThemeSwitcher.astro";
   transition:persist
   transition:name="header"
 >
-  <div class="header-inner">
-    <div class="header-left">
+  <div class="fixed-header-inner">
+    <div class="fixed-header-left">
       <LogoMark
         href="/"
         label="Go to home"
@@ -29,7 +29,7 @@ import ThemeSwitcher from "./ThemeSwitcher.astro";
       />
       <Nav links={NAV_LINKS} aria-label="Main navigation" />
     </div>
-    <div class="header-right">
+    <div class="fixed-header-right">
       <ThemeSwitcher size="sm" />
     </div>
   </div>
@@ -61,7 +61,7 @@ import ThemeSwitcher from "./ThemeSwitcher.astro";
     pointer-events: auto;
   }
 
-  .header-inner {
+  .fixed-header-inner {
     max-width: var(--container-max);
     margin: 0 auto;
     padding: var(--space-4) var(--container-px);
@@ -70,13 +70,13 @@ import ThemeSwitcher from "./ThemeSwitcher.astro";
     align-items: center;
   }
 
-  .header-left {
+  .fixed-header-left {
     display: flex;
     align-items: center;
     gap: var(--space-6);
   }
 
-  .header-right {
+  .fixed-header-right {
     display: flex;
     align-items: center;
   }
