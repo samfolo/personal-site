@@ -9,12 +9,13 @@
 import type {CollectionEntry} from "astro:content";
 
 import JSONLD from "../components/JSONLD.astro";
-import SheenText from "../components/SheenText.astro";
+import PostMeta from "../components/PostMeta.astro";
+import PostNav from "../components/PostNav.astro";
+import PostTags from "../components/PostTags.astro";
 import {MEDIUM_SHEEN} from "../config/sheen";
 import {getBlogPostOgPath} from "../lib/og";
-import {formatDate, formatUpdatedDate} from "../utils/format-date";
 
-import Base from "./Base.astro";
+import Prose from "./Prose.astro";
 
 interface PostNavLink {
   slug: string;
@@ -32,14 +33,19 @@ const {post, readingTime, prevPost, nextPost} = Astro.props;
 const {title, description, publishDate, updatedDate, tags} = post.data;
 ---
 
-<Base
+<Prose
   title={`${title} | Sam Folorunsho`}
   description={description}
-  ogImage={getBlogPostOgPath(post.id)}
-  ogType="article"
-  publishDate={publishDate}
-  updatedDate={updatedDate}
-  tags={tags}
+  heading={title}
+  seo={{
+    ogImage: getBlogPostOgPath(post.id),
+    ogType: "article",
+    publishDate,
+    updatedDate,
+    tags,
+  }}
+  sheenConfig={MEDIUM_SHEEN}
+  headingId="post-title"
 >
   <JSONLD
     type="Article"
@@ -51,191 +57,16 @@ const {title, description, publishDate, updatedDate, tags} = post.data;
       tags,
     }}
   />
-  <main class="post-container">
-    <article class="post">
-      <!-- Post Header -->
-      <header class="post-header">
-        <SheenText
-          text={title}
-          tag="h1"
-          class="post-title"
-          id="post-title"
-          interval={MEDIUM_SHEEN.interval}
-          spread={MEDIUM_SHEEN.spread}
-        />
 
-        <div class="post-meta">
-          <time datetime={publishDate.toISOString()}>
-            {formatDate(publishDate)}
-          </time>
-          {
-            updatedDate && (
-              <span class="post-updated">{formatUpdatedDate(updatedDate)}</span>
-            )
-          }
-          <span class="post-reading-time">{readingTime}</span>
-        </div>
+  <Fragment slot="meta">
+    <PostMeta {publishDate} {updatedDate} {readingTime} />
+    <PostTags {tags} />
+  </Fragment>
 
-        {
-          tags.length > 0 && (
-            <ul class="post-tags">
-              {tags.map((tag) => (
-                <li class="post-tag">{tag}</li>
-              ))}
-            </ul>
-          )
-        }
-      </header>
+  <slot />
 
-      <!-- Post Content -->
-      <div class="prose">
-        <slot />
-      </div>
-    </article>
-
-    <!-- Post Navigation -->
-    {
-      (prevPost || nextPost) && (
-        <nav class="post-nav" aria-label="Post navigation">
-          <div class="post-nav-item post-nav-prev">
-            {prevPost && (
-              <>
-                <span class="post-nav-label">Previous</span>
-                <a href={`/blog/${prevPost.slug}`} class="post-nav-link">
-                  {prevPost.title}
-                </a>
-              </>
-            )}
-          </div>
-
-          <div class="post-nav-item post-nav-next">
-            {nextPost && (
-              <>
-                <span class="post-nav-label">Next</span>
-                <a href={`/blog/${nextPost.slug}`} class="post-nav-link">
-                  {nextPost.title}
-                </a>
-              </>
-            )}
-          </div>
-        </nav>
-      )
-    }
-  </main>
-</Base>
-
-<style>
-  .post-container {
-    max-width: var(--container-max);
-    margin: 0 auto;
-    padding: calc(var(--header-height) + var(--space-8)) var(--container-px)
-      var(--space-9);
-  }
-
-  .post-header {
-    margin-bottom: var(--space-7);
-  }
-
-  /* :global() required as SheenText renders the h1 in its own scope */
-  :global(.post-title) {
-    font-size: clamp(var(--text-xl), 5vw, var(--text-3xl));
-    font-weight: var(--font-bold);
-    letter-spacing: var(--tracking-display);
-    line-height: var(--leading-48);
-    margin-bottom: var(--space-4);
-  }
-
-  .post-meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-3);
-    font-size: var(--text-sm);
-    color: var(--muted);
-  }
-
-  .post-meta > *:not(:last-child)::after {
-    content: "·";
-    margin-left: var(--space-3);
-  }
-
-  .post-tags {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--space-2);
-    margin-top: var(--space-4);
-  }
-
-  .post-tag {
-    font-size: var(--text-xs);
-    font-weight: var(--font-medium);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-labels);
-    color: var(--muted);
-    background-color: var(--rule);
-    padding: var(--space-1) var(--space-2);
-    border-radius: var(--space-1);
-  }
-
-  /* Post Navigation */
-  .post-nav {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: var(--space-5);
-    margin-top: var(--space-8);
-    padding-top: var(--space-6);
-    border-top: var(--border-hairline) solid var(--rule);
-  }
-
-  .post-nav-item {
-    display: flex;
-    flex-direction: column;
-    gap: var(--space-2);
-  }
-
-  .post-nav-next {
-    text-align: right;
-  }
-
-  .post-nav-label {
-    font-size: var(--text-xs);
-    font-weight: var(--font-medium);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-labels);
-    line-height: var(--leading-16);
-    color: var(--muted);
-  }
-
-  .post-nav-link {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    overflow: hidden;
-    font-size: var(--text-md);
-    font-weight: var(--font-medium);
-    line-height: var(--leading-24);
-    color: var(--fg);
-    transition: color var(--transition-fast);
-  }
-
-  .post-nav-link:hover {
-    color: var(--muted);
-  }
-
-  .post-nav-link:focus-visible {
-    outline: var(--outline-width) solid var(--fg);
-    outline-offset: var(--outline-offset);
-  }
-
-  @container page (max-width: 640px) {
-    .post-nav {
-      grid-template-columns: 1fr;
-    }
-
-    .post-nav-next {
-      text-align: left;
-    }
-  }
-</style>
+  <PostNav slot="after" {prevPost} {nextPost} />
+</Prose>
 
 <script>
   import "../scripts/code-copy.ts";
