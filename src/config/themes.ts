@@ -5,13 +5,19 @@
  * All theme-related constants should be imported from here.
  */
 
-import type {Theme} from "../types";
-
 /**
  * Theme order for cycling and iteration.
  * This determines the order in the theme switcher and cycle button.
+ * The Theme type is derived from this array.
  */
-export const THEME_ORDER: Theme[] = ["steel", "purple", "charcoal", "teal"];
+export const THEME_ORDER = ["steel", "purple", "charcoal", "teal"] as const;
+
+/**
+ * Available colour themes.
+ * Derived from THEME_ORDER array.
+ * Corresponds to CSS classes: .theme-steel, .theme-purple, etc.
+ */
+export type Theme = (typeof THEME_ORDER)[number];
 
 /**
  * Theme display labels.

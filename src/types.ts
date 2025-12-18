@@ -5,10 +5,10 @@
  */
 
 /**
- * Available colour themes.
- * Corresponds to CSS classes: .theme-steel, .theme-purple, etc.
+ * Re-export Theme from config.
+ * The canonical definition lives in src/config/themes.ts.
  */
-export type Theme = "steel" | "purple" | "charcoal" | "teal";
+export type {Theme} from "./config/themes";
 
 /**
  * ThemeSwitcher size variants.
