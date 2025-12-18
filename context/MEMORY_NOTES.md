@@ -4,15 +4,16 @@ This document provides comprehensive context for the personal-site project. It s
 
 ## Quick Reference
 
-| Area         | Key Files                                      | Maintenance Level |
-| ------------ | ---------------------------------------------- | ----------------- |
-| Blog Content | `src/content/blog/*.mdx`                       | Regular           |
-| RSS Feed     | `src/pages/rss.xml.ts`                         | Automatic         |
-| Sitemap      | `src/pages/sitemap.xml.ts`                     | Semi-automatic    |
-| OG Images    | `src/pages/og/[...slug].png.ts`, `src/lib/og/` | Automatic         |
-| SEO          | `src/components/SEO.astro`, `JsonLd.astro`     | Automatic         |
-| Deployment   | `.github/workflows/deploy.yml`                 | Rare              |
-| Theming      | `src/styles/tokens/colours.css`, `shiki.css`   | Rare              |
+| Area         | Key Files                                              | Maintenance Level |
+| ------------ | ------------------------------------------------------ | ----------------- |
+| Blog Content | `src/content/blog/*.mdx`                               | Regular           |
+| RSS Feed     | `src/pages/rss.xml.ts`                                 | Automatic         |
+| Sitemap      | `src/pages/sitemap.xml.ts`                             | Semi-automatic    |
+| OG Images    | `src/pages/og/[...slug].png.ts`, `src/lib/og/`         | Automatic         |
+| SEO          | `src/components/seo/SEO.astro`, `JSONLD.astro`         | Automatic         |
+| Deployment   | `.github/workflows/deploy.yml`                         | Rare              |
+| Theming      | `src/styles/tokens/colours.css`, `shiki.css`           | Rare              |
+| Config       | `src/config/` (themes, storage, navigation, dom, sheen)| Rare              |
 
 ## Documentation Index
 
@@ -40,6 +41,7 @@ This document provides comprehensive context for the personal-site project. It s
 2. RSS feed auto-updates (pulls from content collection)
 3. Sitemap auto-updates (pulls from content collection)
 4. SEO metadata auto-generates from frontmatter
+5. OG image auto-generates with deterministic theme
 
 ### When Adding New Static Pages
 
@@ -57,11 +59,14 @@ This document provides comprehensive context for the personal-site project. It s
 
 ### When Modifying Themes
 
-1. Update colour tokens in `src/styles/tokens/colours.css`
-2. **Must also update**: Syntax highlighting in `src/styles/components/shiki.css`
-3. **Must also update**: Boids colours in `src/scripts/boids.ts` (THEME_COLOURS constant)
-4. **Consider updating**: RSS stylesheet in `public/rss/styles.xsl` (uses steel theme colours)
-5. **Consider updating**: OG image theme colours in `src/lib/og/theme-selection.ts`
+1. Add theme ID to `src/config/themes.ts` (THEME_ORDER, THEME_LABELS)
+2. Add colour tokens in `src/styles/tokens/colours.css`
+3. Add syntax tokens in `src/styles/components/shiki.css`
+4. Add hex colours in `src/lib/theme/palette.ts` (for OG images, theme-color)
+5. Add favicon at `public/sf-[themeid].ico`
+6. **Consider updating**: RSS stylesheet in `public/rss/styles.xsl` (uses steel theme colours)
+
+**Note:** Boids animation reads `--rule` from CSS dynamically - no manual update needed.
 
 ### OG Image Generation
 
@@ -69,13 +74,19 @@ OG images are generated dynamically via SSR endpoint:
 
 - **Endpoint**: `/og/default.png` (site) or `/og/blog/[slug].png` (posts)
 - **Dimensions**: 1200x630px
-- **Theme**: Deterministic from title hash (purple, teal, charcoal, steel)
+- **Theme**: Deterministic from title hash (cycles through all themes)
 - **Caching**: 1-year `max-age` with `immutable`
 
 **Key files:**
 
 - `src/pages/og/[...slug].png.ts` - API endpoint
 - `src/lib/og/` - Generation utilities (satori + @resvg/resvg-js)
+  - `index.ts` - Barrel exports, path helpers
+  - `generate.ts` - Core generation logic
+  - `template.ts` - HTML template
+  - `theme-selection.ts` - Hash-based theme selection
+  - `fonts.ts` - Font loading
+  - `switzer-*.ts` - Base64 font data
 
 **Testing OG images:**
 
@@ -91,6 +102,10 @@ OG images are generated dynamically via SSR endpoint:
 npm run dev       # Start dev server at localhost:4321
 npm run build     # Build production site
 npm run preview   # Preview production build
+npm run lint      # Run ESLint
+npm run check     # Run Astro type checking
+npm run fmt       # Format with Prettier
+npm run fmt:check # Check formatting
 ```
 
 ### Required GitHub Secrets for Deployment
@@ -120,7 +135,7 @@ export const THEME_ORDER = ["steel", "purple", "charcoal", "teal"] as const;
 export type Theme = (typeof THEME_ORDER)[number];
 ```
 
-This ensures the type and array stay in sync. The `Theme` type is re-exported from `src/types.ts` for convenience.
+This ensures the type and array stay in sync.
 
 ### Storage Keys
 
@@ -140,14 +155,51 @@ For inline scripts, pass via `define:vars`:
 </script>
 ```
 
+### DOM Identifiers
+
+Centralised in `src/config/dom/selectors.ts`:
+
+- `DOM_IDS` - Element IDs (e.g., `fixed-header`)
+- `DATA_ATTRS` - Data attribute names (e.g., `data-scroll-trigger`)
+- `DOM_SELECTORS` - CSS selectors derived from data attributes
+
+### Component Organisation
+
+Components are grouped by domain with barrel exports:
+
+```typescript
+// Import pattern
+import {BlogList, PostMeta} from "../components/blog";
+import {FixedHeader, FixedFooter} from "../components/chrome";
+import {SheenText, Overline, Caption, Body} from "../components/typography";
+```
+
 ### File Organisation
 
-Theme and utility files follow this structure:
+```
+src/config/         # Configuration constants
+├── themes.ts       # Theme order, labels, classes
+├── storage.ts      # localStorage keys
+├── navigation.ts   # Nav link definitions
+├── sheen.ts        # Sheen animation presets
+├── cache.ts        # Cache duration constants
+└── dom/            # DOM identifiers and selectors
 
-- `src/config/` - Configuration constants (themes, storage, navigation, sheen)
-- `src/lib/theme/` - Theme colour utilities (palette.ts)
-- `src/lib/shiki/` - Shiki syntax highlighting theme
-- `src/lib/og/` - OG image generation utilities
+src/lib/            # Shared utilities
+├── og/             # OG image generation
+├── shiki/          # Shiki syntax theme
+└── theme/          # Theme colour utilities
+
+src/utils/          # Helper functions
+├── format-date.ts  # Date formatting
+└── reading-time.ts # Reading time calculation
+
+src/types/          # TypeScript types
+├── index.ts        # Barrel exports
+├── og.ts           # OG image types
+├── json-ld.ts      # JSON-LD types
+└── culori.d.ts     # Culori type declarations
+```
 
 ### OG Image Template
 
@@ -161,7 +213,7 @@ createOgTemplate({
 });
 ```
 
-Path helpers:
+Path helpers from `src/lib/og`:
 
 - `OG_DEFAULT_PATH` - Default OG image path (`/og/default.png`)
 - `getBlogPostOgPath(postId)` - Blog post OG path (`/og/blog/[id].png`)
@@ -177,7 +229,7 @@ Component and code documentation should follow the style established in ThemeSwi
 - Group related information under clear topic labels
 - Reference CSS or design token names directly without extra context
 
-Example structure from ThemeSwitcher.astro:
+Example structure:
 
 ```
 Component Split:
@@ -189,8 +241,6 @@ individual buttons with visual styling.
 The .theme-toggle-mobile class uses :global() because the button is rendered
 by ThemeSwitcherButton (child component) and Astro scopes styles...
 ```
-
-This style keeps documentation scannable while providing enough context to understand design decisions.
 
 ### British English
 
@@ -211,10 +261,13 @@ Blog posts support Shiki transformers:
 
 ## Quick Troubleshooting
 
-| Issue                    | Solution                                                     |
-| ------------------------ | ------------------------------------------------------------ |
-| Build fails on blog post | Check MDX frontmatter schema matches `src/content.config.ts` |
-| Theme not applying       | Check body class matches theme name (e.g., `theme-steel`)    |
-| Header not showing       | Check if `data-scroll-trigger` element exists on page        |
-| RSS not updating         | RSS pulls from content collection - check post is not draft  |
-| Sitemap missing page     | Static pages must be manually added to `sitemap.xml.ts`      |
+| Issue                    | Solution                                                         |
+| ------------------------ | ---------------------------------------------------------------- |
+| Build fails on blog post | Check MDX frontmatter schema matches `src/content.config.ts`     |
+| Theme not applying       | Check `<html>` class matches theme name (e.g., `theme-steel`)    |
+| Header not showing       | Check if `data-scroll-trigger` element exists on page            |
+| RSS not updating         | RSS pulls from content collection - check post is not draft      |
+| Sitemap missing page     | Static pages must be manually added to `sitemap.xml.ts`          |
+| Boids wrong colour       | Verify `--rule` CSS custom property is defined for the theme     |
+| Sheen not animating      | Check `[data-sheen-ready]` attribute and character spans exist   |
+| Theme not persisting     | Check localStorage for `sf.site.theme` key                       |

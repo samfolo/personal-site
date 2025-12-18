@@ -9,8 +9,9 @@ The site implements comprehensive SEO through:
 3. RSS feed for content syndication
 4. XML sitemap for search engines
 5. Canonical URLs
+6. Dynamic OG image generation
 
-## SEO Component (`src/components/SEO.astro`)
+## SEO Component (`src/components/seo/SEO.astro`)
 
 ### Usage
 
@@ -73,7 +74,7 @@ Injected via Base layout, receives props from page:
 <link rel="alternate" type="application/rss+xml" title="..." href="/rss.xml" />
 ```
 
-## JSON-LD Structured Data (`src/components/JsonLd.astro`)
+## JSON-LD Structured Data (`src/components/seo/JSONLD.astro`)
 
 ### WebSite Schema (default)
 
@@ -114,16 +115,33 @@ Additional schema for posts via Post layout:
 }
 ```
 
-## OG Image
+### Type Definitions (`src/types/json-ld.ts`)
 
-### Dynamic Generation
+```typescript
+export type JSONLDType = "WebSite" | "Article";
+export interface JSONLDPerson { ... }
+export interface JSONLDWebSite { ... }
+export interface JSONLDArticle { ... }
+export interface JSONLDArticleData { ... }
+```
 
-OG images are generated dynamically at request time via SSR endpoint:
+## OG Image Generation
 
-- **Endpoint**: `src/pages/og/[...slug].png.ts`
-- **Library**: `src/lib/og/` (satori + @resvg/resvg-js)
-- **Dimensions**: 1200x630px
-- **Format**: PNG
+### Architecture
+
+OG images are generated dynamically at request time via SSR endpoint.
+
+**Key files:**
+
+| File                            | Purpose                              |
+| ------------------------------- | ------------------------------------ |
+| `src/pages/og/[...slug].png.ts` | API endpoint with routing logic      |
+| `src/lib/og/index.ts`           | Barrel exports and path helpers      |
+| `src/lib/og/generate.ts`        | Core generation (satori → resvg)     |
+| `src/lib/og/template.ts`        | HTML template creation               |
+| `src/lib/og/theme-selection.ts` | Deterministic theme from title hash  |
+| `src/lib/og/fonts.ts`           | Font loading utilities               |
+| `src/lib/og/switzer-*.ts`       | Base64-encoded font data             |
 
 ### URL Patterns
 
@@ -132,18 +150,39 @@ OG images are generated dynamically at request time via SSR endpoint:
 | Site default | `/og/default.png`     |
 | Blog posts   | `/og/blog/[slug].png` |
 
-### Features
+### Path Helpers
 
-- **Title display**: Shows page/post title with proper truncation
-- **Theme colours**: Deterministic theme selection based on title hash
-- **Caching**: 1-year `max-age` with `immutable`
-- **Font**: Switzer Variable (OTF loaded at runtime)
+```typescript
+import {OG_DEFAULT_PATH, getBlogPostOgPath} from "../lib/og";
 
-### Pipeline
+OG_DEFAULT_PATH; // "/og/default.png"
+getBlogPostOgPath("my-post"); // "/og/blog/my-post.png"
+```
+
+### Generation Pipeline
 
 1. `satori-html` creates React-like JSX structure
-2. `satori` renders JSX to SVG
+2. `satori` renders JSX to SVG (with embedded Switzer font)
 3. `@resvg/resvg-js` converts SVG to PNG
+
+### Features
+
+- **Dimensions**: 1200x630px
+- **Format**: PNG
+- **Theme colours**: Deterministic selection based on title hash
+- **Caching**: 1-year `max-age` with `immutable` (via `CACHE_DURATIONS.ONE_YEAR_IN_SECONDS`)
+- **Font**: Switzer (Regular + Bold, embedded as base64)
+
+### Template Options
+
+```typescript
+interface OgTemplateOptions {
+  title: string;
+  date?: Date;
+  theme: Theme;
+  isDefault?: boolean; // True for site-level OG image
+}
+```
 
 ### Testing OG Images
 
@@ -162,7 +201,7 @@ Uses `@astrojs/rss` package:
 return rss({
   title: SITE.name,
   description: SITE.description,
-  site: site,
+  site,
   items: sortedPosts.map((post) => ({
     title: post.data.title,
     pubDate: post.data.publishDate,
@@ -271,6 +310,7 @@ const canonicalUrl =
 - [ ] (Automatic) RSS feed updates
 - [ ] (Automatic) Sitemap updates with lastmod
 - [ ] (Automatic) Article JSON-LD generated
+- [ ] (Automatic) OG image generated with deterministic theme
 
 ### New Static Page
 

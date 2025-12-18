@@ -33,6 +33,7 @@ src/styles/
 │   ├── typography.css      # Fonts, sizes, line heights
 │   ├── spacing.css         # Spacing scale
 │   ├── sizing.css          # Fixed sizes
+│   ├── layout.css          # Safe area insets
 │   ├── z-index.css         # Stacking context
 │   ├── transitions.css     # Animation timings
 │   └── borders.css         # Border widths
@@ -44,6 +45,8 @@ src/styles/
 
 ### Available Themes
 
+Four themes defined in `src/config/themes.ts`:
+
 | Theme    | Class             | Background  | Foreground | Accent         |
 | -------- | ----------------- | ----------- | ---------- | -------------- |
 | Steel    | `.theme-steel`    | Blue-grey   | Warm cream | Cool highlight |
@@ -51,9 +54,25 @@ src/styles/
 | Charcoal | `.theme-charcoal` | Warm grey   | Off-white  | Neutral        |
 | Teal     | `.theme-teal`     | Dark teal   | Coral      | Cyan           |
 
-### Theme Tokens
+### Theme Configuration (`src/config/themes.ts`)
 
-Each theme defines six semantic colours:
+```typescript
+export const THEME_ORDER = ["steel", "purple", "charcoal", "teal"] as const;
+export type Theme = (typeof THEME_ORDER)[number];
+
+export const THEME_LABELS: Record<Theme, string> = {
+  steel: "STEEL GREY + WARM CREAM",
+  purple: "DARK PURPLE + GOLD",
+  charcoal: "WARM CHARCOAL + OFF-WHITE",
+  teal: "DARK TEAL + CORAL",
+};
+
+export const THEME_CLASSES: string[] = THEME_ORDER.map((id) => `theme-${id}`);
+```
+
+### Theme Tokens (`src/styles/tokens/colours.css`)
+
+Each theme defines six semantic colours using OKLCH colour space:
 
 ```css
 .theme-steel {
@@ -76,7 +95,7 @@ All colours use OKLCH for perceptual uniformity:
 
 ### Theme Application
 
-Theme class applied to `<html>`:
+Theme class applied to `<html>` element (not `<body>`):
 
 ```html
 <html class="theme-steel"></html>
@@ -84,22 +103,26 @@ Theme class applied to `<html>`:
 
 This ensures CSS variables are available to view transition pseudo-elements.
 
-Changed via `ThemeSwitcher` component, persisted to localStorage.
-
 ### Theme Persistence
 
-```javascript
+Using localStorage with namespaced key from `src/config/storage.ts`:
+
+```typescript
+// Storage key
+export const STORAGE_KEYS = {
+  THEME: "sf.site.theme",
+} as const;
+
 // Set theme
-localStorage.setItem("theme", themeId);
+localStorage.setItem(STORAGE_KEYS.THEME, themeId);
 document.documentElement.classList.add(`theme-${themeId}`);
 
 // Restore on load (inline script in Base.astro)
-const saved = localStorage.getItem("theme");
+const saved = localStorage.getItem("sf.site.theme");
 if (saved) document.documentElement.classList.add(`theme-${saved}`);
-
-// Restore after View Transitions
-document.addEventListener("astro:after-swap", applyStoredTheme);
 ```
+
+Theme restoration also handles View Transitions via `astro:after-swap`.
 
 ## Typography
 
@@ -141,73 +164,96 @@ document.addEventListener("astro:after-swap", applyStoredTheme);
 | `--tracking-labels`  | 0.1em   | Uppercase labels |
 | `--tracking-body`    | 0.01em  | Body text        |
 
+## Typography Components
+
+Located in `src/components/typography/`:
+
+| Component   | Purpose                           | Default Colour |
+| ----------- | --------------------------------- | -------------- |
+| `Overline`  | Uppercase labels, section headers | muted          |
+| `Caption`   | Dates, metadata, supporting text  | muted          |
+| `Body`      | Taglines, descriptions            | muted          |
+| `SheenText` | Interactive text with animation   | fg             |
+
+### Common Props
+
+All typography components accept:
+
+- `tag` - HTML element to render (default varies by component)
+- `color` - `fg` or `muted`
+- `class` - Additional CSS classes
+- Spread attributes for flexibility
+
+### Caption Specific
+
+- `numeric` prop enables `font-variant-numeric: tabular-nums` for aligned numbers
+
 ## Container Queries
 
-The site uses container queries for responsive layout, enabling components to respond to their container's width rather than the viewport.
+The site uses container queries for responsive layout.
 
 ### Page Container
 
-The `<body>` element has `@container/page` class, making the entire page a named container:
+The `<body>` element is a named container:
 
 ```html
 <body class="@container/page min-h-screen"></body>
 ```
 
-### Usage
-
-Components can use Tailwind container query variants:
-
-```html
-<span class="hidden @md/page:block">Desktop content</span>
-<span class="block @md/page:hidden">Mobile content</span>
-```
-
-Or CSS `@container` queries in `<style>` blocks:
+### Usage in CSS
 
 ```css
-@container page (max-width: 640px) {
+@container page (min-width: 32rem) {
   .element {
-    /* mobile styles */
+    /* wider container styles */
   }
 }
 ```
 
+### Breakpoint Values
+
+Defined in `@theme` block of `global.css`:
+
+```css
+--container-md: 28rem; /* 448px */
+--container-lg: 32rem; /* 512px */
+```
+
 ### Media Queries (Preserved)
 
-User preference and output queries remain as `@media`:
+User preference queries remain as `@media`:
 
 - `@media (prefers-reduced-motion: reduce)` - Accessibility
 - `@media print` - Print styles
 
-## Logomark
+## LogoMark Component
+
+Located at `src/components/navigation/LogoMark.astro`.
 
 ### Specification
 
 The logomark is **"SF."** (initials plus period), matching the full "Sam Folorunsho." wordmark style.
 
-### Component (`src/components/LogoMark.astro`)
+### Responsive Behaviour
 
-Self-contained component with responsive abbreviation:
-
-- Shows "SF." on small containers (< 768px)
-- Shows "Sam Folorunsho." on larger containers (≥ 768px)
+- Shows "SF." on containers < 32rem (512px)
+- Shows "Sam Folorunsho." on containers ≥ 32rem
 
 ### Props
 
-| Prop        | Type     | Default     | Description                       |
-| ----------- | -------- | ----------- | --------------------------------- |
-| `href`      | `string` | required    | Link destination                  |
-| `label`     | `string` | required    | Accessible label (aria-label)     |
-| `container` | `string` | `'page'`    | Container name to query           |
-| `onClick`   | `string` | `undefined` | Handler identifier (data-onclick) |
+| Prop      | Type     | Default  | Description                       |
+| --------- | -------- | -------- | --------------------------------- |
+| `href`    | `string` | required | Link destination                  |
+| `label`   | `string` | required | Accessible label (aria-label)     |
+| `onClick` | `string` | -        | Handler identifier (data-onclick) |
 
 ### Usage
 
 ```astro
-<LogoMark href="/" label="Go to home" container="page" onClick="scrollToTop" />
+<LogoMark href="/" label="Go to home" onClick="scrollToTop" />
 ```
 
-**Locations:** Fixed header, favicons
+**Locations:** Fixed header, uses `page` container for responsive breakpoint
 
 ## Spacing Scale (Base-8)
 
@@ -223,6 +269,21 @@ Self-contained component with responsive abbreviation:
 | `--space-7`  | 4rem    | 64px   |
 | `--space-8`  | 5rem    | 80px   |
 | `--space-9`  | 6rem    | 96px   |
+
+## Layout Tokens
+
+Safe area insets for mobile devices (`src/styles/tokens/layout.css`):
+
+```css
+:root {
+  --safe-area-top: env(safe-area-inset-top, 0);
+  --safe-area-right: env(safe-area-inset-right, 0);
+  --safe-area-bottom: env(safe-area-inset-bottom, 0);
+  --safe-area-left: env(safe-area-inset-left, 0);
+}
+```
+
+Used by FixedHeader and FixedFooter for iOS notch/home indicator avoidance.
 
 ## Tailwind Integration
 
@@ -253,7 +314,7 @@ Prose styles customised in `prose.css` to use design tokens.
 
 ### Custom Shiki Theme
 
-Located at `src/lib/shiki-theme.ts`, maps TextMate scopes to CSS variables.
+Located at `src/lib/shiki/theme.ts`, maps TextMate scopes to CSS variables.
 
 ### Token Architecture
 
@@ -284,84 +345,6 @@ Three-level cascade in `src/styles/components/shiki.css`:
 | Comments    | `--syn-comment`                             |
 | Punctuation | `--syn-punctuation`                         |
 | Diff        | `--syn-diff-add-bg`, `--syn-diff-remove-bg` |
-
-### Adding Language Overrides
-
-```css
-.theme-steel pre.astro-code[data-language="css"] {
-  --shiki-token-keyword: var(--syn-string);
-  --shiki-token-property: var(--syn-fg);
-}
-```
-
-### Colour Patterns
-
-All syntax tokens use OKLCH colour space for perceptual uniformity.
-
-#### Lightness Bands
-
-| Band   | L Range   | Usage                      |
-| ------ | --------- | -------------------------- |
-| Bright | 0.80-0.90 | Strings, types, attributes |
-| Normal | 0.65-0.75 | Keywords, functions        |
-| Muted  | 0.50-0.60 | Comments                   |
-| Dark   | 0.19-0.22 | Backgrounds, highlights    |
-
-#### Chroma Tiers
-
-| Tier    | C Range   | Usage                       |
-| ------- | --------- | --------------------------- |
-| Accent  | 0.10-0.17 | Keywords, escape sequences  |
-| Subtle  | 0.03-0.08 | Strings, functions, numbers |
-| Neutral | 0.00-0.02 | Comments, backgrounds       |
-
-#### Theme Hue Families
-
-| Theme    | Primary Hues             | Accent Hues                    |
-| -------- | ------------------------ | ------------------------------ |
-| Steel    | 235-275 (blue-grey)      | 47 (warm gold)                 |
-| Purple   | 280-330 (magenta-violet) | 40-97 (orange-gold)            |
-| Charcoal | 60-70 (warm grey)        | 0 (pure grey)                  |
-| Teal     | 195-214 (cyan-teal)      | 34, 90-128 (coral, gold, mint) |
-
-#### Near-Duplicate Token Groups
-
-Tokens intentionally sharing identical values for visual cohesion:
-
-**Steel:**
-
-- `string`, `constant`, `param`: `oklch(0.80 0.03 235)`
-- `type`, `attr`: `oklch(0.9 0.03 235)`
-- `keyword`, `tag`: `oklch(0.7 0.03 275)`
-
-**Purple:**
-
-- `string`, `constant`: `oklch(0.8 0.05 97.89)`
-- `param`, `punctuation`: `oklch(0.8 0.01 0)`
-
-**Charcoal:**
-
-- `constant`, `param`: `oklch(0.77 0 0)`
-- `string`, `string-alt`: `oklch(0.80 0.01 70)`
-- `keyword`, `attr`, `punctuation`: `oklch(0.80 0.02 60)`
-
-**Teal:**
-
-- `string`, `string-alt`, `constant`, `type`: `oklch(0.66 0.06 214)`
-- `punctuation`, `operator`: `oklch(0.62 0.03 195)`
-- `keyword`, `tag`: `oklch(0.70 0.11 34)`
-
-## Prose Typography (`prose.css`)
-
-Extends Tailwind Typography with design tokens:
-
-- Maps `--tw-prose-*` variables to theme colours
-- Custom heading styles with proper line heights
-- Anchor link styling with border-bottom
-- Table formatting
-- Code block spacing
-- Blockquote styling
-- List styling
 
 ## Animations and Transitions
 
@@ -406,17 +389,36 @@ Applied throughout for accessibility.
 
 ### Adding a New Theme
 
-1. Add colour definitions in `colours.css`:
+1. Add to `src/config/themes.ts`:
+
+   ```typescript
+   export const THEME_ORDER = [
+     "steel",
+     "purple",
+     "charcoal",
+     "teal",
+     "new",
+   ] as const;
+   export const THEME_LABELS: Record<Theme, string> = {
+     // ... existing
+     new: "NEW THEME DESCRIPTION",
+   };
+   ```
+
+2. Add colour definitions in `src/styles/tokens/colours.css`:
 
    ```css
    .theme-new {
      --bg: oklch(...);
      --fg: oklch(...);
-     /* ... */
+     --muted: oklch(...);
+     --rule: oklch(...);
+     --highlight: oklch(...);
+     --emphasis: oklch(...);
    }
    ```
 
-2. Add syntax tokens in `shiki.css`:
+3. Add syntax tokens in `src/styles/components/shiki.css`:
 
    ```css
    .theme-new {
@@ -425,29 +427,31 @@ Applied throughout for accessibility.
    }
    ```
 
-3. Add theme to switcher in `ThemeSwitcher.astro`:
+4. Add hex colours in `src/lib/theme/palette.ts` for OG images and theme-color meta:
 
    ```typescript
-   const themes = [
+   export const THEME_COLOURS: Record<Theme, ThemeColours> = {
      // ... existing
-     {id: "new", label: "New theme description"},
-   ];
-   ```
-
-4. Add boids colour in `boids.ts`:
-   ```typescript
-   const THEME_COLOURS = {
-     // ... existing
-     new: {r: 0, g: 0, b: 0},
+     new: {
+       bg: oklchToHex(...),
+       fg: oklchToHex(...),
+       muted: oklchToHex(...),
+       rule: oklchToHex(...),
+     },
    };
    ```
+
+5. Add favicon at `public/sf-new.ico`
 
 ### Cross-Component Colour Sync
 
 When modifying theme colours, update:
 
-- [ ] `src/styles/tokens/colours.css` - Base theme
+- [ ] `src/config/themes.ts` - Theme metadata
+- [ ] `src/styles/tokens/colours.css` - Base theme CSS
 - [ ] `src/styles/components/shiki.css` - Syntax highlighting
-- [ ] `src/scripts/boids.ts` - Background animation
+- [ ] `src/lib/theme/palette.ts` - Hex values for JS usage
+- [ ] `public/sf-*.ico` - Theme favicon
 - [ ] `public/rss/styles.xsl` - RSS feed (optional, uses steel)
-- [ ] `public/og-default.svg` - OG image (optional, uses steel)
+
+**Note:** Boids animation reads `--rule` dynamically from CSS at runtime, so no manual colour sync needed.

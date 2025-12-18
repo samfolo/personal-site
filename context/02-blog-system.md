@@ -50,18 +50,18 @@ draft: false # Hides post in production when true
 
 ### Blog Index (`/blog`)
 
+- Uses `Prose` layout with `BlogList` in `before` slot
 - Fetches all non-draft posts
 - Sorts by publish date (newest first)
-- Groups posts by month using `BlogList` component
-- Uses Base layout
+- Groups posts by month
 
 ### Individual Posts (`/blog/[slug]`)
 
 - Dynamic SSR route (not static generation)
+- Uses `Post` layout (extends `Prose`)
 - Fetches post by slug from URL parameter
 - Calculates reading time from content
 - Determines prev/next posts for navigation
-- Uses Post layout with Article JSON-LD
 
 ## Post Rendering Pipeline
 
@@ -80,9 +80,9 @@ Shiki (syntax highlighting with custom theme)
     ↓
 Client Scripts:
   - code-copy.ts (populates language labels, copy functionality)
-  - heading-anchors.ts (hover effects)
-  - sheen-links.ts (link animations)
-  - sheen-headings.ts (heading animations)
+  - heading-anchors.ts (click to copy URL, hash navigation)
+  - sheen/headings.ts (heading hover animations)
+  - sheen/links.ts (link hover animations)
 ```
 
 ## Rehype Plugins
@@ -93,19 +93,19 @@ Client Scripts:
 - Generates URL-safe slugs using `github-slugger`
 - Adds `id` attribute to headings
 - Prepends anchor link with `§` symbol
-- Styling in `prose.css`
+- Adds `data-heading-anchor` attribute for client-side enhancement
 
 ### `rehype-code-blocks.ts`
 
 - Wraps `<pre>` elements containing code
 - Creates `.code-block` wrapper div
-- Adds floating `.code-lang` label (populated client-side)
+- Adds floating `.code-lang` label (populated client-side from `data-language`)
 - Adds floating `.code-copy` button
 - Runs BEFORE Shiki, so detects by structure not class
 
 ## Syntax Highlighting
 
-### Custom Shiki Theme (`src/lib/shiki-theme.ts`)
+### Custom Shiki Theme (`src/lib/shiki/theme.ts`)
 
 - TextMate theme mapping scopes to CSS variables
 - Uses `--astro-code-*` variable naming convention
@@ -143,36 +143,77 @@ const new = "value"; // [!code ++]
 
 ## Utilities
 
-### Reading Time (`src/utils/readingTime.ts`)
+### Reading Time (`src/utils/reading-time.ts`)
 
 - Strips MDX components and code blocks
 - Calculates word count
 - Uses 200 WPM reading speed
 - Returns format: "X min read"
 
-### Date Formatting (`src/utils/formatDate.ts`)
+### Date Formatting (`src/utils/format-date.ts`)
 
-- Uses British English locale (`en-GB`)
-- Format: "12 December 2024"
-- Also provides `formatUpdatedDate()` returning "Updated 12 December 2024"
+Uses British English locale (`en-GB`) with multiple format options:
 
-## BlogList Component
+| Format          | Output             | Example              |
+| --------------- | ------------------ | -------------------- |
+| `full`          | Day Month Year     | "12 December 2024"   |
+| `short`         | Day Month (abbrev) | "12 Dec"             |
+| `month-year`    | Month Year         | "December 2024"      |
+| `dot-separated` | DD.MM.YYYY         | "12.12.2024"         |
+
+## Blog Components
+
+### BlogList (`src/components/blog/BlogList.astro`)
 
 Groups posts by month with visual hierarchy:
 
-- Month labels (uppercase, muted colour)
-- Post links with title and date
-- SheenText effect on hover
+- Month labels using `Overline` typography component
+- Post entries using `BlogListItem`
+- Empty state message using `Body` component
+
+### BlogListItem (`src/components/blog/BlogListItem.astro`)
+
+Individual post entry:
+
+- Title with `SheenText` hover effect
+- Formatted date using `Caption` component with tabular numerals
 - Responsive padding animation on hover
 
-## Post Navigation
+### PostMeta (`src/components/blog/PostMeta.astro`)
 
-At bottom of each post:
+Displays post metadata:
+
+- Publish date
+- Updated date (if different from publish)
+- Reading time
+
+### PostTags (`src/components/blog/PostTags.astro`)
+
+Renders post tags as inline list.
+
+### PostNav (`src/components/blog/PostNav.astro`)
+
+Bottom navigation between posts:
 
 - Previous post link (older)
 - Next post link (newer)
-- Based on chronological sort order
 - Gracefully handles first/last posts (no link)
+
+## Typography Components
+
+Blog components use shared typography components from `src/components/typography/`:
+
+| Component   | Usage                           | Default Colour |
+| ----------- | ------------------------------- | -------------- |
+| `Overline`  | Section labels, month headers   | muted          |
+| `Caption`   | Dates, reading time, metadata   | muted          |
+| `Body`      | Taglines, empty states          | muted          |
+| `SheenText` | Interactive text with animation | fg             |
+
+All typography components support:
+- Custom `tag` prop for semantic HTML
+- `color` prop (`fg` or `muted`)
+- Spread attributes for flexibility
 
 ## Adding a New Blog Post
 
