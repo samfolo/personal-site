@@ -104,8 +104,7 @@ const getButtonStyle = (
 const createDefaultTemplate = (
   theme: Theme,
   colours: ThemeColours
-): ReturnType<typeof html> => {
-  return html`
+): ReturnType<typeof html> => html`
     <div
       style="display: flex; flex-direction: column; width: ${OG.width}px; height: ${OG.height}px; background-color: ${colours.bg}; padding: ${OG.padding}px; font-family: 'Switzer';"
     >
@@ -174,7 +173,6 @@ const createDefaultTemplate = (
       </div>
     </div>
   `;
-};
 
 /**
  * Create blog post OG template.

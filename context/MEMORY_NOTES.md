@@ -61,7 +61,7 @@ This document provides comprehensive context for the personal-site project. It s
 2. **Must also update**: Syntax highlighting in `src/styles/components/shiki.css`
 3. **Must also update**: Boids colours in `src/scripts/boids.ts` (THEME_COLOURS constant)
 4. **Consider updating**: RSS stylesheet in `public/rss/styles.xsl` (uses steel theme colours)
-5. **Consider updating**: OG image theme colours in `src/lib/og/theme.ts`
+5. **Consider updating**: OG image theme colours in `src/lib/og/theme-selection.ts`
 
 ### OG Image Generation
 
@@ -108,6 +108,63 @@ npm run preview   # Preview production build
 - Memory: `256Mi`
 - Min instances: `0` (scales to zero)
 - Max instances: `2`
+
+## Code Conventions
+
+### Theme Configuration
+
+The Theme type is derived from `THEME_ORDER` in `src/config/themes.ts`:
+
+```typescript
+export const THEME_ORDER = ["steel", "purple", "charcoal", "teal"] as const;
+export type Theme = (typeof THEME_ORDER)[number];
+```
+
+This ensures the type and array stay in sync. The `Theme` type is re-exported from `src/types.ts` for convenience.
+
+### Storage Keys
+
+All localStorage keys are defined in `src/config/storage.ts` with the `sf.site.*` namespace:
+
+```typescript
+export const STORAGE_KEYS = {
+  THEME: "sf.site.theme",
+} as const;
+```
+
+For inline scripts, pass via `define:vars`:
+
+```astro
+<script is:inline define:vars={{THEME_STORAGE_KEY: STORAGE_KEYS.THEME}}>
+  localStorage.getItem(THEME_STORAGE_KEY);
+</script>
+```
+
+### File Organisation
+
+Theme and utility files follow this structure:
+
+- `src/config/` - Configuration constants (themes, storage, navigation, sheen)
+- `src/lib/theme/` - Theme colour utilities (palette.ts)
+- `src/lib/shiki/` - Shiki syntax highlighting theme
+- `src/lib/og/` - OG image generation utilities
+
+### OG Image Template
+
+Use `isDefault: true` for site-level OG images:
+
+```typescript
+createOgTemplate({
+  title: "Sam Folorunsho",
+  theme: "steel",
+  isDefault: true,
+});
+```
+
+Path helpers:
+
+- `OG_DEFAULT_PATH` - Default OG image path (`/og/default.png`)
+- `getBlogPostOgPath(postId)` - Blog post OG path (`/og/blog/[id].png`)
 
 ## Content Guidelines
 
