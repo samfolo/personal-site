@@ -6,6 +6,8 @@
  * Renders a 2-column grid on desktop, single column on mobile.
  */
 
+import {Overline} from "./typography";
+
 interface PostNavLink {
   slug: string;
   title: string;
@@ -25,7 +27,7 @@ const {prevPost, nextPost} = Astro.props;
       <div class="post-nav-item post-nav-prev">
         {prevPost && (
           <>
-            <span class="post-nav-label">Previous</span>
+            <Overline>Previous</Overline>
             <a href={`/blog/${prevPost.slug}`} class="post-nav-link">
               {prevPost.title}
             </a>
@@ -36,7 +38,7 @@ const {prevPost, nextPost} = Astro.props;
       <div class="post-nav-item post-nav-next">
         {nextPost && (
           <>
-            <span class="post-nav-label">Next</span>
+            <Overline>Next</Overline>
             <a href={`/blog/${nextPost.slug}`} class="post-nav-link">
               {nextPost.title}
             </a>
@@ -65,15 +67,6 @@ const {prevPost, nextPost} = Astro.props;
 
   .post-nav-next {
     text-align: right;
-  }
-
-  .post-nav-label {
-    font-size: var(--text-xs);
-    font-weight: var(--font-medium);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-labels);
-    line-height: var(--leading-16);
-    color: var(--muted);
   }
 
   .post-nav-link {

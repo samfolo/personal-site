@@ -178,6 +178,7 @@ Component and code documentation should follow the style established in ThemeSwi
 - Reference CSS or design token names directly without extra context
 
 Example structure from ThemeSwitcher.astro:
+
 ```
 Component Split:
 ThemeSwitcher orchestrates theme selection, handles desktop/mobile responsive

@@ -21,7 +21,11 @@ const {publishDate, updatedDate, readingTime} = Astro.props;
   <time datetime={publishDate.toISOString()}>
     {formatDate(publishDate)}
   </time>
-  {updatedDate && <span class="post-updated">Updated {formatDate(updatedDate)}</span>}
+  {
+    updatedDate && (
+      <span class="post-updated">Updated {formatDate(updatedDate)}</span>
+    )
+  }
   <span class="post-reading-time">{readingTime}</span>
 </div>
 

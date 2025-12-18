@@ -11,8 +11,9 @@
  * <Body color="fg">Primary body text</Body>
  */
 
-import type { HTMLAttributes } from "astro/types";
-import type { TypographyColor } from "./types";
+import type {HTMLAttributes} from "astro/types";
+
+import type {TypographyColor} from "./types";
 
 interface Props extends HTMLAttributes<"span"> {
   tag?: keyof HTMLElementTagNameMap;

@@ -10,6 +10,7 @@ import {MEDIUM_SHEEN} from "../config/sheen";
 import {formatDate} from "../utils/format-date";
 
 import SheenText from "./SheenText.astro";
+import {Caption} from "./typography";
 
 interface Props {
   title: string;
@@ -32,7 +33,7 @@ const formattedDate = formatDate(new Date(date), "short");
         spread={MEDIUM_SHEEN.spread}
       />
     </span>
-    <span class="post-date">{formattedDate}</span>
+    <Caption numeric class="post-date">{formattedDate}</Caption>
   </a>
 </li>
 
@@ -71,10 +72,6 @@ const formattedDate = formatDate(new Date(date), "short");
   }
 
   .post-date {
-    font-size: var(--text-sm);
-    line-height: var(--leading-16);
-    color: var(--muted);
-    font-variant-numeric: tabular-nums;
     flex-shrink: 0;
     margin-left: var(--space-4);
   }

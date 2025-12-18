@@ -5,6 +5,8 @@
  * Displays a list of tags as pill badges.
  */
 
+import {Overline} from "./typography";
+
 interface Props {
   tags: string[];
 }
@@ -16,7 +18,9 @@ const {tags} = Astro.props;
   tags.length > 0 && (
     <ul class="post-tags">
       {tags.map((tag) => (
-        <li class="post-tag">{tag}</li>
+        <li class="post-tag">
+          <Overline>{tag}</Overline>
+        </li>
       ))}
     </ul>
   )
@@ -31,11 +35,8 @@ const {tags} = Astro.props;
   }
 
   .post-tag {
-    font-size: var(--text-xs);
-    font-weight: var(--font-medium);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-labels);
-    color: var(--muted);
+    display: flex;
+    align-items: center;
     background-color: var(--rule);
     padding: var(--space-1) var(--space-2);
     border-radius: var(--space-1);

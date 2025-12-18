@@ -9,6 +9,7 @@
 import {formatDate} from "../utils/format-date";
 
 import BlogListItem from "./BlogListItem.astro";
+import {Overline, Body} from "./typography";
 
 interface Post {
   title: string;
@@ -53,11 +54,13 @@ const groupedPosts = groupPostsByMonth(posts);
 <div class="blog-list not-prose">
   {
     posts.length === 0 ? (
-      <p class="empty-state">No blog posts to display.</p>
+      <Body tag="p">No blog posts to display.</Body>
     ) : (
       Array.from(groupedPosts.entries()).map(([_key, monthPosts]) => (
         <section class="blog-month-group">
-          <h2 class="month-label">{formatDate(new Date(monthPosts[0].date), "month-year")}</h2>
+          <Overline tag="h2" class="month-label">
+            {formatDate(new Date(monthPosts[0].date), "month-year")}
+          </Overline>
           <ul class="post-list">
             {monthPosts.map((post) => (
               <BlogListItem
@@ -80,24 +83,12 @@ const groupedPosts = groupPostsByMonth(posts);
     gap: var(--space-7);
   }
 
-  .empty-state {
-    font-size: var(--text-base);
-    line-height: var(--leading-24);
-    color: var(--muted);
-  }
-
   .blog-month-group {
     display: flex;
     flex-direction: column;
   }
 
   .month-label {
-    font-size: var(--text-xs);
-    font-weight: var(--font-medium);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-labels);
-    line-height: var(--leading-16);
-    color: var(--muted);
     margin-bottom: var(--space-4);
   }
 

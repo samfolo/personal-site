@@ -11,8 +11,9 @@
  * <Caption color="fg">Highlighted caption</Caption>
  */
 
-import type { HTMLAttributes } from "astro/types";
-import type { TypographyColor } from "./types";
+import type {HTMLAttributes} from "astro/types";
+
+import type {TypographyColor} from "./types";
 
 interface Props extends HTMLAttributes<"span"> {
   tag?: keyof HTMLElementTagNameMap;
@@ -34,7 +35,7 @@ const {
   class:list={[
     "sf-caption",
     `sf-caption-${color}`,
-    { "sf-caption-numeric": numeric },
+    {"sf-caption-numeric": numeric},
     className,
   ]}
   {...attrs}

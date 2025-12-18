@@ -94,74 +94,67 @@ const createDefaultTemplate = (
   theme: Theme,
   colours: ThemeColours
 ): ReturnType<typeof html> => html`
-    <div
-      style="display: flex; flex-direction: column; width: ${OG.width}px; height: ${OG.height}px; background-color: ${colours.bg}; padding: ${OG.padding}px; font-family: 'Switzer';"
-    >
-      <div style="display: flex; justify-content: flex-end;">
-        <div style="display: flex; gap: ${BUTTON.gap}px;">
-          <div
-            style="display: flex; ${getButtonStyle("steel", theme, colours.fg)}"
-          >
-            <div
-              style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
-                .steel
-                .fg}; background: linear-gradient(135deg, ${THEME_COLOURS.steel
-                .bg} 50%, ${THEME_COLOURS.steel.fg} 50%);"
-            ></div>
-          </div>
-          <div
-            style="display: flex; ${getButtonStyle(
-              "purple",
-              theme,
-              colours.fg
-            )}"
-          >
-            <div
-              style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
-                .purple
-                .fg}; background: linear-gradient(135deg, ${THEME_COLOURS.purple
-                .bg} 50%, ${THEME_COLOURS.purple.fg} 50%);"
-            ></div>
-          </div>
-          <div
-            style="display: flex; ${getButtonStyle(
-              "charcoal",
-              theme,
-              colours.fg
-            )}"
-          >
-            <div
-              style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
-                .charcoal
-                .fg}; background: linear-gradient(135deg, ${THEME_COLOURS
-                .charcoal.bg} 50%, ${THEME_COLOURS.charcoal.fg} 50%);"
-            ></div>
-          </div>
-          <div
-            style="display: flex; ${getButtonStyle("teal", theme, colours.fg)}"
-          >
-            <div
-              style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
-                .teal.fg}; background: linear-gradient(135deg, ${THEME_COLOURS
-                .teal.bg} 50%, ${THEME_COLOURS.teal.fg} 50%);"
-            ></div>
-          </div>
-        </div>
-      </div>
-      <div style="display: flex; flex: 1; align-items: flex-end;">
+  <div
+    style="display: flex; flex-direction: column; width: ${OG.width}px; height: ${OG.height}px; background-color: ${colours.bg}; padding: ${OG.padding}px; font-family: 'Switzer';"
+  >
+    <div style="display: flex; justify-content: flex-end;">
+      <div style="display: flex; gap: ${BUTTON.gap}px;">
         <div
-          style="display: flex; flex-direction: column; color: ${colours.fg}; font-size: ${TYPOGRAPHY
-            .wordmark.lg.size}px; font-weight: ${TYPOGRAPHY.wordmark.lg
-            .weight}; line-height: ${TYPOGRAPHY.wordmark.lg
-            .lineHeight}; letter-spacing: ${TYPOGRAPHY.wordmark.lg
-            .letterSpacing};"
+          style="display: flex; ${getButtonStyle("steel", theme, colours.fg)}"
         >
-          <div style="display: flex;">Sam</div>
-          <div style="display: flex;">Folorunsho.</div>
+          <div
+            style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
+              .steel.fg}; background: linear-gradient(135deg, ${THEME_COLOURS
+              .steel.bg} 50%, ${THEME_COLOURS.steel.fg} 50%);"
+          ></div>
+        </div>
+        <div
+          style="display: flex; ${getButtonStyle("purple", theme, colours.fg)}"
+        >
+          <div
+            style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
+              .purple.fg}; background: linear-gradient(135deg, ${THEME_COLOURS
+              .purple.bg} 50%, ${THEME_COLOURS.purple.fg} 50%);"
+          ></div>
+        </div>
+        <div
+          style="display: flex; ${getButtonStyle(
+            "charcoal",
+            theme,
+            colours.fg
+          )}"
+        >
+          <div
+            style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
+              .charcoal.fg}; background: linear-gradient(135deg, ${THEME_COLOURS
+              .charcoal.bg} 50%, ${THEME_COLOURS.charcoal.fg} 50%);"
+          ></div>
+        </div>
+        <div
+          style="display: flex; ${getButtonStyle("teal", theme, colours.fg)}"
+        >
+          <div
+            style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
+              .teal.fg}; background: linear-gradient(135deg, ${THEME_COLOURS
+              .teal.bg} 50%, ${THEME_COLOURS.teal.fg} 50%);"
+          ></div>
         </div>
       </div>
     </div>
-  `;
+    <div style="display: flex; flex: 1; align-items: flex-end;">
+      <div
+        style="display: flex; flex-direction: column; color: ${colours.fg}; font-size: ${TYPOGRAPHY
+          .wordmark.lg.size}px; font-weight: ${TYPOGRAPHY.wordmark.lg
+          .weight}; line-height: ${TYPOGRAPHY.wordmark.lg
+          .lineHeight}; letter-spacing: ${TYPOGRAPHY.wordmark.lg
+          .letterSpacing};"
+      >
+        <div style="display: flex;">Sam</div>
+        <div style="display: flex;">Folorunsho.</div>
+      </div>
+    </div>
+  </div>
+`;
 
 /**
  * Create blog post OG template.
