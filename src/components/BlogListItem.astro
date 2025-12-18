@@ -7,6 +7,7 @@
  */
 
 import {MEDIUM_SHEEN} from "../config/sheen";
+import {formatDate} from "../utils/format-date";
 
 import SheenText from "./SheenText.astro";
 
@@ -18,19 +19,7 @@ interface Props {
 
 const {title, date, slug} = Astro.props;
 
-/**
- * Formats a date string as "12 Dec" for post dates
- */
-const formatPostDate = (dateString: string): string => {
-  const dateObj = new Date(dateString);
-  const day = dateObj.getDate();
-  const month = new Intl.DateTimeFormat("en-GB", {month: "short"}).format(
-    dateObj
-  );
-  return `${day} ${month}`;
-};
-
-const formattedDate = formatPostDate(date);
+const formattedDate = formatDate(new Date(date), "short");
 ---
 
 <li class="post-item">

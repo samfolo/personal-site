@@ -11,6 +11,7 @@ import {html} from "satori-html";
 
 import {THEME_LABELS} from "../../config/themes";
 import type {Theme} from "../../types";
+import {formatDate} from "../../utils/format-date";
 
 import {THEME_COLOURS} from "../theme";
 import type {ThemeColours} from "../theme";
@@ -66,18 +67,6 @@ export interface OgTemplateOptions {
    */
   isDefault?: boolean;
 }
-
-/**
- * Format date as DD.MM.YYYY
- */
-const formatOgDate = (date: Date): string =>
-  date
-    .toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    })
-    .replace(/\//g, ".");
 
 /**
  * Get button outline style if this is the active theme.
@@ -183,7 +172,7 @@ const createBlogPostTemplate = (
   colours: ThemeColours
 ): ReturnType<typeof html> => {
   const {title, date, theme} = options;
-  const formattedDate = date ? formatOgDate(date) : "";
+  const formattedDate = date ? formatDate(date, "dot-separated") : "";
   const themeLabel = THEME_LABELS[theme];
 
   return html`

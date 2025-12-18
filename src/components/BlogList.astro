@@ -6,6 +6,8 @@
  * Posts are shown in reverse chronological order.
  */
 
+import {formatDate} from "../utils/format-date";
+
 import BlogListItem from "./BlogListItem.astro";
 
 interface Post {
@@ -19,17 +21,6 @@ interface Props {
 }
 
 const {posts} = Astro.props;
-
-/**
- * Formats a date string as "December 2024" for month labels
- */
-const formatMonthLabel = (dateString: string): string => {
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat("en-GB", {
-    month: "long",
-    year: "numeric",
-  }).format(date);
-};
 
 /**
  * Groups posts by month-year and returns in reverse chronological order
@@ -66,7 +57,7 @@ const groupedPosts = groupPostsByMonth(posts);
     ) : (
       Array.from(groupedPosts.entries()).map(([_key, monthPosts]) => (
         <section class="blog-month-group">
-          <h2 class="month-label">{formatMonthLabel(monthPosts[0].date)}</h2>
+          <h2 class="month-label">{formatDate(new Date(monthPosts[0].date), "month-year")}</h2>
           <ul class="post-list">
             {monthPosts.map((post) => (
               <BlogListItem

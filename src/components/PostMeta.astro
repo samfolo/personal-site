@@ -6,7 +6,7 @@
  * Items are separated by dot dividers.
  */
 
-import {formatDate, formatUpdatedDate} from "../utils/format-date";
+import {formatDate} from "../utils/format-date";
 
 interface Props {
   publishDate: Date;
@@ -21,7 +21,7 @@ const {publishDate, updatedDate, readingTime} = Astro.props;
   <time datetime={publishDate.toISOString()}>
     {formatDate(publishDate)}
   </time>
-  {updatedDate && <span class="post-updated">{formatUpdatedDate(updatedDate)}</span>}
+  {updatedDate && <span class="post-updated">Updated {formatDate(updatedDate)}</span>}
   <span class="post-reading-time">{readingTime}</span>
 </div>
 

@@ -30,9 +30,9 @@ const NETWORK_OPACITY = 84;
 const NETWORK_MAX_CONNECTIONS = 3;
 const NETWORK_RANGE_MULTIPLIER = 2.5;
 
-// Centre fade (to keep content column readable)
-const CENTRE_CLEAR_ZONE = 360; // Half-width of content column (720px / 2)
-const CENTRE_MIN_OPACITY = 0.1; // Minimum opacity at centre
+// Center fade (to keep content column readable)
+const CENTER_CLEAR_ZONE = 360; // Half-width of content column (720px / 2)
+const CENTER_MIN_OPACITY = 0.1; // Minimum opacity at center
 
 // Scatter
 const SCATTER_INTENSITY = 0.5; // 0 = no edge seeking, 1 = full override
@@ -98,28 +98,28 @@ const getColourFromProperty = (propertyName: string): RGBColour => {
 };
 
 /**
- * Calculate opacity factor based on distance from centre vertical axis
- * Returns CENTRE_MIN_OPACITY within the clear zone, scaling to 1.0 at screen edges
+ * Calculate opacity factor based on distance from center vertical axis
+ * Returns CENTER_MIN_OPACITY within the clear zone, scaling to 1.0 at screen edges
  */
-const getCentreOpacityFactor = (x: number, screenWidth: number): number => {
-  const centreX = screenWidth / 2;
-  const distanceFromCentre = Math.abs(x - centreX);
+const getCenterOpacityFactor = (x: number, screenWidth: number): number => {
+  const centerX = screenWidth / 2;
+  const distanceFromCenter = Math.abs(x - centerX);
 
   // Within the clear zone: minimum opacity
-  if (distanceFromCentre <= CENTRE_CLEAR_ZONE) {
-    return CENTRE_MIN_OPACITY;
+  if (distanceFromCenter <= CENTER_CLEAR_ZONE) {
+    return CENTER_MIN_OPACITY;
   }
 
   // Outside clear zone: scale from min opacity to 1.0
-  const distanceBeyondZone = distanceFromCentre - CENTRE_CLEAR_ZONE;
-  const maxDistanceBeyondZone = centreX - CENTRE_CLEAR_ZONE;
+  const distanceBeyondZone = distanceFromCenter - CENTER_CLEAR_ZONE;
+  const maxDistanceBeyondZone = centerX - CENTER_CLEAR_ZONE;
 
   if (maxDistanceBeyondZone <= 0) {
     return 1;
   } // Screen narrower than clear zone
 
   const factor = distanceBeyondZone / maxDistanceBeyondZone;
-  return CENTRE_MIN_OPACITY + factor * (1 - CENTRE_MIN_OPACITY);
+  return CENTER_MIN_OPACITY + factor * (1 - CENTER_MIN_OPACITY);
 };
 
 // =============================================================================
@@ -237,7 +237,7 @@ class Boid {
   }
 
   /**
-   * Cohesion: steer towards centre of nearby boids
+   * Cohesion: steer towards center of nearby boids
    */
   private cohere(boids: Boid[]): p5.Vector {
     const sum = this.p.createVector(0, 0);
@@ -426,12 +426,12 @@ class Boid {
 
     const p = this.p;
 
-    // Calculate opacity reduction based on proximity to centre vertical axis
-    const centreOpacityFactor = getCentreOpacityFactor(
+    // Calculate opacity reduction based on proximity to center vertical axis
+    const centerOpacityFactor = getCenterOpacityFactor(
       this.position.x,
       p.width
     );
-    const finalOpacity = this.opacity * centreOpacityFactor;
+    const finalOpacity = this.opacity * centerOpacityFactor;
     if (finalOpacity <= 0) {
       return;
     }
@@ -540,11 +540,11 @@ const drawNetworkLines = (p: p5, boids: Boid[], colour: RGBColour): void => {
     nearby.sort((a, b) => a.distance - b.distance);
     const connections = nearby.slice(0, NETWORK_MAX_CONNECTIONS);
 
-    // Draw lines with opacity based on distance and centre proximity
-    const boidCentreFactor = getCentreOpacityFactor(boid.position.x, p.width);
+    // Draw lines with opacity based on distance and center proximity
+    const boidCenterFactor = getCenterOpacityFactor(boid.position.x, p.width);
 
     for (const conn of connections) {
-      const connCentreFactor = getCentreOpacityFactor(
+      const connCenterFactor = getCenterOpacityFactor(
         conn.boid.position.x,
         p.width
       );
@@ -553,8 +553,8 @@ const drawNetworkLines = (p: p5, boids: Boid[], colour: RGBColour): void => {
         opacity *
         boid.opacity *
         conn.boid.opacity *
-        boidCentreFactor *
-        connCentreFactor;
+        boidCenterFactor *
+        connCenterFactor;
 
       p.stroke(colour.r, colour.g, colour.b, finalOpacity);
       p.strokeWeight(0.5);
