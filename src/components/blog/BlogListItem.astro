@@ -6,11 +6,10 @@
  * Displays title with sheen effect and formatted date.
  */
 
-import {MEDIUM_SHEEN} from "../config/sheen";
-import {formatDate} from "../utils/format-date";
+import {MEDIUM_SHEEN} from "../../config/sheen";
+import {formatDate} from "../../utils/format-date";
 
-import SheenText from "./SheenText.astro";
-import {Caption} from "./typography";
+import {SheenText, Caption} from "../typography";
 
 interface Props {
   title: string;

@@ -8,10 +8,8 @@
 
 import type {CollectionEntry} from "astro:content";
 
-import JSONLD from "../components/JSONLD.astro";
-import PostMeta from "../components/PostMeta.astro";
-import PostNav from "../components/PostNav.astro";
-import PostTags from "../components/PostTags.astro";
+import {PostMeta, PostNav, PostTags} from "../components/blog";
+import {JSONLD} from "../components/seo";
 import {MEDIUM_SHEEN} from "../config/sheen";
 import {getBlogPostOgPath} from "../lib/og";
 

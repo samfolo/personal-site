@@ -17,7 +17,7 @@
  * @param spread - Number of characters to highlight on each side
  */
 
-import {DATA_ATTRS} from "../config/dom";
+import {DATA_ATTRS} from "../../config/dom";
 
 interface Props extends astroHTML.JSX.HTMLAttributes {
   text: string;
@@ -70,7 +70,7 @@ const sheenReadyAttr = {[DATA_ATTRS.SHEEN.READY]: ""};
   }
 </Tag>
 
-<script src="../scripts/sheen/controller.ts"></script>
+<script src="../../scripts/sheen/controller.ts"></script>
 
 <style>
   .sheen-text :global(.sheen-word) {
