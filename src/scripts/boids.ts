@@ -466,13 +466,18 @@ class Boid {
 // State Management
 // =============================================================================
 
+/** Active fade effect - triggers opacity animation from 0 to 1 */
+interface FadeEffect {
+  startTime: number;
+  duration: number;
+}
+
 interface BoidsState {
   p5Instance: p5 | null;
   boids: Boid[];
   colour: RGBColour;
   isScattered: boolean;
-  isRespawning: boolean;
-  respawnStartTime: number;
+  activeFade: FadeEffect | null;
   allExited: boolean;
   observer: IntersectionObserver | null;
   mutationObserver: MutationObserver | null;
@@ -483,8 +488,7 @@ const state: BoidsState = {
   boids: [],
   colour: {r: 50, g: 50, b: 50}, // Placeholder, updated on init
   isScattered: false,
-  isRespawning: false,
-  respawnStartTime: 0,
+  activeFade: null,
   allExited: false,
   observer: null,
   mutationObserver: null,
@@ -512,7 +516,7 @@ const getPopulation = (): number =>
  */
 const drawNetworkLines = (p: p5, boids: Boid[], colour: RGBColour): void => {
   // Skip during scatter for performance
-  if (state.isScattered && !state.isRespawning) {
+  if (state.isScattered && !state.activeFade) {
     return;
   }
 
@@ -593,6 +597,9 @@ const sketch = (p: p5): void => {
     for (let i = 0; i < population; i++) {
       state.boids.push(new Boid(p));
     }
+
+    // Trigger initial fade-in
+    triggerFadeIn();
   };
 
   p.draw = (): void => {
@@ -602,23 +609,23 @@ const sketch = (p: p5): void => {
     }
 
     // Skip if all boids have exited during scatter
-    if (state.allExited && !state.isRespawning) {
+    if (state.allExited && !state.activeFade) {
       return;
     }
 
     p.clear();
 
-    // Handle respawn fade-in
-    if (state.isRespawning) {
-      const elapsed = Date.now() - state.respawnStartTime;
-      const progress = Math.min(elapsed / RESPAWN_FADE_DURATION, 1);
+    // Handle fade-in effect (initial load or respawn)
+    if (state.activeFade) {
+      const elapsed = Date.now() - state.activeFade.startTime;
+      const progress = Math.min(elapsed / state.activeFade.duration, 1);
 
       for (const boid of state.boids) {
         boid.opacity = progress;
       }
 
       if (progress >= 1) {
-        state.isRespawning = false;
+        state.activeFade = null;
       }
     }
 
@@ -634,7 +641,7 @@ const sketch = (p: p5): void => {
     drawNetworkLines(p, state.boids, state.colour);
 
     // Check if all boids have exited during scatter
-    if (state.isScattered && !state.isRespawning) {
+    if (state.isScattered && !state.activeFade) {
       state.allExited = state.boids.every((b) => b.hasExitedScreen());
     }
   };
@@ -647,6 +654,21 @@ const sketch = (p: p5): void => {
 // =============================================================================
 // Scatter and Respawn Control
 // =============================================================================
+
+/**
+ * Trigger fade-in effect for all boids
+ * Sets all boid opacities to 0 and starts the fade animation.
+ * If called while another fade is active, overwrites the previous effect.
+ */
+const triggerFadeIn = (): void => {
+  for (const boid of state.boids) {
+    boid.opacity = 0;
+  }
+  state.activeFade = {
+    startTime: Date.now(),
+    duration: RESPAWN_FADE_DURATION,
+  };
+};
 
 /**
  * Trigger scatter behaviour for all boids
@@ -673,13 +695,13 @@ const triggerRespawn = (): void => {
   }
 
   state.isScattered = false;
-  state.isRespawning = true;
-  state.respawnStartTime = Date.now();
   state.allExited = false;
 
   for (const boid of state.boids) {
     boid.reset();
   }
+
+  triggerFadeIn();
 };
 
 // =============================================================================
@@ -761,7 +783,7 @@ const cleanup = (): void => {
   }
   state.boids = [];
   state.isScattered = false;
-  state.isRespawning = false;
+  state.activeFade = null;
   state.allExited = false;
 };
 
