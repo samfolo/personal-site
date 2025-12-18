@@ -11,6 +11,7 @@ import {NAV_LINKS} from "../config/navigation";
 
 import HeroWordmark from "./HeroWordmark.astro";
 import Nav from "./Nav.astro";
+import {Overline, Body} from "./typography";
 
 interface Props {
   class?: string;
@@ -30,15 +31,15 @@ const {class: className} = Astro.props;
     <HeroWordmark />
 
     <!-- Tagline -->
-    <p class="hero-tagline">
+    <Body tag="p" class="hero-tagline">
       Software engineer exploring AI agents, creative coding, and the
       intersection of technology and craft.
-    </p>
+    </Body>
   </div>
 
   <!-- Scroll Hint -->
   <div class="scroll-hint">
-    <span class="scroll-hint-label">Recent Writing</span>
+    <Overline class="scroll-hint-label">Recent Writing</Overline>
     <span class="scroll-hint-line" aria-hidden="true"></span>
   </div>
 </section>
@@ -79,10 +80,7 @@ const {class: className} = Astro.props;
 
   /* Tagline */
   .hero-tagline {
-    font-size: var(--text-base);
-    color: var(--muted);
     max-width: var(--size-64);
-    line-height: var(--leading-normal);
   }
 
   /* Scroll Hint */
@@ -98,11 +96,6 @@ const {class: className} = Astro.props;
   }
 
   .scroll-hint-label {
-    font-size: var(--text-xs);
-    font-weight: var(--font-medium);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-labels);
-    color: var(--muted);
     white-space: nowrap;
   }
 

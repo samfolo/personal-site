@@ -11,33 +11,38 @@
  * <Body color="fg">Primary body text</Body>
  */
 
+import type { HTMLAttributes } from "astro/types";
 import type { TypographyColor } from "./types";
 
-interface Props {
+interface Props extends HTMLAttributes<"span"> {
   tag?: keyof HTMLElementTagNameMap;
   color?: TypographyColor;
-  class?: string;
 }
 
-const { tag: Tag = "span", color = "muted", class: className } = Astro.props;
+const {
+  tag: Tag = "span",
+  color = "muted",
+  class: className,
+  ...attrs
+} = Astro.props;
 ---
 
-<Tag class:list={["body-text", `body-text-${color}`, className]}>
+<Tag class:list={["sf-body", `sf-body-${color}`, className]} {...attrs}>
   <slot />
 </Tag>
 
 <style>
-  .body-text {
+  .sf-body {
     font-size: var(--text-base);
     font-weight: var(--font-regular);
     line-height: var(--leading-24);
   }
 
-  .body-text-muted {
+  .sf-body-muted {
     color: var(--muted);
   }
 
-  .body-text-fg {
+  .sf-body-fg {
     color: var(--fg);
   }
 </style>

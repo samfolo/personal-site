@@ -7,6 +7,7 @@
  */
 
 import {THEME_LABELS} from "../config/themes";
+import {Overline} from "./typography";
 ---
 
 <footer
@@ -16,7 +17,7 @@ import {THEME_LABELS} from "../config/themes";
   transition:name="footer"
 >
   <div class="footer-inner">
-    <span id="theme-name" class="theme-name">STEEL GREY + WARM CREAM</span>
+    <Overline id="theme-name" class="theme-name">STEEL GREY + WARM CREAM</Overline>
   </div>
 </footer>
 
@@ -56,11 +57,6 @@ import {THEME_LABELS} from "../config/themes";
   }
 
   .theme-name {
-    font-size: var(--text-xs);
-    text-transform: uppercase;
-    letter-spacing: var(--tracking-labels);
-    color: var(--muted);
-    font-weight: var(--font-medium);
     pointer-events: auto;
   }
 </style>

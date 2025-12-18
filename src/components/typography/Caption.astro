@@ -11,14 +11,14 @@
  * <Caption color="fg">Highlighted caption</Caption>
  */
 
+import type { HTMLAttributes } from "astro/types";
 import type { TypographyColor } from "./types";
 
-interface Props {
+interface Props extends HTMLAttributes<"span"> {
   tag?: keyof HTMLElementTagNameMap;
   /** Use tabular numerals for aligned numbers (dates, times, stats) */
   numeric?: boolean;
   color?: TypographyColor;
-  class?: string;
 }
 
 const {
@@ -26,36 +26,38 @@ const {
   numeric = false,
   color = "muted",
   class: className,
+  ...attrs
 } = Astro.props;
 ---
 
 <Tag
   class:list={[
-    "caption",
-    `caption-${color}`,
-    { "caption-numeric": numeric },
+    "sf-caption",
+    `sf-caption-${color}`,
+    { "sf-caption-numeric": numeric },
     className,
   ]}
+  {...attrs}
 >
   <slot />
 </Tag>
 
 <style>
-  .caption {
+  .sf-caption {
     font-size: var(--text-sm);
     font-weight: var(--font-regular);
     line-height: var(--leading-16);
   }
 
-  .caption-muted {
+  .sf-caption-muted {
     color: var(--muted);
   }
 
-  .caption-fg {
+  .sf-caption-fg {
     color: var(--fg);
   }
 
-  .caption-numeric {
+  .sf-caption-numeric {
     font-variant-numeric: tabular-nums;
   }
 </style>
