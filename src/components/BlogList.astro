@@ -50,7 +50,7 @@ const groupPostsByMonth = (posts: Post[]): Map<string, Post[]> => {
 const groupedPosts = groupPostsByMonth(posts);
 ---
 
-<div class="blog-list">
+<div class="blog-list not-prose">
   {
     posts.length === 0 ? (
       <p class="empty-state">No blog posts to display.</p>

@@ -22,11 +22,17 @@ const linkStates = new WeakMap<HTMLAnchorElement, SheenState>();
  * Initialise a single link
  */
 const initLink = (link: HTMLAnchorElement): void => {
-  // Skip if already initialised or if link contains non-text content
+  // Skip if already initialised
   if (link.hasAttribute(DATA_ATTRS.SHEEN.LINK)) {
     return;
   }
 
+  // Skip if inside a not-prose container (respects prose escape hatch)
+  if (link.closest(".not-prose")) {
+    return;
+  }
+
+  // Skip if link contains non-text content
   if (link.querySelector("img, svg, code")) {
     return;
   }

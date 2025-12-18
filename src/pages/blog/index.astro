@@ -9,7 +9,7 @@
 import {getCollection} from "astro:content";
 
 import BlogList from "../../components/BlogList.astro";
-import Base from "../../layouts/Base.astro";
+import Prose from "../../layouts/Prose.astro";
 
 // Fetch all non-draft posts (or all posts in development)
 const allPosts = await getCollection("blog", ({data}) =>
@@ -26,36 +26,10 @@ const posts = allPosts
   }));
 ---
 
-<Base
+<Prose
   title="Blog | Sam Folorunsho"
   description="Writing about AI agents, creative coding, and software engineering."
+  heading="Blog"
 >
-  <main class="blog-index">
-    <header class="blog-header">
-      <h1 class="blog-title">Blog</h1>
-    </header>
-
-    <section class="blog-posts">
-      <BlogList posts={posts} />
-    </section>
-  </main>
-</Base>
-
-<style>
-  .blog-index {
-    max-width: var(--container-max);
-    margin: 0 auto;
-    padding: calc(var(--header-height) + var(--space-8)) var(--container-px)
-      var(--space-9);
-  }
-
-  .blog-header {
-    margin-bottom: var(--space-7);
-  }
-
-  .blog-title {
-    font-size: var(--text-xl);
-    font-weight: var(--font-bold);
-    letter-spacing: var(--tracking-display);
-  }
-</style>
+  <BlogList posts={posts} />
+</Prose>
