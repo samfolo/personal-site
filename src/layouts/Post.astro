@@ -11,6 +11,7 @@ import type {CollectionEntry} from "astro:content";
 import JSONLD from "../components/JSONLD.astro";
 import SheenText from "../components/SheenText.astro";
 import {MEDIUM_SHEEN} from "../config/sheen";
+import {getBlogPostOgPath} from "../lib/og";
 import {formatDate, formatUpdatedDate} from "../utils/format-date";
 
 import Base from "./Base.astro";
@@ -34,7 +35,7 @@ const {title, description, publishDate, updatedDate, tags} = post.data;
 <Base
   title={`${title} | Sam Folorunsho`}
   description={description}
-  ogImage={`/og/blog/${post.id}.png`}
+  ogImage={getBlogPostOgPath(post.id)}
   ogType="article"
   publishDate={publishDate}
   updatedDate={updatedDate}

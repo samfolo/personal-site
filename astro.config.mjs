@@ -10,7 +10,7 @@ import {
 import tailwindcss from "@tailwindcss/vite";
 import {defineConfig} from "astro/config";
 
-import {customCssVariablesTheme} from "./src/lib/shiki-theme";
+import {customCssVariablesTheme} from "./src/lib/shiki";
 import rehypeCodeBlocks from "./src/plugins/rehype-code-blocks";
 import rehypeHeadingAnchors from "./src/plugins/rehype-heading-anchors";
 

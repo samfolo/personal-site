@@ -25,6 +25,7 @@ export const GET: APIRoute = async ({params}) => {
     options = {
       title: "Sam Folorunsho",
       theme: "steel",
+      isDefault: true,
     };
   }
   // Route: /og/blog/[post-slug].png

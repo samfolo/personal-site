@@ -13,6 +13,7 @@ import {THEME_LABELS} from "../../config/themes";
 import type {Theme} from "../../types";
 
 import {THEME_COLOURS} from "../theme";
+import type {ThemeColours} from "../theme";
 
 /**
  * Canvas dimensions for OG images.
@@ -45,9 +46,25 @@ const TYPOGRAPHY = {
 } as const;
 
 export interface OgTemplateOptions {
+  /**
+   * The page title to display.
+   */
   title: string;
+
+  /**
+   * Publication date for blog posts.
+   */
   date?: Date;
+
+  /**
+   * Theme to use for the OG image colours.
+   */
   theme: Theme;
+
+  /**
+   * Whether this is the default site-level OG image.
+   */
+  isDefault?: boolean;
 }
 
 /**
@@ -81,102 +98,93 @@ const getButtonStyle = (
 };
 
 /**
- * Create HTML template for OG image.
- *
- * @param options - Title, optional date, and theme
- * @returns satori-html virtual DOM node
+ * Create default (site-level) OG template.
+ * Wordmark bottom-left, theme buttons top-right.
  */
-export const createOgTemplate = (
-  options: OgTemplateOptions
+const createDefaultTemplate = (
+  theme: Theme,
+  colours: ThemeColours
 ): ReturnType<typeof html> => {
-  const {title, date, theme} = options;
-  const colours = THEME_COLOURS[theme];
-
-  // Check if this is the default (site-level) OG image
-  const isDefault = title === "Sam Folorunsho";
-
-  // Default layout: wordmark bottom-left, buttons top-right
-  if (isDefault) {
-    return html`
-      <div
-        style="display: flex; flex-direction: column; width: ${OG.width}px; height: ${OG.height}px; background-color: ${colours.bg}; padding: ${OG.padding}px; font-family: 'Switzer';"
-      >
-        <div style="display: flex; justify-content: flex-end;">
-          <div style="display: flex; gap: ${BUTTON.gap}px;">
-            <div
-              style="display: flex; ${getButtonStyle(
-                "steel",
-                theme,
-                colours.fg
-              )}"
-            >
-              <div
-                style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
-                  .steel
-                  .fg}; background: linear-gradient(135deg, ${THEME_COLOURS
-                  .steel.bg} 50%, ${THEME_COLOURS.steel.fg} 50%);"
-              ></div>
-            </div>
-            <div
-              style="display: flex; ${getButtonStyle(
-                "purple",
-                theme,
-                colours.fg
-              )}"
-            >
-              <div
-                style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
-                  .purple
-                  .fg}; background: linear-gradient(135deg, ${THEME_COLOURS
-                  .purple.bg} 50%, ${THEME_COLOURS.purple.fg} 50%);"
-              ></div>
-            </div>
-            <div
-              style="display: flex; ${getButtonStyle(
-                "charcoal",
-                theme,
-                colours.fg
-              )}"
-            >
-              <div
-                style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
-                  .charcoal
-                  .fg}; background: linear-gradient(135deg, ${THEME_COLOURS
-                  .charcoal.bg} 50%, ${THEME_COLOURS.charcoal.fg} 50%);"
-              ></div>
-            </div>
-            <div
-              style="display: flex; ${getButtonStyle(
-                "teal",
-                theme,
-                colours.fg
-              )}"
-            >
-              <div
-                style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
-                  .teal.fg}; background: linear-gradient(135deg, ${THEME_COLOURS
-                  .teal.bg} 50%, ${THEME_COLOURS.teal.fg} 50%);"
-              ></div>
-            </div>
-          </div>
-        </div>
-        <div style="display: flex; flex: 1; align-items: flex-end;">
+  return html`
+    <div
+      style="display: flex; flex-direction: column; width: ${OG.width}px; height: ${OG.height}px; background-color: ${colours.bg}; padding: ${OG.padding}px; font-family: 'Switzer';"
+    >
+      <div style="display: flex; justify-content: flex-end;">
+        <div style="display: flex; gap: ${BUTTON.gap}px;">
           <div
-            style="display: flex; flex-direction: column; color: ${colours.fg}; font-size: ${TYPOGRAPHY
-              .wordmark.lg.size}px; font-weight: ${TYPOGRAPHY.wordmark.lg
-              .weight}; line-height: ${TYPOGRAPHY.wordmark.lg
-              .lineHeight}; letter-spacing: ${TYPOGRAPHY.wordmark.lg
-              .letterSpacing};"
+            style="display: flex; ${getButtonStyle("steel", theme, colours.fg)}"
           >
-            <div style="display: flex;">Sam</div>
-            <div style="display: flex;">Folorunsho.</div>
+            <div
+              style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
+                .steel
+                .fg}; background: linear-gradient(135deg, ${THEME_COLOURS.steel
+                .bg} 50%, ${THEME_COLOURS.steel.fg} 50%);"
+            ></div>
+          </div>
+          <div
+            style="display: flex; ${getButtonStyle(
+              "purple",
+              theme,
+              colours.fg
+            )}"
+          >
+            <div
+              style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
+                .purple
+                .fg}; background: linear-gradient(135deg, ${THEME_COLOURS.purple
+                .bg} 50%, ${THEME_COLOURS.purple.fg} 50%);"
+            ></div>
+          </div>
+          <div
+            style="display: flex; ${getButtonStyle(
+              "charcoal",
+              theme,
+              colours.fg
+            )}"
+          >
+            <div
+              style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
+                .charcoal
+                .fg}; background: linear-gradient(135deg, ${THEME_COLOURS
+                .charcoal.bg} 50%, ${THEME_COLOURS.charcoal.fg} 50%);"
+            ></div>
+          </div>
+          <div
+            style="display: flex; ${getButtonStyle("teal", theme, colours.fg)}"
+          >
+            <div
+              style="display: flex; width: ${BUTTON.inner}px; height: ${BUTTON.inner}px; border: ${BUTTON.border}px solid ${THEME_COLOURS
+                .teal.fg}; background: linear-gradient(135deg, ${THEME_COLOURS
+                .teal.bg} 50%, ${THEME_COLOURS.teal.fg} 50%);"
+            ></div>
           </div>
         </div>
       </div>
-    `;
-  }
+      <div style="display: flex; flex: 1; align-items: flex-end;">
+        <div
+          style="display: flex; flex-direction: column; color: ${colours.fg}; font-size: ${TYPOGRAPHY
+            .wordmark.lg.size}px; font-weight: ${TYPOGRAPHY.wordmark.lg
+            .weight}; line-height: ${TYPOGRAPHY.wordmark.lg
+            .lineHeight}; letter-spacing: ${TYPOGRAPHY.wordmark.lg
+            .letterSpacing};"
+        >
+          <div style="display: flex;">Sam</div>
+          <div style="display: flex;">Folorunsho.</div>
+        </div>
+      </div>
+    </div>
+  `;
+};
 
-  // Blog post layout
+/**
+ * Create blog post OG template.
+ * Wordmark top-left, title bottom-left, metadata below.
+ */
+const createBlogPostTemplate = (
+  options: OgTemplateOptions,
+  colours: ThemeColours
+): ReturnType<typeof html> => {
+  const {title, date, theme} = options;
   const formattedDate = date ? formatOgDate(date) : "";
   const themeLabel = THEME_LABELS[theme];
 
@@ -281,4 +289,21 @@ export const createOgTemplate = (
       </div>
     </div>
   `;
+};
+
+/**
+ * Create HTML template for OG image.
+ *
+ * @param options - Title, optional date, theme, and isDefault flag
+ * @returns satori-html virtual DOM node
+ */
+export const createOgTemplate = (
+  options: OgTemplateOptions
+): ReturnType<typeof html> => {
+  const {theme, isDefault = false} = options;
+  const colours = THEME_COLOURS[theme];
+
+  return isDefault
+    ? createDefaultTemplate(theme, colours)
+    : createBlogPostTemplate(options, colours);
 };
