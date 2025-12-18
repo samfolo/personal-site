@@ -4,18 +4,16 @@
  * Applies the sheen text animation effect to all links within prose content.
  */
 
-import {MEDIUM_SHEEN} from "../config/sheen";
+import {DATA_ATTRS, DOM_SELECTORS} from "../../config/dom";
+import {MEDIUM_SHEEN} from "../../config/sheen";
 
-import type {SheenState} from "./sheen-core";
+import type {SheenState} from "./core";
 import {
   splitIntoChars,
   startAnimation,
   stopAnimation,
   createState,
-} from "./sheen-core";
-
-const PROSE_LINK_SELECTOR = ".prose a:not(.heading-anchor)";
-const INITIALISED_ATTR = "data-sheen-link";
+} from "./core";
 
 // Track state for each link
 const linkStates = new WeakMap<HTMLAnchorElement, SheenState>();
@@ -25,7 +23,7 @@ const linkStates = new WeakMap<HTMLAnchorElement, SheenState>();
  */
 const initLink = (link: HTMLAnchorElement): void => {
   // Skip if already initialised or if link contains non-text content
-  if (link.hasAttribute(INITIALISED_ATTR)) {
+  if (link.hasAttribute(DATA_ATTRS.SHEEN.LINK)) {
     return;
   }
 
@@ -44,7 +42,7 @@ const initLink = (link: HTMLAnchorElement): void => {
   const state = createState(chars, MEDIUM_SHEEN.interval, MEDIUM_SHEEN.spread);
 
   linkStates.set(link, state);
-  link.setAttribute(INITIALISED_ATTR, "");
+  link.setAttribute(DATA_ATTRS.SHEEN.LINK, "");
 
   link.addEventListener("mouseenter", () => {
     const s = linkStates.get(link);
@@ -67,8 +65,9 @@ const initLink = (link: HTMLAnchorElement): void => {
  * Initialise all prose links
  */
 const init = (): void => {
-  const links =
-    document.querySelectorAll<HTMLAnchorElement>(PROSE_LINK_SELECTOR);
+  const links = document.querySelectorAll<HTMLAnchorElement>(
+    DOM_SELECTORS.PROSE.LINK
+  );
   links.forEach(initLink);
 };
 

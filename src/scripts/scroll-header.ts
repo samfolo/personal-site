@@ -8,17 +8,17 @@
  * On other pages (no scroll trigger): header is always visible
  */
 
-((): void => {
-  const HEADER_ID = "fixed-header";
-  const SCROLL_TRIGGER_SELECTOR = "[data-scroll-trigger]";
-  const INITIAL_SWITCHER_ID = "initial-theme-switcher";
+import {DOM_IDS, DOM_SELECTORS} from "../config/dom";
 
+((): void => {
   const init = (): void => {
-    const header = document.getElementById(HEADER_ID);
+    const header = document.getElementById(DOM_IDS.FIXED_HEADER);
     const scrollTrigger = document.querySelector<HTMLElement>(
-      SCROLL_TRIGGER_SELECTOR
+      DOM_SELECTORS.SCROLL_TRIGGER
     );
-    const initialSwitcher = document.getElementById(INITIAL_SWITCHER_ID);
+    const initialSwitcher = document.getElementById(
+      DOM_IDS.INITIAL_THEME_SWITCHER
+    );
 
     if (!header) {
       return;
@@ -50,6 +50,8 @@
         });
       },
       {
+        // Offset roughly matches header height (~76px) to trigger
+        // visibility change just before/after header would overlap content.
         rootMargin: "-80px 0px 0px 0px",
       }
     );

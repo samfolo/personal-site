@@ -1,24 +1,12 @@
 /**
  * Code Block Enhancement Script
  *
- * - Populates language labels from Shiki's data-language attribute (sentence case)
+ * - Populates language labels from Shiki's data-language attribute
  * - Adds copy-to-clipboard functionality
  */
 
 ((): void => {
   const COPIED_DURATION = 2000;
-
-  /**
-   * Convert language string to sentence case.
-   * e.g., "typescript" -> "Typescript", "html" -> "Html"
-   */
-  const toSentenceCase = (str: string): string => {
-    if (!str) {
-      return "";
-    }
-
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  };
 
   const init = (): void => {
     const codeBlocks = document.querySelectorAll<HTMLElement>(".code-block");
@@ -31,8 +19,7 @@
 
       // Populate language label from Shiki's data-language attribute
       if (langLabel && pre) {
-        const lang = pre.dataset.language || "";
-        langLabel.textContent = toSentenceCase(lang);
+        langLabel.textContent = pre.dataset.language || "";
       }
 
       if (!code || !copyButton) {

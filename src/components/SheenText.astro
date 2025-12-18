@@ -17,6 +17,8 @@
  * @param spread - Number of characters to highlight on each side
  */
 
+import {DATA_ATTRS} from "../config/dom";
+
 interface Props extends astroHTML.JSX.HTMLAttributes {
   text: string;
   tag?: keyof HTMLElementTagNameMap;
@@ -35,13 +37,16 @@ const {
 
 // Split text into words and spaces for server-side rendering
 const tokens = text.split(/( )/);
+
+// Centralised data attribute for sheen-ready state
+const sheenReadyAttr = {[DATA_ATTRS.SHEEN.READY]: ""};
 ---
 
 <Tag
   class:list={["sheen-text", className]}
   data-sheen-interval={interval}
   data-sheen-spread={spread}
-  data-sheen-ready
+  {...sheenReadyAttr}
   {...attrs}
 >
   {
@@ -65,7 +70,7 @@ const tokens = text.split(/( )/);
   }
 </Tag>
 
-<script src="../scripts/sheen.ts"></script>
+<script src="../scripts/sheen/controller.ts"></script>
 
 <style>
   .sheen-text :global(.sheen-word) {

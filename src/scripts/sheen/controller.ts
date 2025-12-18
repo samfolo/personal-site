@@ -2,25 +2,14 @@
  * Sheen Text Animation Controller
  *
  * Animates a left-to-right colour sweep on hover for elements
- * with the [data-sheen-ready] attribute (pre-split at build time)
- * or [data-sheen-text] attribute (split at runtime).
+ * with the [data-sheen-ready] attribute (pre-split at build time).
  */
 
-import {MEDIUM_SHEEN} from "../config/sheen";
+import {DOM_SELECTORS} from "../../config/dom";
+import {MEDIUM_SHEEN} from "../../config/sheen";
 
-import type {SheenState} from "./sheen-core";
-import {
-  CHAR_CLASS,
-  splitIntoChars,
-  startAnimation,
-  stopAnimation,
-  createState,
-} from "./sheen-core";
-
-// Elements pre-split at build time (preferred)
-const SHEEN_READY_SELECTOR = "[data-sheen-ready]";
-// Legacy: elements that need runtime splitting
-const SHEEN_TEXT_SELECTOR = "[data-sheen-text]";
+import type {SheenState} from "./core";
+import {CHAR_CLASS, startAnimation, stopAnimation, createState} from "./core";
 
 // Track state for each sheen element
 const sheenStates = new WeakMap<HTMLElement, SheenState>();
@@ -47,21 +36,7 @@ const initElement = (element: HTMLElement): void => {
     ? parseInt(element.dataset.sheenSpread, 10)
     : MEDIUM_SHEEN.spread;
 
-  // Use pre-split chars if available, otherwise split at runtime
-  const isPreSplit = element.hasAttribute("data-sheen-ready");
-  let chars: HTMLSpanElement[];
-
-  if (isPreSplit) {
-    chars = collectChars(element);
-  } else {
-    const text = element.dataset.sheenText;
-
-    if (!text) {
-      return;
-    }
-
-    chars = splitIntoChars(element, text);
-  }
+  const chars = collectChars(element);
 
   if (chars.length === 0) {
     return;
@@ -92,7 +67,7 @@ const initElement = (element: HTMLElement): void => {
  */
 const init = (): void => {
   const elements = document.querySelectorAll<HTMLElement>(
-    `${SHEEN_READY_SELECTOR}, ${SHEEN_TEXT_SELECTOR}`
+    DOM_SELECTORS.SHEEN.READY
   );
   elements.forEach(initElement);
 };
