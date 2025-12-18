@@ -1,0 +1,43 @@
+---
+/**
+ * PostTags Component
+ *
+ * Displays a list of tags as pill badges.
+ */
+
+interface Props {
+  tags: string[];
+}
+
+const {tags} = Astro.props;
+---
+
+{
+  tags.length > 0 && (
+    <ul class="post-tags">
+      {tags.map((tag) => (
+        <li class="post-tag">{tag}</li>
+      ))}
+    </ul>
+  )
+}
+
+<style>
+  .post-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    margin-top: var(--space-4);
+  }
+
+  .post-tag {
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-labels);
+    color: var(--muted);
+    background-color: var(--rule);
+    padding: var(--space-1) var(--space-2);
+    border-radius: var(--space-1);
+  }
+</style>

@@ -1,0 +1,109 @@
+---
+/**
+ * PostNav Component
+ *
+ * Displays previous/next post navigation links.
+ * Renders a 2-column grid on desktop, single column on mobile.
+ */
+
+interface PostNavLink {
+  slug: string;
+  title: string;
+}
+
+interface Props {
+  prevPost?: PostNavLink | null;
+  nextPost?: PostNavLink | null;
+}
+
+const {prevPost, nextPost} = Astro.props;
+---
+
+{
+  (prevPost || nextPost) && (
+    <nav class="post-nav" aria-label="Post navigation">
+      <div class="post-nav-item post-nav-prev">
+        {prevPost && (
+          <>
+            <span class="post-nav-label">Previous</span>
+            <a href={`/blog/${prevPost.slug}`} class="post-nav-link">
+              {prevPost.title}
+            </a>
+          </>
+        )}
+      </div>
+
+      <div class="post-nav-item post-nav-next">
+        {nextPost && (
+          <>
+            <span class="post-nav-label">Next</span>
+            <a href={`/blog/${nextPost.slug}`} class="post-nav-link">
+              {nextPost.title}
+            </a>
+          </>
+        )}
+      </div>
+    </nav>
+  )
+}
+
+<style>
+  .post-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: var(--border-hairline) solid var(--rule);
+  }
+
+  .post-nav-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .post-nav-next {
+    text-align: right;
+  }
+
+  .post-nav-label {
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-labels);
+    line-height: var(--leading-16);
+    color: var(--muted);
+  }
+
+  .post-nav-link {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    overflow: hidden;
+    font-size: var(--text-md);
+    font-weight: var(--font-medium);
+    line-height: var(--leading-24);
+    color: var(--fg);
+    transition: color var(--transition-fast);
+  }
+
+  .post-nav-link:hover {
+    color: var(--muted);
+  }
+
+  .post-nav-link:focus-visible {
+    outline: var(--outline-width) solid var(--fg);
+    outline-offset: var(--outline-offset);
+  }
+
+  @container page (max-width: 640px) {
+    .post-nav {
+      grid-template-columns: 1fr;
+    }
+
+    .post-nav-next {
+      text-align: left;
+    }
+  }
+</style>

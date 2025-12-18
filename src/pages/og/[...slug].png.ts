@@ -10,10 +10,9 @@
 import type {APIRoute} from "astro";
 import {getEntry} from "astro:content";
 
+import {CACHE_DURATIONS} from "../../config/cache";
 import {generateOgImage, getThemeFromTitle} from "../../lib/og";
 import type {OgTemplateOptions} from "../../lib/og";
-
-const ONE_YEAR_IN_SECONDS = 60 * 60 * 24 * 365;
 
 export const GET: APIRoute = async ({params}) => {
   const slugParts = params.slug?.split("/") ?? [];
@@ -58,7 +57,7 @@ export const GET: APIRoute = async ({params}) => {
       status: 200,
       headers: {
         "Content-Type": "image/png",
-        "Cache-Control": `public, max-age=${ONE_YEAR_IN_SECONDS}, immutable`,
+        "Cache-Control": `public, max-age=${CACHE_DURATIONS.ONE_YEAR_IN_SECONDS}, immutable`,
       },
     });
   } catch (error) {

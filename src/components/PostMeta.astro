@@ -1,0 +1,41 @@
+---
+/**
+ * PostMeta Component
+ *
+ * Displays post metadata: publish date, updated date (optional), and reading time.
+ * Items are separated by dot dividers.
+ */
+
+import {formatDate, formatUpdatedDate} from "../utils/format-date";
+
+interface Props {
+  publishDate: Date;
+  updatedDate?: Date;
+  readingTime: string;
+}
+
+const {publishDate, updatedDate, readingTime} = Astro.props;
+---
+
+<div class="post-meta">
+  <time datetime={publishDate.toISOString()}>
+    {formatDate(publishDate)}
+  </time>
+  {updatedDate && <span class="post-updated">{formatUpdatedDate(updatedDate)}</span>}
+  <span class="post-reading-time">{readingTime}</span>
+</div>
+
+<style>
+  .post-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    font-size: var(--text-sm);
+    color: var(--muted);
+  }
+
+  .post-meta > *:not(:last-child)::after {
+    content: "·";
+    margin-left: var(--space-3);
+  }
+</style>

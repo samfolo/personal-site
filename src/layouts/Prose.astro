@@ -1,0 +1,108 @@
+---
+/**
+ * Prose Layout
+ *
+ * Shared layout for prose content pages (about, uses, blog posts).
+ * Provides consistent container structure with header and content sections.
+ *
+ * Named slots:
+ *   - meta: Content after the title (e.g., PostMeta, PostTags)
+ *   - after: Content after the prose body (e.g., PostNav)
+ */
+
+import SheenText from "../components/SheenText.astro";
+import {LARGE_SHEEN} from "../config/sheen";
+import type {OGType} from "../types";
+
+import Base from "./Base.astro";
+
+interface SEOConfig {
+  ogImage?: string;
+  ogType?: OGType;
+  publishDate?: Date;
+  updatedDate?: Date;
+  tags?: string[];
+}
+
+interface SheenConfig {
+  interval: number;
+  spread: number;
+}
+
+interface Props {
+  /** Page <title> */
+  title: string;
+  /** H1 heading text */
+  heading: string;
+  /** Meta description */
+  description?: string;
+  /** SEO-specific props passed through to Base */
+  seo?: SEOConfig;
+  /** Sheen animation config (default: LARGE_SHEEN) */
+  sheenConfig?: SheenConfig;
+  /** Heading element ID (default: "page-title") */
+  headingId?: string;
+}
+
+const {
+  title,
+  heading,
+  description,
+  seo = {},
+  sheenConfig = LARGE_SHEEN,
+  headingId = "page-title",
+} = Astro.props;
+
+const {ogImage, ogType, publishDate, updatedDate, tags} = seo;
+---
+
+<Base
+  {title}
+  {description}
+  {ogImage}
+  {ogType}
+  {publishDate}
+  {updatedDate}
+  {tags}
+>
+  <main class="prose-page">
+    <article class="prose-article">
+      <header class="prose-header">
+        <SheenText
+          text={heading}
+          tag="h1"
+          class="prose-title"
+          id={headingId}
+          interval={sheenConfig.interval}
+          spread={sheenConfig.spread}
+        />
+        <slot name="meta" />
+      </header>
+      <div class="prose">
+        <slot />
+      </div>
+      <slot name="after" />
+    </article>
+  </main>
+</Base>
+
+<style>
+  .prose-page {
+    max-width: var(--container-max);
+    margin: 0 auto;
+    padding: calc(var(--header-height) + var(--space-8)) var(--container-px)
+      var(--space-9);
+  }
+
+  .prose-header {
+    margin-bottom: var(--space-7);
+  }
+
+  /* :global() required as SheenText renders the h1 in its own scope */
+  :global(.prose-title) {
+    font-size: clamp(var(--text-xl), 5vw, var(--text-3xl));
+    font-weight: var(--font-bold);
+    letter-spacing: var(--tracking-display);
+    line-height: var(--leading-48);
+  }
+</style>

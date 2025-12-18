@@ -5,47 +5,14 @@
  * Placeholder page for the About section.
  */
 
-import SheenText from "../components/SheenText.astro";
-import {LARGE_SHEEN} from "../config/sheen";
-import Base from "../layouts/Base.astro";
+import Prose from "../layouts/Prose.astro";
 ---
 
-<Base title="About | Sam Folorunsho" description="About Sam Folorunsho.">
-  <main class="about-page">
-    <header class="page-header">
-      <h1 id="page-title" class="page-title">
-        <SheenText
-          text="About"
-          interval={LARGE_SHEEN.interval}
-          spread={LARGE_SHEEN.spread}
-        />
-      </h1>
-    </header>
-
-    <section class="page-content">
-      <p class="coming-soon">Coming soon.</p>
-    </section>
-  </main>
-</Base>
+<Prose title="About | Sam Folorunsho" description="About Sam Folorunsho." heading="About">
+  <p class="coming-soon">Coming soon.</p>
+</Prose>
 
 <style>
-  .about-page {
-    max-width: var(--container-max);
-    margin: 0 auto;
-    padding: calc(var(--header-height) + var(--space-8)) var(--container-px)
-      var(--space-9);
-  }
-
-  .page-header {
-    margin-bottom: var(--space-7);
-  }
-
-  .page-title {
-    font-size: var(--text-xl);
-    font-weight: var(--font-bold);
-    letter-spacing: var(--tracking-display);
-  }
-
   .coming-soon {
     font-size: var(--text-base);
     line-height: var(--leading-24);
