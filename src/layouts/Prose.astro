@@ -7,6 +7,7 @@
  *
  * Named slots:
  *   - meta: Content after the title (e.g., PostMeta, PostTags)
+ *   - before: Content before prose body, outside .prose styling (e.g., BlogList)
  *   - after: Content after the prose body (e.g., PostNav)
  */
 
@@ -78,6 +79,7 @@ const {ogImage, ogType, publishDate, updatedDate, tags} = seo;
         />
         <slot name="meta" />
       </header>
+      <slot name="before" />
       <div class="prose">
         <slot />
       </div>

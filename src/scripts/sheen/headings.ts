@@ -41,6 +41,11 @@ const initHeading = (heading: HTMLElement): void => {
     return;
   }
 
+  // Skip headings inside not-prose containers
+  if (heading.closest(".not-prose")) {
+    return;
+  }
+
   const text = getHeadingText(heading);
 
   if (!text) {
