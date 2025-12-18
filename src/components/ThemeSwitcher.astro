@@ -102,17 +102,16 @@ const THEMES: ThemeOption[] = THEME_ORDER.map((id) => ({
 </style>
 
 <script>
+  import {STORAGE_KEYS} from "../config/storage";
   import {THEME_CLASSES, THEME_LABELS, THEME_ORDER} from "../config/themes";
   import {setFavicon} from "../scripts/favicon";
   import {setThemeColor} from "../scripts/theme-color";
   import type {Theme} from "../types";
 
-  const THEME_KEY = "theme";
-
   const setTheme = (themeId: Theme): void => {
     document.documentElement.classList.remove(...THEME_CLASSES);
     document.documentElement.classList.add(`theme-${themeId}`);
-    localStorage.setItem(THEME_KEY, themeId);
+    localStorage.setItem(STORAGE_KEYS.THEME, themeId);
     setFavicon(themeId);
     setThemeColor(themeId);
     updateActiveStates(themeId);

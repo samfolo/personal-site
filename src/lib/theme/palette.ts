@@ -1,13 +1,13 @@
 /**
- * Theme Colours
+ * Theme Colour Palette
  *
- * Centralized theme colour definitions.
+ * Centralised theme colour definitions.
  * Converts OKLCH values to hex for use across the application.
  */
 
 import {formatHex, oklch} from "culori";
 
-import type {Theme} from "../types";
+import type {Theme} from "../../types";
 
 export interface ThemeColours {
   bg: string;
