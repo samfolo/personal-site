@@ -1,0 +1,43 @@
+---
+/**
+ * Body Component
+ *
+ * Muted body text for taglines, descriptions, and secondary content.
+ * Uses grid-aligned line-height for vertical rhythm.
+ *
+ * @example
+ * <Body>Software engineer exploring AI agents...</Body>
+ * <Body tag="p">No posts to display.</Body>
+ * <Body color="fg">Primary body text</Body>
+ */
+
+import type { TypographyColor } from "./types";
+
+interface Props {
+  tag?: keyof HTMLElementTagNameMap;
+  color?: TypographyColor;
+  class?: string;
+}
+
+const { tag: Tag = "span", color = "muted", class: className } = Astro.props;
+---
+
+<Tag class:list={["body-text", `body-text-${color}`, className]}>
+  <slot />
+</Tag>
+
+<style>
+  .body-text {
+    font-size: var(--text-base);
+    font-weight: var(--font-regular);
+    line-height: var(--leading-24);
+  }
+
+  .body-text-muted {
+    color: var(--muted);
+  }
+
+  .body-text-fg {
+    color: var(--fg);
+  }
+</style>

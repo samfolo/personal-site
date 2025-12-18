@@ -1,0 +1,45 @@
+---
+/**
+ * Overline Component
+ *
+ * Uppercase label typography for section headers, metadata labels,
+ * and decorative text. Designed for short, single-line content.
+ *
+ * @example
+ * <Overline>Recent Writing</Overline>
+ * <Overline tag="h2">December 2024</Overline>
+ * <Overline color="fg">Highlighted Label</Overline>
+ */
+
+import type { TypographyColor } from "./types";
+
+interface Props {
+  tag?: keyof HTMLElementTagNameMap;
+  color?: TypographyColor;
+  class?: string;
+}
+
+const { tag: Tag = "span", color = "muted", class: className } = Astro.props;
+---
+
+<Tag class:list={["overline", `overline-${color}`, className]}>
+  <slot />
+</Tag>
+
+<style>
+  .overline {
+    font-size: var(--text-xs);
+    font-weight: var(--font-medium);
+    text-transform: uppercase;
+    letter-spacing: var(--tracking-labels);
+    line-height: var(--leading-16);
+  }
+
+  .overline-muted {
+    color: var(--muted);
+  }
+
+  .overline-fg {
+    color: var(--fg);
+  }
+</style>

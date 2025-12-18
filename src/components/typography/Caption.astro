@@ -1,0 +1,61 @@
+---
+/**
+ * Caption Component
+ *
+ * Secondary text for metadata, dates, and supporting information.
+ * Sentence case, muted colour, compact line-height.
+ *
+ * @example
+ * <Caption>12 December 2024</Caption>
+ * <Caption numeric>5 min read</Caption>
+ * <Caption color="fg">Highlighted caption</Caption>
+ */
+
+import type { TypographyColor } from "./types";
+
+interface Props {
+  tag?: keyof HTMLElementTagNameMap;
+  /** Use tabular numerals for aligned numbers (dates, times, stats) */
+  numeric?: boolean;
+  color?: TypographyColor;
+  class?: string;
+}
+
+const {
+  tag: Tag = "span",
+  numeric = false,
+  color = "muted",
+  class: className,
+} = Astro.props;
+---
+
+<Tag
+  class:list={[
+    "caption",
+    `caption-${color}`,
+    { "caption-numeric": numeric },
+    className,
+  ]}
+>
+  <slot />
+</Tag>
+
+<style>
+  .caption {
+    font-size: var(--text-sm);
+    font-weight: var(--font-regular);
+    line-height: var(--leading-16);
+  }
+
+  .caption-muted {
+    color: var(--muted);
+  }
+
+  .caption-fg {
+    color: var(--fg);
+  }
+
+  .caption-numeric {
+    font-variant-numeric: tabular-nums;
+  }
+</style>
