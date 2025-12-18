@@ -7,7 +7,7 @@
 
 import {formatHex, oklch} from "culori";
 
-import type {Theme} from "../../types";
+import type {Theme} from "../../config/themes";
 
 export interface ThemeColours {
   bg: string;

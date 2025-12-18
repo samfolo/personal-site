@@ -12,12 +12,13 @@ import FixedFooter from "../components/FixedFooter.astro";
 import FixedHeader from "../components/FixedHeader.astro";
 import JSONLD from "../components/JSONLD.astro";
 import SEO from "../components/SEO.astro";
-import ThemeSwitcher from "../components/ThemeSwitcher.astro";
+import ThemeSwitcher from "../components/ThemeSwitcher";
 import {STORAGE_KEYS} from "../config/storage";
 import {THEME_CLASSES} from "../config/themes";
+import type {Theme} from "../config/themes";
 import {THEME_COLOURS} from "../lib/theme";
 import "../styles/global.css";
-import type {OGType, Theme} from "../types";
+import type {OGType} from "../types";
 
 const THEME_BG_COLOURS = Object.fromEntries(
   Object.entries(THEME_COLOURS).map(([theme, colours]) => [theme, colours.bg])

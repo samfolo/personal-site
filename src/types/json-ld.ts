@@ -1,37 +1,5 @@
 /**
- * Shared Type Definitions
- *
- * Centralised types used across the application.
- */
-
-/**
- * Re-export Theme from config.
- * The canonical definition lives in src/config/themes.ts.
- */
-export type {Theme} from "./config/themes";
-
-/**
- * ThemeSwitcher size variants.
- */
-export type ThemeSwitcherSize = "sm" | "md";
-
-/**
- * Open Graph content type.
- */
-export type OGType = "website" | "article";
-
-/**
- * Font weight values for OG image generation.
- */
-export type FontWeight = 400 | 700;
-
-/**
- * Font style values for OG image generation.
- */
-export type FontStyle = "normal";
-
-/**
- * JSON-LD Types
+ * JSON-LD Type Definitions
  *
  * Minimal schema.org types for structured data used in the site.
  * See: https://schema.org/

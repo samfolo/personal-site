@@ -23,10 +23,11 @@
  * --container-lg for consistency.
  */
 
-import {THEME_LABELS, THEME_ORDER} from "../config/themes";
-import type {Theme, ThemeSwitcherSize} from "../types";
+import {THEME_LABELS, THEME_ORDER} from "../../config/themes";
+import type {Theme} from "../../config/themes";
 
 import ThemeSwitcherButton from "./ThemeSwitcherButton.astro";
+import type {ThemeSwitcherSize} from "./types";
 
 interface Props {
   size?: ThemeSwitcherSize;
@@ -102,74 +103,74 @@ const THEMES: ThemeOption[] = THEME_ORDER.map((id) => ({
 </style>
 
 <script>
-  import {STORAGE_KEYS} from "../config/storage";
-  import {THEME_CLASSES, THEME_LABELS, THEME_ORDER} from "../config/themes";
-  import {setFavicon} from "../scripts/favicon";
-  import {setThemeColor} from "../scripts/theme-color";
-  import type {Theme} from "../types";
+import {STORAGE_KEYS} from "../../config/storage";
+import {THEME_CLASSES, THEME_LABELS, THEME_ORDER} from "../../config/themes";
+import type {Theme} from "../../config/themes";
+import {setFavicon} from "../../scripts/favicon";
+import {setThemeColor} from "../../scripts/theme-color";
 
-  const setTheme = (themeId: Theme): void => {
-    document.documentElement.classList.remove(...THEME_CLASSES);
-    document.documentElement.classList.add(`theme-${themeId}`);
-    localStorage.setItem(STORAGE_KEYS.THEME, themeId);
-    setFavicon(themeId);
-    setThemeColor(themeId);
-    updateActiveStates(themeId);
-  };
+const setTheme = (themeId: Theme): void => {
+  document.documentElement.classList.remove(...THEME_CLASSES);
+  document.documentElement.classList.add(`theme-${themeId}`);
+  localStorage.setItem(STORAGE_KEYS.THEME, themeId);
+  setFavicon(themeId);
+  setThemeColor(themeId);
+  updateActiveStates(themeId);
+};
 
-  const cycleTheme = (): void => {
-    const current = getCurrentTheme();
-    const currentIndex = THEME_ORDER.indexOf(current);
-    const nextIndex = (currentIndex + 1) % THEME_ORDER.length;
-    setTheme(THEME_ORDER[nextIndex]);
-  };
+const cycleTheme = (): void => {
+  const current = getCurrentTheme();
+  const currentIndex = THEME_ORDER.indexOf(current);
+  const nextIndex = (currentIndex + 1) % THEME_ORDER.length;
+  setTheme(THEME_ORDER[nextIndex]);
+};
 
-  const updateActiveStates = (activeTheme: Theme): void => {
-    document.querySelectorAll(".theme-button").forEach((button) => {
-      const isActive = button.getAttribute("data-theme") === activeTheme;
-      button.setAttribute("data-active", String(isActive));
-    });
+const updateActiveStates = (activeTheme: Theme): void => {
+  document.querySelectorAll(".theme-button").forEach((button) => {
+    const isActive = button.getAttribute("data-theme") === activeTheme;
+    button.setAttribute("data-active", String(isActive));
+  });
 
-    // Update mobile toggle aria-label
-    const label = THEME_LABELS[activeTheme];
-    document.querySelectorAll(".theme-toggle-mobile").forEach((button) => {
-      button.setAttribute(
-        "aria-label",
+  // Update mobile toggle aria-label
+  const label = THEME_LABELS[activeTheme];
+  document.querySelectorAll(".theme-toggle-mobile").forEach((button) => {
+    button.setAttribute(
+      "aria-label",
         `Cycle colour theme, currently ${label}`
-      );
-    });
-  };
+    );
+  });
+};
 
-  const getCurrentTheme = (): Theme => {
-    for (const cls of document.documentElement.classList) {
-      if (cls.startsWith("theme-")) {
-        return cls.replace("theme-", "") as Theme;
-      }
+const getCurrentTheme = (): Theme => {
+  for (const cls of document.documentElement.classList) {
+    if (cls.startsWith("theme-")) {
+      return cls.replace("theme-", "") as Theme;
     }
-    return "steel";
-  };
+  }
+  return "steel";
+};
 
-  const init = (): void => {
-    const currentTheme = getCurrentTheme();
-    updateActiveStates(currentTheme);
+const init = (): void => {
+  const currentTheme = getCurrentTheme();
+  updateActiveStates(currentTheme);
 
-    // Desktop: individual theme buttons
-    document.querySelectorAll(".theme-button").forEach((button) => {
-      button.addEventListener("click", () => {
-        const themeId = button.getAttribute("data-theme") as Theme | null;
-        if (themeId) {
-          setTheme(themeId);
-        }
-      });
+  // Desktop: individual theme buttons
+  document.querySelectorAll(".theme-button").forEach((button) => {
+    button.addEventListener("click", () => {
+      const themeId = button.getAttribute("data-theme") as Theme | null;
+      if (themeId) {
+        setTheme(themeId);
+      }
     });
+  });
 
-    // Mobile: cycle toggle button
-    document.querySelectorAll(".theme-toggle-mobile").forEach((button) => {
-      button.addEventListener("click", cycleTheme);
-    });
-  };
+  // Mobile: cycle toggle button
+  document.querySelectorAll(".theme-toggle-mobile").forEach((button) => {
+    button.addEventListener("click", cycleTheme);
+  });
+};
 
-  // Initialise on DOM ready and after Astro page transitions
-  init();
-  document.addEventListener("astro:after-swap", init);
+// Initialise on DOM ready and after Astro page transitions
+init();
+document.addEventListener("astro:after-swap", init);
 </script>

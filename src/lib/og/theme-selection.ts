@@ -5,7 +5,7 @@
  */
 
 import {THEME_ORDER} from "../../config/themes";
-import type {Theme} from "../../types";
+import type {Theme} from "../../config/themes";
 
 /**
  * Simple hash function for strings.

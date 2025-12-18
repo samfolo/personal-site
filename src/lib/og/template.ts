@@ -10,7 +10,7 @@
 import {html} from "satori-html";
 
 import {THEME_LABELS} from "../../config/themes";
-import type {Theme} from "../../types";
+import type {Theme} from "../../config/themes";
 import {formatDate} from "../../utils/format-date";
 
 import {THEME_COLOURS} from "../theme";

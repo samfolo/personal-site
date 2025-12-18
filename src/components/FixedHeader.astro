@@ -10,7 +10,7 @@ import {NAV_LINKS} from "../config/navigation";
 
 import LogoMark from "./LogoMark.astro";
 import Nav from "./Nav.astro";
-import ThemeSwitcher from "./ThemeSwitcher.astro";
+import ThemeSwitcher from "./ThemeSwitcher";
 ---
 
 <header
@@ -21,12 +21,7 @@ import ThemeSwitcher from "./ThemeSwitcher.astro";
 >
   <div class="fixed-header-inner">
     <div class="fixed-header-left">
-      <LogoMark
-        href="/"
-        label="Go to home"
-        container="page"
-        onClick="scrollToTop"
-      />
+      <LogoMark href="/" label="Go to home" onClick="scrollToTop" />
       <Nav links={NAV_LINKS} aria-label="Main navigation" />
     </div>
     <div class="fixed-header-right">
