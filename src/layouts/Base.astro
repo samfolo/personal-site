@@ -125,8 +125,15 @@ const {
         // Reapply after View Transition navigation
         document.addEventListener("astro:after-swap", applyStoredTheme);
 
-        // Preserve favicon href during View Transitions (avoid re-fetching)
+        // Apply theme to new document BEFORE swap to prevent flash
         document.addEventListener("astro:before-swap", (e) => {
+          const saved = localStorage.getItem(THEME_STORAGE_KEY);
+          if (saved && THEME_CLASSES.indexOf("theme-" + saved) !== -1) {
+            e.newDocument.documentElement.classList.remove(...THEME_CLASSES);
+            e.newDocument.documentElement.classList.add("theme-" + saved);
+          }
+
+          // Preserve favicon href during View Transitions (avoid re-fetching)
           const currentFavicon = document.querySelector("link[data-favicon]");
           const newFavicon = e.newDocument.querySelector("link[data-favicon]");
           if (currentFavicon && currentFavicon.href && newFavicon) {
