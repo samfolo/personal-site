@@ -1,11 +1,11 @@
 ---
 name: coding-standards
-description: Code standards for the personal-site project. Consult when implementing features, reviewing code, refactoring, or answering questions about project conventions. Extends CLAUDE.md with type discipline, naming conventions, Astro patterns, and review checklists.
+description: Code standards for the site. Consult when implementing features, reviewing code, refactoring, or answering questions about project conventions. Extends CLAUDE.md with type discipline, naming conventions, Astro patterns, and review checklists.
 ---
 
 # Code Standards
 
-Standards for personal-site development. Concise, precise, effective. Maximum signal, minimum noise.
+Standards for site development. Concise, precise, effective. Maximum signal, minimum noise.
 
 British English throughout—code, comments, documentation, content.
 

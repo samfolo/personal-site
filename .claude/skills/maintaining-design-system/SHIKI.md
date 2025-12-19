@@ -1,6 +1,6 @@
 # Syntax Highlighting
 
-Shiki configuration, token architecture, and code block styling for the personal site.
+Shiki configuration, token architecture, and code block styling for the site.
 
 ## Overview
 

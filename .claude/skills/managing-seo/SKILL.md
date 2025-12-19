@@ -1,11 +1,11 @@
 ---
 name: managing-seo
-description: SEO maintenance for the personal-site project. Consult when adding content, modifying pages, updating metadata, or making changes that affect discoverability. Covers meta tags, structured data, OG images, sitemap, RSS, and llms.txt.
+description: SEO maintenance for the site. Consult when adding content, modifying pages, updating metadata, or making changes that affect discoverability. Covers meta tags, structured data, OG images, sitemap, RSS, and llms.txt.
 ---
 
 # Managing SEO
 
-SEO maintenance for the personal site. Keep metadata accurate, content discoverable, and AI systems informed.
+SEO maintenance for the site. Keep metadata accurate, content discoverable, and AI systems informed.
 
 ## When to Use
 
