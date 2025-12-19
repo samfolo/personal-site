@@ -22,8 +22,6 @@ Deployment: Docker → Google Cloud Run via GitHub Actions.
 
 Consult **coding-standards** when implementing features, reviewing code, or refactoring. Contains type discipline, naming conventions, Astro patterns, JSDoc standards, and review checklists.
 
-Consult **writing-content** when adding blog posts or static pages. Contains frontmatter schema, MDX patterns, Shiki transformer usage, and sitemap requirements.
-
 Consult **managing-seo** when working with meta tags, structured data, or feeds. Contains SEO component usage, JSON-LD schemas, RSS configuration, and OG image generation.
 
 Consult **maintaining-design-system** when modifying colours, typography, or spacing. Contains token locations, theme definitions, synchronisation requirements, and Shiki theme configuration.
