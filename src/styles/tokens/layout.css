@@ -10,4 +10,8 @@
   --safe-area-right: env(safe-area-inset-right, 0);
   --safe-area-bottom: env(safe-area-inset-bottom, 0);
   --safe-area-left: env(safe-area-inset-left, 0);
+
+  /* Container constraints */
+  --container-max: 45rem; /* 720px */
+  --container-px: 1.5rem; /* 24px horizontal padding */
 }

@@ -17,8 +17,4 @@
   --space-7: 3rem; /* 48px */
   --space-8: 4rem; /* 64px */
   --space-9: 6rem; /* 96px */
-
-  /* Container constraints */
-  --container-max: 45rem; /* 720px */
-  --container-px: 1.5rem; /* 24px horizontal padding */
 }
