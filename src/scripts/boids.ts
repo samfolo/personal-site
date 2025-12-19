@@ -26,7 +26,7 @@ const BOID_SIZE = 6.5;
 const BOID_WIDTH = 1.15;
 const BOID_LENGTH = 1.7;
 const BOID_INDENT = 0.2;
-const NETWORK_OPACITY = 84;
+const NETWORK_OPACITY = 90;
 const NETWORK_MAX_CONNECTIONS = 3;
 const NETWORK_RANGE_MULTIPLIER = 2.5;
 
@@ -96,6 +96,15 @@ const getColourFromProperty = (propertyName: string): RGBColour => {
     .trim();
   return parseComputedColour(value);
 };
+
+/**
+ * Quantise opacity to reduce p5 colour cache bloat.
+ * p5.js caches colour objects internally; unique RGBA combinations accumulate
+ * and eventually cause "Too many properties to enumerate" errors.
+ * Quantising to ~20 steps limits cache growth.
+ */
+const quantiseOpacity = (opacity: number): number =>
+  Math.round(opacity * 20) / 20;
 
 /**
  * Calculate opacity factor based on distance from center vertical axis
@@ -445,7 +454,7 @@ class Boid {
     const length = size * BOID_LENGTH;
     const indent = size * BOID_INDENT;
 
-    p.fill(colour.r, colour.g, colour.b, finalOpacity * 255);
+    p.fill(colour.r, colour.g, colour.b, quantiseOpacity(finalOpacity) * 255);
     p.noStroke();
     p.beginShape();
     // Nose
@@ -560,7 +569,7 @@ const drawNetworkLines = (p: p5, boids: Boid[], colour: RGBColour): void => {
         boidCenterFactor *
         connCenterFactor;
 
-      p.stroke(colour.r, colour.g, colour.b, finalOpacity);
+      p.stroke(colour.r, colour.g, colour.b, quantiseOpacity(finalOpacity / 255) * 255);
       p.strokeWeight(0.5);
       p.line(
         boid.position.x,
