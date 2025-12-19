@@ -50,18 +50,38 @@ Creative expression has value. Not everything needs functional justification. Bo
 Use `interface` for object shapes and `type` for unions, aliases, and function signatures:
 
 ```typescript
+/**
+  * Metadata for a blog post.
+  */
 interface PostMeta {
+  /**
+   * Title of the blog post.
+   */
   title: string;
+  
+  /**
+   * Date the blog post was published.
+   */
   publishDate: Date;
 }
 
+/**
+ * Theme options for the site.
+ */
 type Theme = 'steel' | 'purple' | 'charcoal' | 'teal';
+
+/**
+ * Function that formats a date for display.
+ */
 type FormatFn = (date: Date) => string;
 ```
 
 Format unions with `|` prefix when multi-line, discriminator field first:
 
 ```typescript
+/**
+ * Represents the state of a data fetch operation.
+ */
 type UnionType<Data, Err = Error> =
   | IdleVariant          // {status: 'idle'}
   | LoadingVariant       // {status: 'loading'}
@@ -87,14 +107,38 @@ Use instead: `satisfies` for type checking without widening, `instanceof`/`typeo
 **Flat interfaces**: Extract nested object shapes into their own named interfaces. Nested definitions can't be reused, documented, or referenced independently.
 
 ```typescript
+/**
+  * Open Graph type for SEO.
+  */
 interface SEOConfig {
+  /**
+   * Open Graph image URL.
+   */
   ogImage?: string;
+
+  /**
+   * Open Graph type.
+   */
   ogType?: OGType;
+
+  /**
+   * Article publish date.
+   */
   publishDate?: Date;
 }
 
+/**
+ * Props for the Page component.
+ */
 interface Props {
+  /**
+   * Page title.
+   */
   title: string;
+
+  /**
+   * SEO configuration.
+   */
   seo?: SEOConfig;
 }
 ```
@@ -158,7 +202,14 @@ Comments describe the current state of the code, never its history or future pla
 No magic numbers or strings—extract as named constants:
 
 ```typescript
+/**
+  * Average reading speed in words per minute.
+  */
 const READING_SPEED_WPM = 200;
+
+/**
+ * Default theme for the site.
+ */
 const DEFAULT_THEME = 'steel';
 
 const readingTime = Math.ceil(wordCount / READING_SPEED_WPM);
