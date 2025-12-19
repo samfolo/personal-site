@@ -20,26 +20,26 @@ Open [localhost:4321](http://localhost:4321).
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Development server with hot reload |
-| `npm run build` | Production build to `./dist/` |
-| `npm run preview` | Preview production build locally |
-| `npm run lint` | ESLint (add `--fix` to auto-fix) |
-| `npm run check` | Astro + TypeScript type checking |
-| `npm run fmt` | Format with Prettier |
+| Command             | Description                        |
+| ------------------- | ---------------------------------- |
+| `npm run dev`       | Development server with hot reload |
+| `npm run build`     | Production build to `./dist/`      |
+| `npm run preview`   | Preview production build locally   |
+| `npm run lint`      | ESLint (add `--fix` to auto-fix)   |
+| `npm run check`     | Astro + TypeScript type checking   |
+| `npm run fmt`       | Format with Prettier               |
 | `npm run fmt:check` | Check formatting without modifying |
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Astro 5 (SSR, Node.js adapter) |
-| Styling | Tailwind CSS 4 |
-| Content | MDX |
+| Layer               | Technology                         |
+| ------------------- | ---------------------------------- |
+| Framework           | Astro 5 (SSR, Node.js adapter)     |
+| Styling             | Tailwind CSS 4                     |
+| Content             | MDX                                |
 | Syntax Highlighting | Shiki (custom CSS variables theme) |
-| Animation | p5.js |
-| Deployment | Docker → Google Cloud Run |
+| Animation           | p5.js                              |
+| Deployment          | Docker → Google Cloud Run          |
 
 ## Project Structure
 
@@ -61,18 +61,18 @@ Static assets in `public/`. Deployment config in `.github/workflows/`.
 
 ## Routes
 
-| Route | Page | Description |
-|-------|------|-------------|
-| `/` | `src/pages/index.astro` | Home with hero and blog list |
-| `/blog` | `src/pages/blog/index.astro` | Blog index |
-| `/blog/[slug]` | `src/pages/blog/[slug].astro` | Individual posts (SSR) |
-| `/about` | `src/pages/about.astro` | About page |
-| `/uses` | `src/pages/uses.astro` | Uses page |
-| `/rss.xml` | `src/pages/rss.xml.ts` | RSS feed |
-| `/sitemap.xml` | `src/pages/sitemap.xml.ts` | XML sitemap |
-| `/og/*.png` | `src/pages/og/[...slug].png.ts` | Dynamic OG images |
-| `/robots.txt` | `public/robots.txt` | Crawler directives |
-| `/llms.txt` | `public/llms.txt` | AI context file |
+| Route          | Page                            | Description                  |
+| -------------- | ------------------------------- | ---------------------------- |
+| `/`            | `src/pages/index.astro`         | Home with hero and blog list |
+| `/blog`        | `src/pages/blog/index.astro`    | Blog index                   |
+| `/blog/[slug]` | `src/pages/blog/[slug].astro`   | Individual posts (SSR)       |
+| `/about`       | `src/pages/about.astro`         | About page                   |
+| `/uses`        | `src/pages/uses.astro`          | Uses page                    |
+| `/rss.xml`     | `src/pages/rss.xml.ts`          | RSS feed                     |
+| `/sitemap.xml` | `src/pages/sitemap.xml.ts`      | XML sitemap                  |
+| `/og/*.png`    | `src/pages/og/[...slug].png.ts` | Dynamic OG images            |
+| `/robots.txt`  | `public/robots.txt`             | Crawler directives           |
+| `/llms.txt`    | `public/llms.txt`               | AI context file              |
 
 ## Deployment
 
@@ -83,10 +83,10 @@ Every push triggers deployment via GitHub Actions:
 
 ### Required Secrets
 
-| Secret | Description |
-|--------|-------------|
-| `GCP_PROJECT_ID` | Google Cloud project ID |
-| `GCP_SA_KEY` | Service account JSON key |
+| Secret           | Description              |
+| ---------------- | ------------------------ |
+| `GCP_PROJECT_ID` | Google Cloud project ID  |
+| `GCP_SA_KEY`     | Service account JSON key |
 
 ### Utility Scripts
 
@@ -110,6 +110,7 @@ See [CLAUDE.md](./CLAUDE.md) for development guidance and available skills.
 The project includes MCP server configuration in `.mcp.json`. Some servers require authentication:
 
 **gcloud** — Google Cloud operations
+
 ```bash
 gcloud auth login
 gcloud auth application-default login
@@ -121,6 +122,7 @@ gcloud config set project YOUR_PROJECT_ID
 This project uses [direnv](https://direnv.net/) to manage environment variables. Setup:
 
 1. Install direnv:
+
    ```bash
    # macOS
    brew install direnv
@@ -134,7 +136,9 @@ This project uses [direnv](https://direnv.net/) to manage environment variables.
    # Arch
    sudo pacman -S direnv
    ```
+
 2. Add the hook to your shell config (once):
+
    ```bash
    # For bash (~/.bashrc)
    eval "$(direnv hook bash)"
@@ -142,6 +146,7 @@ This project uses [direnv](https://direnv.net/) to manage environment variables.
    # For zsh (~/.zshrc)
    eval "$(direnv hook zsh)"
    ```
+
 3. Restart your shell or source your config
 4. Create `.envrc` in the project root:
    ```bash

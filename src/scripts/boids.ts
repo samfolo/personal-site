@@ -569,7 +569,12 @@ const drawNetworkLines = (p: p5, boids: Boid[], colour: RGBColour): void => {
         boidCenterFactor *
         connCenterFactor;
 
-      p.stroke(colour.r, colour.g, colour.b, quantiseOpacity(finalOpacity / 255) * 255);
+      p.stroke(
+        colour.r,
+        colour.g,
+        colour.b,
+        quantiseOpacity(finalOpacity / 255) * 255
+      );
       p.strokeWeight(0.5);
       p.line(
         boid.position.x,
