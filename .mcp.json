@@ -18,6 +18,13 @@
       "type": "stdio",
       "command": "npx",
       "args": ["-y", "@google-cloud/gcloud-mcp"]
+    },
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ${GITHUB_PAT}"
+      }
     }
   }
 }

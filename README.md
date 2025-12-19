@@ -105,6 +105,24 @@ This project is developed and maintained with assistance from Claude Code. Proje
 
 See [CLAUDE.md](./CLAUDE.md) for development guidance and available skills.
 
+### MCP Servers
+
+The project includes MCP server configuration in `.mcp.json`. Some servers require authentication:
+
+**gcloud** — Google Cloud operations
+```bash
+gcloud auth login
+gcloud auth application-default login
+gcloud config set project YOUR_PROJECT_ID
+```
+
+**github** — GitHub API access ([create PAT](https://github.com/settings/personal-access-tokens/new) with `repo` scope)
+```bash
+export GITHUB_PAT="your_token_here"
+```
+
+For a self-hosted GitHub MCP alternative using Docker, see the [GitHub MCP installation guide](https://github.com/github/github-mcp-server/blob/main/docs/installation-guides/install-claude.md).
+
 ## Links
 
 - [Uptime Robot](https://stats.uptimerobot.com/7YrzjwrjbR)
