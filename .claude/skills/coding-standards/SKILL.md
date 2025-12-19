@@ -97,7 +97,7 @@ Never use these for convenience:
 
 - `as` casting without exhausting alternatives
 - `any` to bypass type checking
-- non-null assertion (`!`) without guards
+- non-null assertion (!) without guards
 - `null as never` to silence the compiler
 
 Use instead: `satisfies` for type checking without widening, `instanceof`/`typeof`/`in` for narrowing.
@@ -305,6 +305,8 @@ import type {Theme} from '../config/themes';
 import {THEME_ORDER, THEME_LABELS} from '../config/themes';
 ```
 
+Prefer relative imports within component directories. Use `../` for cross-directory imports within `src/`.
+
 Import order: third-party → Astro → parent (`../`) → sibling (`./`) → styles. Run `npm run lint -- --fix` to auto-organise.
 
 ## Astro Patterns
@@ -382,6 +384,10 @@ Use named slots for layout flexibility:
   <main content here>
 </Layout>
 ```
+
+### View Transitions
+
+Components using `transition:persist` (e.g. FixedHeader, FixedFooter) require scripts to reinitialise after view transitions via the `astro:after-swap` event.
 
 ## Code Review
 

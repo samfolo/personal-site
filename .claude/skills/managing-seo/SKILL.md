@@ -11,6 +11,10 @@ SEO maintenance for the site. Keep metadata accurate, content discoverable, and 
 
 Consult this skill when adding blog posts, creating static pages, modifying titles or descriptions, updating site-wide configuration, or making any change that affects how the site appears to search engines, social platforms, or AI systems.
 
+## Important
+
+Static pages require manual sitemap entry in `src/pages/sitemap.xml.ts`. This is easy to forget when adding new pages.
+
 ## Key Principles
 
 Keep meta content in sync with visible content. The description in meta tags must match the description visible on the page. The title in Open Graph tags must match the page heading. Drift between metadata and visible content is a bug.
