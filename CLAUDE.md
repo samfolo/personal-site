@@ -26,8 +26,6 @@ Consult **writing-content** when adding blog posts or static pages. Contains fro
 
 Consult **managing-seo** when working with meta tags, structured data, or feeds. Contains SEO component usage, JSON-LD schemas, RSS configuration, and OG image generation.
 
-Consult **managing-deployment** when working with CI/CD, infrastructure, or monitoring. Contains GitHub Actions workflow, Cloud Run configuration, Docker setup, and Cloudflare/UptimeRobot details.
-
 Consult **maintaining-design-system** when modifying colours, typography, or spacing. Contains token locations, theme definitions, synchronisation requirements, and Shiki theme configuration.
 
 ## Imports
