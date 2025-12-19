@@ -39,12 +39,12 @@ If `npm run build` succeeds locally, the Docker build should succeed in CI.
 
 ## Docker Build
 
-Multi-stage build in `Dockerfile`:
+Multi-stage build defined in `Dockerfile`:
 
-1. **Build stage**: Node 22 Alpine, all dependencies, runs `npm run build`
+1. **Build stage**: Installs all dependencies, runs `npm run build`
 2. **Runtime stage**: Production dependencies only, copies built output
 
-Entry point: `node dist/server/entry.mjs` on port 4321.
+Check the Dockerfile for current Node version and port configuration.
 
 ## Diagnosing Build Failures
 
@@ -101,17 +101,12 @@ Preview (other branches):
 
 ## Cloud Run Configuration
 
-Current settings in workflow:
+Settings defined in `.github/workflows/deploy.yml`:
 
-| Setting | Value |
-|---------|-------|
-| Region | `europe-west2` |
-| Memory | `256Mi` |
-| Min instances | `0` |
-| Max instances | `2` |
-| Port | `4321` |
+- **Region, service name, registry**: `env` section at the top of the workflow
+- **Memory, instances, port**: `flags` section in deploy steps
 
-To modify: edit flags in both production and preview deploy steps (keep them in sync).
+When modifying deploy flags, keep production and preview steps in sync.
 
 ## Required Secrets
 
