@@ -2,6 +2,12 @@
 
 Source code for my personal site—a portfolio, blog, and space for creative experiments.
 
+## AI Usage
+
+This project is developed and maintained with assistance from Claude Code. Project-level configuration exists in the `.claude/` directory.
+
+See [CLAUDE.md](./CLAUDE.md) for development guidance and available skills.
+
 ## Prerequisites
 
 - **Node.js 22+** (see Dockerfile for exact version) ([install](https://nodejs.org/en/download/))
@@ -98,12 +104,6 @@ Requires gcloud CLI authenticated to the project.
 ./scripts/revisions.sh        # List revisions
 ./scripts/cleanup-previews.sh # Remove preview tags
 ```
-
-## AI Usage
-
-This project is developed and maintained with assistance from Claude Code. Project-level configuration exists in the `.claude/` directory.
-
-See [CLAUDE.md](./CLAUDE.md) for development guidance and available skills.
 
 ### MCP Servers
 
