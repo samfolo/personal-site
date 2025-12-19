@@ -5,11 +5,13 @@ Guidance for Claude Code when working with this repository.
 ## Commands
 
 ```bash
-npm run dev      # Development server (localhost:4321)
-npm run build    # Production build to ./dist/
-npm run preview  # Preview production build locally
-npm run lint     # ESLint (add --fix to auto-fix)
-npm run check    # Astro + TypeScript checks
+npm run dev       # Development server (localhost:4321)
+npm run build     # Production build to ./dist/
+npm run preview   # Preview production build locally
+npm run lint      # ESLint (add --fix to auto-fix)
+npm run check     # Astro + TypeScript checks
+npm run fmt       # Format code with Prettier
+npm run fmt:check # Check formatting without changes
 ```
 
 ## Tech Stack
@@ -25,6 +27,8 @@ Consult **coding-standards** when implementing features, reviewing code, or refa
 Consult **managing-seo** when working with meta tags, structured data, or feeds. Contains SEO component usage, JSON-LD schemas, RSS configuration, and OG image generation.
 
 Consult **maintaining-design-system** when modifying colours, typography, or spacing. Contains token locations, theme definitions, synchronisation requirements, and Shiki theme configuration.
+
+Consult **managing-deployment** when troubleshooting deployments or modifying CI/CD. Contains workflow structure, Docker build, Cloud Run configuration, and build diagnostics.
 
 ## Imports
 

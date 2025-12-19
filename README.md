@@ -28,6 +28,7 @@ Open [localhost:4321](http://localhost:4321).
 | `npm run lint` | ESLint (add `--fix` to auto-fix) |
 | `npm run check` | Astro + TypeScript type checking |
 | `npm run fmt` | Format with Prettier |
+| `npm run fmt:check` | Check formatting without modifying |
 
 ## Tech Stack
 
@@ -57,6 +58,21 @@ src/
 ```
 
 Static assets in `public/`. Deployment config in `.github/workflows/`.
+
+## Routes
+
+| Route | Page | Description |
+|-------|------|-------------|
+| `/` | `src/pages/index.astro` | Home with hero and blog list |
+| `/blog` | `src/pages/blog/index.astro` | Blog index |
+| `/blog/[slug]` | `src/pages/blog/[slug].astro` | Individual posts (SSR) |
+| `/about` | `src/pages/about.astro` | About page |
+| `/uses` | `src/pages/uses.astro` | Uses page |
+| `/rss.xml` | `src/pages/rss.xml.ts` | RSS feed |
+| `/sitemap.xml` | `src/pages/sitemap.xml.ts` | XML sitemap |
+| `/og/*.png` | `src/pages/og/[...slug].png.ts` | Dynamic OG images |
+| `/robots.txt` | `public/robots.txt` | Crawler directives |
+| `/llms.txt` | `public/llms.txt` | AI context file |
 
 ## Deployment
 
