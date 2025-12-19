@@ -9,7 +9,7 @@ Deployment and infrastructure maintenance for the site.
 
 ## When to Use
 
-Consult this skill when troubleshooting failed deployments, modifying the GitHub Actions workflow, or diagnosing build issues.
+Consult this skill when troubleshooting failed deployments, modifying the GitHub Actions workflow, or diagnosing build issues. The gcloud and GitHub MCP servers are available for direct Cloud Run and repository operations.
 
 ## Architecture
 
@@ -96,7 +96,7 @@ Production (main branch):
 
 Preview (other branches):
 - Tagged revision with no traffic
-- Accessible via tag URL: `https://{tag}---personal-site-{hash}.run.app`
+- Accessible via tag URL: `https://{tag}---{service-name}-{hash}.run.app` (service name from workflow `env` section)
 - Branch names are sanitised for Cloud Run (lowercase, alphanumeric + hyphens)
 
 ## Cloud Run Configuration
@@ -121,10 +121,16 @@ If deployment fails with authentication errors, these secrets may need regenerat
 
 ## Checking Deployment Status
 
-With GitHub MCP server access:
-- Check workflow run status for the commit
-- View workflow run logs for error details
-- Re-run failed workflows if the issue was transient
+With gcloud MCP (`mcp__gcloud__run_gcloud_command`):
+- `gcloud run services describe` — service status and URL
+- `gcloud run revisions list` — list revisions
+- `gcloud run services logs read` — view logs
+
+Region and service name are in the workflow's `env` section.
+
+With GitHub MCP:
+- `mcp__github__list_commits` — verify what's been pushed
+- `mcp__github__pull_request_read` with `get_status` — check PR CI state
 
 ## Modifying the Workflow
 

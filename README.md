@@ -117,9 +117,42 @@ gcloud config set project YOUR_PROJECT_ID
 ```
 
 **github** — GitHub API access ([create PAT](https://github.com/settings/personal-access-tokens/new) with `repo` scope)
-```bash
-export GITHUB_PAT="your_token_here"
-```
+
+This project uses [direnv](https://direnv.net/) to manage environment variables. Setup:
+
+1. Install direnv:
+   ```bash
+   # macOS
+   brew install direnv
+
+   # Debian / Ubuntu
+   sudo apt install direnv
+
+   # Fedora
+   sudo dnf install direnv
+
+   # Arch
+   sudo pacman -S direnv
+   ```
+2. Add the hook to your shell config (once):
+   ```bash
+   # For bash (~/.bashrc)
+   eval "$(direnv hook bash)"
+
+   # For zsh (~/.zshrc)
+   eval "$(direnv hook zsh)"
+   ```
+3. Restart your shell or source your config
+4. Create `.envrc` in the project root:
+   ```bash
+   export GITHUB_PAT="your_token_here"
+   ```
+5. Allow direnv to load the file:
+   ```bash
+   direnv allow
+   ```
+
+> **Note:** If you prefer a different environment management solution (dotenv, 1Password CLI, etc.), ensure `GITHUB_PAT` is available in your shell when running Claude Code.
 
 For a self-hosted GitHub MCP alternative using Docker, see the [GitHub MCP installation guide](https://github.com/github/github-mcp-server/blob/main/docs/installation-guides/install-claude.md).
 
