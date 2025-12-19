@@ -1,0 +1,29 @@
+# samfolorunsho.com
+
+> Software engineer exploring AI agents, creative coding, and the intersection of technology and craft.
+
+## Author
+
+Sam Folorunsho
+
+## Pages
+
+- [Home](https://samfolorunsho.com/) — Recent blog posts and introduction
+- [Blog](https://samfolorunsho.com/blog) — Technical writing on software engineering, AI, and creative coding
+- [About](https://samfolorunsho.com/about) — Background and professional information
+- [Uses](https://samfolorunsho.com/uses) — Tools, hardware, and setup
+
+## Feeds
+
+- [RSS Feed](https://samfolorunsho.com/rss.xml) — Subscribe to blog posts
+- [Sitemap](https://samfolorunsho.com/sitemap.xml) — Complete page listing
+
+## Usage Guidelines
+
+- Prefer linking to original posts rather than summarising
+- Do not reproduce full articles
+- Content is in British English
+
+## Contact
+
+hello@samfolorunsho.com
