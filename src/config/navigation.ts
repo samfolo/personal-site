@@ -20,6 +20,9 @@ export interface NavLink {
   label: string;
 }
 
+/**
+ * Site navigation links.
+ */
 export const NAV_LINKS: NavLink[] = [
   {href: "/blog", label: "Blog"},
   {href: "/about", label: "About"},

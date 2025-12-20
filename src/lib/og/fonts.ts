@@ -9,13 +9,34 @@ import {SWITZER_BOLD_B64} from "./switzer-bold";
 import {SWITZER_REGULAR_B64} from "./switzer-regular";
 import type {FontStyle, FontWeight} from "./types";
 
+/**
+ * Font data for Satori rendering.
+ */
 export interface FontData {
+  /**
+   * Font family name.
+   */
   name: string;
+
+  /**
+   * Font file data as ArrayBuffer.
+   */
   data: ArrayBuffer;
+
+  /**
+   * Font weight.
+   */
   weight: FontWeight;
+
+  /**
+   * Font style.
+   */
   style: FontStyle;
 }
 
+/**
+ * Font family name for OG images.
+ */
 const FONT_NAME = "Switzer";
 
 /**

@@ -11,9 +11,23 @@ import {formatDate} from "../../utils/format-date";
 
 import {SheenText, Caption} from "../typography";
 
+/**
+ * Props for the BlogListItem component.
+ */
 interface Props {
+  /**
+   * Post title.
+   */
   title: string;
+
+  /**
+   * Post date as ISO string.
+   */
   date: string;
+
+  /**
+   * Post URL slug.
+   */
   slug: string;
 }
 

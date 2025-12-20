@@ -6,9 +6,23 @@
  * Shows "SF." on small containers, "Sam Folorunsho." on larger ones.
  */
 
+/**
+ * Props for the LogoMark component.
+ */
 interface Props {
+  /**
+   * Link destination URL.
+   */
   href: string;
+
+  /**
+   * Accessible label for the link.
+   */
   label: string;
+
+  /**
+   * Click handler identifier.
+   */
   onClick?: string;
 }
 

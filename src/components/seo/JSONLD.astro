@@ -16,8 +16,18 @@ import type {
   JSONLDWebSite,
 } from "../../types";
 
+/**
+ * Props for the JSONLD component.
+ */
 interface Props {
+  /**
+   * Schema type to render.
+   */
   type: JSONLDType;
+
+  /**
+   * Article data for Article schema type.
+   */
   article?: JSONLDArticleData;
 }
 

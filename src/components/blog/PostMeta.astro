@@ -8,9 +8,23 @@
 
 import {formatDate} from "../../utils/format-date";
 
+/**
+ * Props for the PostMeta component.
+ */
 interface Props {
+  /**
+   * Post publish date.
+   */
   publishDate: Date;
+
+  /**
+   * Post last updated date.
+   */
   updatedDate?: Date;
+
+  /**
+   * Formatted reading time string.
+   */
   readingTime: string;
 }
 

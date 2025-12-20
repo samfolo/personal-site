@@ -10,8 +10,18 @@ import type {NavLink as NavLinkType} from "../../config/navigation";
 
 import NavLink from "./NavLink.astro";
 
+/**
+ * Props for the Nav component.
+ */
 interface Props {
+  /**
+   * Navigation links to render.
+   */
   links: NavLinkType[];
+
+  /**
+   * Accessible label for the navigation.
+   */
   "aria-label": string;
 }
 

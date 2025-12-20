@@ -9,10 +9,28 @@ import {formatHex, oklch} from "culori";
 
 import type {Theme} from "../../config/themes";
 
+/**
+ * Theme colour palette in hex format.
+ */
 export interface ThemeColours {
+  /**
+   * Background colour.
+   */
   bg: string;
+
+  /**
+   * Foreground colour.
+   */
   fg: string;
+
+  /**
+   * Muted text colour.
+   */
   muted: string;
+
+  /**
+   * Rule/divider colour.
+   */
   rule: string;
 }
 
