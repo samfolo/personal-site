@@ -11,37 +11,47 @@
  *   - after: Content after the prose body (e.g., PostNav)
  */
 
+import type {SEOConfig} from "../components/seo";
 import {SheenText} from "../components/typography";
+import type {SheenConfig} from "../config/sheen";
 import {LARGE_SHEEN} from "../config/sheen";
-import type {OGType} from "../types";
 
 import Base from "./Base.astro";
 
-interface SEOConfig {
-  ogImage?: string;
-  ogType?: OGType;
-  publishDate?: Date;
-  updatedDate?: Date;
-  tags?: string[];
-}
-
-interface SheenConfig {
-  interval: number;
-  spread: number;
-}
-
+/**
+ * Props for the Prose layout.
+ */
 interface Props {
-  /** Page <title> */
+  /**
+   * Page title for the document head.
+   */
   title: string;
-  /** H1 heading text */
+
+  /**
+   * H1 heading text displayed on the page.
+   */
   heading: string;
-  /** Meta description */
+
+  /**
+   * Meta description for SEO.
+   */
   description?: string;
-  /** SEO-specific props passed through to Base */
+
+  /**
+   * SEO configuration passed through to Base layout.
+   */
   seo?: SEOConfig;
-  /** Sheen animation config (default: LARGE_SHEEN) */
+
+  /**
+   * Sheen animation configuration.
+   * @default LARGE_SHEEN
+   */
   sheenConfig?: SheenConfig;
-  /** Heading element ID (default: "page-title") */
+
+  /**
+   * ID attribute for the heading element.
+   * @default "page-title"
+   */
   headingId?: string;
 }
 

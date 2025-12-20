@@ -10,19 +10,29 @@
  * - RSS feed discovery
  */
 
-import {SITE} from "../../config";
-import {OG_DEFAULT_PATH} from "../../lib/og";
-import type {OGType} from "../../types";
+import {SITE} from "../../../config";
+import {OG_DEFAULT_PATH} from "../../../lib/og";
 
-interface Props {
+import type {SEOConfig} from "./types";
+
+/**
+ * Props for the SEO component.
+ */
+interface Props extends SEOConfig {
+  /**
+   * Page title.
+   */
   title: string;
+
+  /**
+   * Page meta description.
+   */
   description?: string;
+
+  /**
+   * Canonical URL override.
+   */
   canonicalUrl?: string;
-  ogImage?: string;
-  ogType?: OGType;
-  publishDate?: Date;
-  updatedDate?: Date;
-  tags?: string[];
 }
 
 const {

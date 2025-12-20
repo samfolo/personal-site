@@ -18,7 +18,7 @@ import type {BaseTypographyProps} from "./types";
 /**
  * Props for the Caption component.
  */
-interface Props extends BaseTypographyProps, HTMLAttributes<"span"> {
+interface Props extends BaseTypographyProps, Omit<HTMLAttributes<"span">, "color"> {
   /**
    * Use tabular nums for aligned numbers (dates, times, stats).
    */
