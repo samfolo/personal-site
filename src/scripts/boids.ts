@@ -55,9 +55,23 @@ const HERO_WORDMARK_ID = "hero-wordmark";
 // Colour Utilities
 // =============================================================================
 
+/**
+ * RGB colour representation.
+ */
 interface RGBColour {
+  /**
+   * Red channel.
+   */
   r: number;
+
+  /**
+   * Green channel.
+   */
   g: number;
+
+  /**
+   * Blue channel.
+   */
   b: number;
 }
 
@@ -135,14 +149,18 @@ const getCenterOpacityFactor = (x: number, screenWidth: number): number => {
 // Boid Class
 // =============================================================================
 
-/** Target edge point for scatter behaviour */
+/**
+ * Target edge point for scatter behaviour.
+ */
 interface TargetEdge {
   x: number;
   y: number;
   d: number;
 }
 
-/** Nearby boid with distance for network line calculations */
+/**
+ * Nearby boid with distance for network line calculations.
+ */
 interface NearbyBoid {
   boid: Boid;
   distance: number;
@@ -475,20 +493,56 @@ class Boid {
 // State Management
 // =============================================================================
 
-/** Active fade effect - triggers opacity animation from 0 to 1 */
+/**
+ * Active fade effect triggering opacity animation from 0 to 1.
+ */
 interface FadeEffect {
   startTime: number;
   duration: number;
 }
 
+/**
+ * Global state for the boids animation.
+ */
 interface BoidsState {
+  /**
+   * Active p5.js sketch instance.
+   */
   p5Instance: p5 | null;
+
+  /**
+   * Array of boid entities in the simulation.
+   */
   boids: Boid[];
+
+  /**
+   * Current boid colour parsed from CSS.
+   */
   colour: RGBColour;
+
+  /**
+   * Whether boids are currently scattering to edges.
+   */
   isScattered: boolean;
+
+  /**
+   * Active fade-in animation state.
+   */
   activeFade: FadeEffect | null;
+
+  /**
+   * Whether all boids have exited the viewport.
+   */
   allExited: boolean;
+
+  /**
+   * Visibility observer for the canvas container.
+   */
   observer: IntersectionObserver | null;
+
+  /**
+   * Observer for theme attribute changes.
+   */
   mutationObserver: MutationObserver | null;
 }
 

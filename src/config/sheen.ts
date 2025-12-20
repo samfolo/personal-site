@@ -5,8 +5,18 @@
  * All sheen-related values should be imported from here.
  */
 
+/**
+ * Configuration for sheen text animation.
+ */
 interface SheenConfig {
+  /**
+   * Delay in milliseconds between each character's animation start.
+   */
   interval: number;
+
+  /**
+   * Number of characters animated simultaneously.
+   */
   spread: number;
 }
 

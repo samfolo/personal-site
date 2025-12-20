@@ -5,10 +5,14 @@
  * See: https://schema.org/
  */
 
-/** Supported JSON-LD schema types */
+/**
+ * Supported JSON-LD schema types.
+ */
 export type JSONLDType = "WebSite" | "Article";
 
-/** schema.org Person */
+/**
+ * schema.org Person.
+ */
 export interface JSONLDPerson {
   "@type": "Person";
   name: string;
@@ -17,7 +21,9 @@ export interface JSONLDPerson {
   sameAs?: string[];
 }
 
-/** schema.org WebSite */
+/**
+ * schema.org WebSite.
+ */
 export interface JSONLDWebSite {
   "@context": "https://schema.org";
   "@type": "WebSite";
@@ -27,7 +33,9 @@ export interface JSONLDWebSite {
   author: JSONLDPerson;
 }
 
-/** schema.org Article */
+/**
+ * schema.org Article.
+ */
 export interface JSONLDArticle {
   "@context": "https://schema.org";
   "@type": "Article";
@@ -40,7 +48,9 @@ export interface JSONLDArticle {
   keywords?: string;
 }
 
-/** Article data passed to JSON-LD component */
+/**
+ * Article data passed to JSON-LD component.
+ */
 export interface JSONLDArticleData {
   headline: string;
   description: string;

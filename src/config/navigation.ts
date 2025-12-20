@@ -5,8 +5,18 @@
  * All navigation-related constants should be imported from here.
  */
 
+/**
+ * Navigation link definition.
+ */
 export interface NavLink {
+  /**
+   * URL path for the link.
+   */
   href: string;
+
+  /**
+   * Display text for the link.
+   */
   label: string;
 }
 

@@ -4,6 +4,9 @@
  * Centralised date formatting using British English locale.
  */
 
+/**
+ * Available date format options.
+ */
 type DateFormat = "full" | "short" | "month-year" | "dot-separated";
 
 /**
