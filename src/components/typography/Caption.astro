@@ -13,13 +13,16 @@
 
 import type {HTMLAttributes} from "astro/types";
 
-import type {TypographyColor} from "./types";
+import type {BaseTypographyProps} from "./types";
 
-interface Props extends HTMLAttributes<"span"> {
-  tag?: keyof HTMLElementTagNameMap;
-  /** Use tabular numerals for aligned numbers (dates, times, stats) */
+/**
+ * Props for the Caption component.
+ */
+interface Props extends BaseTypographyProps, HTMLAttributes<"span"> {
+  /**
+   * Use tabular nums for aligned numbers (dates, times, stats).
+   */
   numeric?: boolean;
-  color?: TypographyColor;
 }
 
 const {

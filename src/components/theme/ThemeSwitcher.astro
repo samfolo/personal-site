@@ -29,12 +29,28 @@ import type {Theme} from "../../config/themes";
 import ThemeSwitcherButton from "./ThemeSwitcherButton.astro";
 import type {ThemeSwitcherSize} from "./types";
 
+/**
+ * Props for the ThemeSwitcher component.
+ */
 interface Props {
+  /**
+   * Button size variant for theme buttons.
+   */
   size?: ThemeSwitcherSize;
 }
 
+/**
+ * Theme option for rendering in the switcher.
+ */
 interface ThemeOption {
+  /**
+   * Theme identifier.
+   */
   id: Theme;
+
+  /**
+   * Display label for the theme.
+   */
   label: string;
 }
 

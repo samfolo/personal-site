@@ -10,16 +10,33 @@ import type {Theme} from "../../config/themes";
 
 import type {ThemeSwitcherSize} from "./types";
 
+/**
+ * Props for the ThemeSwitcherButton component.
+ */
 interface Props {
-  /** Button size: sm (24px) or md (32px) */
+  /**
+   * Button size variant.
+   */
   size?: ThemeSwitcherSize;
-  /** Theme to preview. If omitted, shows current theme colours. */
+
+  /**
+   * Theme to preview. If omitted, shows current theme colours.
+   */
   theme?: Theme;
-  /** Whether outline is always visible (not just on focus) */
+
+  /**
+   * Whether outline is always visible (not just on focus).
+   */
   isActive?: boolean;
-  /** Accessible label for the button */
+
+  /**
+   * Accessible label for the button.
+   */
   label: string;
-  /** Additional classes */
+
+  /**
+   * Additional CSS classes.
+   */
   class?: string;
 }
 

@@ -6,15 +6,22 @@
  * Renders a 2-column grid on desktop, single column on mobile.
  */
 
-import {Overline} from "../typography";
+import {Overline} from "../../typography";
 
-interface PostNavLink {
-  slug: string;
-  title: string;
-}
+import type {PostNavLink} from "./types";
 
+/**
+ * Props for the PostNav component.
+ */
 interface Props {
+  /**
+   * Link to the previous post, if any.
+   */
   prevPost?: PostNavLink | null;
+
+  /**
+   * Link to the next post, if any.
+   */
   nextPost?: PostNavLink | null;
 }
 

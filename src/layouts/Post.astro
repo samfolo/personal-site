@@ -8,6 +8,7 @@
 
 import type {CollectionEntry} from "astro:content";
 
+import type {PostNavLink} from "../components/blog";
 import {PostMeta, PostNav, PostTags} from "../components/blog";
 import {JSONLD} from "../components/seo";
 import {MEDIUM_SHEEN} from "../config/sheen";
@@ -15,15 +16,28 @@ import {getBlogPostOgPath} from "../lib/og";
 
 import Prose from "./Prose.astro";
 
-interface PostNavLink {
-  slug: string;
-  title: string;
-}
-
+/**
+ * Props for the Post layout.
+ */
 interface Props {
+  /**
+   * Blog post entry from the content collection.
+   */
   post: CollectionEntry<"blog">;
+
+  /**
+   * Formatted reading time string.
+   */
   readingTime: string;
+
+  /**
+   * Link to the previous post, if any.
+   */
   prevPost?: PostNavLink | null;
+
+  /**
+   * Link to the next post, if any.
+   */
   nextPost?: PostNavLink | null;
 }
 

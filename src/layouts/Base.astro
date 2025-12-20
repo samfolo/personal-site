@@ -22,14 +22,48 @@ const THEME_BG_COLOURS = Object.fromEntries(
   Object.entries(THEME_COLOURS).map(([theme, colours]) => [theme, colours.bg])
 );
 
+/**
+ * Props for the Base layout.
+ */
 interface Props {
+  /**
+   * Page title for the document.
+   */
   title: string;
+
+  /**
+   * Meta description for SEO.
+   */
   description?: string;
+
+  /**
+   * Initial theme to render.
+   */
   theme?: Theme;
+
+  /**
+   * Open Graph image path.
+   */
   ogImage?: string;
+
+  /**
+   * Open Graph content type.
+   */
   ogType?: OGType;
+
+  /**
+   * Article publish date for structured data.
+   */
   publishDate?: Date;
+
+  /**
+   * Article last updated date for structured data.
+   */
   updatedDate?: Date;
+
+  /**
+   * Article tags for structured data.
+   */
   tags?: string[];
 }
 

@@ -8,7 +8,7 @@
 /**
  * Configuration for sheen text animation.
  */
-interface SheenConfig {
+export interface SheenConfig {
   /**
    * Delay in milliseconds between each character's animation start.
    */

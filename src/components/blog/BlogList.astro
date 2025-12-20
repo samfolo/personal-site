@@ -12,13 +12,33 @@ import {Overline, Body} from "../typography";
 
 import BlogListItem from "./BlogListItem.astro";
 
+/**
+ * Simplified post data for list rendering.
+ */
 interface Post {
+  /**
+   * Post title.
+   */
   title: string;
+
+  /**
+   * ISO date string.
+   */
   date: string;
+
+  /**
+   * URL slug for the post.
+   */
   slug: string;
 }
 
+/**
+ * Props for the BlogList component.
+ */
 interface Props {
+  /**
+   * Posts to display in the list.
+   */
   posts: Post[];
 }
 

@@ -13,12 +13,12 @@
 
 import type {HTMLAttributes} from "astro/types";
 
-import type {TypographyColor} from "./types";
+import type {BaseTypographyProps} from "./types";
 
-interface Props extends HTMLAttributes<"span"> {
-  tag?: keyof HTMLElementTagNameMap;
-  color?: TypographyColor;
-}
+/**
+ * Props for the Overline component.
+ */
+interface Props extends BaseTypographyProps, HTMLAttributes<"span"> {}
 
 const {
   tag: Tag = "span",
