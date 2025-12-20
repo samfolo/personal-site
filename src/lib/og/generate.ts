@@ -12,7 +12,14 @@ import {FONTS} from "./fonts";
 import {createOgTemplate} from "./template";
 import type {OgTemplateOptions} from "./template";
 
+/**
+ * OG image width in pixels.
+ */
 const WIDTH = 1200;
+
+/**
+ * OG image height in pixels.
+ */
 const HEIGHT = 630;
 
 /**

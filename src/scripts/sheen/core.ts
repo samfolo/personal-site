@@ -13,7 +13,14 @@ export interface SheenState {
   frame: number;
 }
 
+/**
+ * CSS class applied to individual character spans.
+ */
 export const CHAR_CLASS = "sheen-char";
+
+/**
+ * CSS class applied to word wrapper spans.
+ */
 export const WORD_CLASS = "sheen-word";
 
 /**

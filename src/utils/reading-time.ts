@@ -5,6 +5,9 @@
  * Uses average reading speed of 200 words per minute.
  */
 
+/**
+ * Average reading speed used for time estimates.
+ */
 const WORDS_PER_MINUTE = 200;
 
 export const calculateReadingTime = (content: string): string => {

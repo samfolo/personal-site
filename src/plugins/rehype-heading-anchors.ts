@@ -10,6 +10,9 @@ import type {Root, Element} from "hast";
 import {toString} from "hast-util-to-string";
 import {visit} from "unist-util-visit";
 
+/**
+ * HTML heading tags to process for anchor links.
+ */
 const HEADING_TAGS = new Set(["h2", "h3", "h4", "h5", "h6"]);
 
 const rehypeHeadingAnchors = () => (tree: Root) => {

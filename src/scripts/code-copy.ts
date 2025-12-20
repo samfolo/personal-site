@@ -6,6 +6,9 @@
  */
 
 ((): void => {
+  /**
+   * Duration in milliseconds to show "Copied" feedback.
+   */
   const COPIED_DURATION = 2000;
 
   const init = (): void => {

@@ -6,9 +6,11 @@
  * Fixed position at z-index 0, behind all content.
  * Responds to theme changes and scroll position.
  */
+
+import {DOM_IDS} from "../../config/dom/selectors";
 ---
 
-<div id="boids-canvas" class="boids-canvas"></div>
+<div id={DOM_IDS.BOIDS_CANVAS} class="boids-canvas"></div>
 
 <script src="../../scripts/boids.ts"></script>
 

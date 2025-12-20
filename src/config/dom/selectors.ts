@@ -10,6 +10,8 @@ export const DOM_IDS = {
   INITIAL_THEME_SWITCHER: "initial-theme-switcher",
   THEME_NAME: "theme-name",
   FIXED_FOOTER: "fixed-footer",
+  BOIDS_CANVAS: "boids-canvas",
+  HERO_WORDMARK: "hero-wordmark",
 } as const;
 
 /**

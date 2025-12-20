@@ -7,49 +7,143 @@
 
 import p5 from "p5";
 
+import {DOM_IDS} from "../config/dom/selectors";
+
 // =============================================================================
 // Constants
 // =============================================================================
 
 // Behaviour
+
+/**
+ * Default flock size for desktop viewports.
+ */
 const POPULATION = 80;
+
+/**
+ * Reduced flock size for mobile viewports.
+ */
 const POPULATION_MOBILE = 50;
+
+/**
+ * Separation force weight—how strongly boids avoid crowding neighbours.
+ */
 const SEPARATION = 3.8;
+
+/**
+ * Alignment force weight—how strongly boids match neighbour velocity.
+ */
 const ALIGNMENT = 1.6;
+
+/**
+ * Cohesion force weight—how strongly boids steer toward flock center.
+ */
 const COHESION = 0.8;
+
+/**
+ * Radius in pixels within which boids perceive neighbours.
+ */
 const PERCEPTION_RADIUS = 70;
+
+/**
+ * Maximum velocity magnitude.
+ */
 const MAX_SPEED = 3.2;
+
+/**
+ * Maximum steering force applied per frame.
+ */
 const MAX_FORCE = 0.12;
 
 // Appearance
+
+/**
+ * Base size multiplier for boid rendering.
+ */
 const BOID_SIZE = 6.5;
+
+/**
+ * Width multiplier relative to base size.
+ */
 const BOID_WIDTH = 1.15;
+
+/**
+ * Length multiplier relative to base size.
+ */
 const BOID_LENGTH = 1.7;
+
+/**
+ * Tail indent depth as fraction of length.
+ */
 const BOID_INDENT = 0.2;
+
+/**
+ * Network line opacity (0-255).
+ */
 const NETWORK_OPACITY = 90;
+
+/**
+ * Maximum network lines drawn per boid.
+ */
 const NETWORK_MAX_CONNECTIONS = 3;
+
+/**
+ * Multiplier applied to perception radius for network line distance.
+ */
 const NETWORK_RANGE_MULTIPLIER = 2.5;
 
 // Center fade (to keep content column readable)
-const CENTER_CLEAR_ZONE = 360; // Half-width of content column (720px / 2)
-const CENTER_MIN_OPACITY = 0.1; // Minimum opacity at center
+
+/**
+ * Half-width of the center clear zone in pixels.
+ */
+const CENTER_CLEAR_ZONE = 360;
+
+/**
+ * Minimum opacity at the center of the viewport.
+ */
+const CENTER_MIN_OPACITY = 0.1;
 
 // Scatter
-const SCATTER_INTENSITY = 0.5; // 0 = no edge seeking, 1 = full override
-const SCATTER_FORCE = 0.7; // Strength of edge-seeking force
-const SCATTER_SPEED_BOOST = 4.5; // Multiplier on MAX_SPEED during scatter
+
+/**
+ * Blend factor for edge-seeking behaviour (0 = none, 1 = full override).
+ */
+const SCATTER_INTENSITY = 0.5;
+
+/**
+ * Force strength when steering toward edges.
+ */
+const SCATTER_FORCE = 0.7;
+
+/**
+ * Speed multiplier applied during scatter mode.
+ */
+const SCATTER_SPEED_BOOST = 4.5;
+
+/**
+ * Distance from edge at which fade begins.
+ */
 const SCATTER_FADE_DISTANCE = 300;
 
 // Respawn
+
+/**
+ * Fade-in duration in milliseconds after respawn.
+ */
 const RESPAWN_FADE_DURATION = 5000;
 
 // Canvas
-const FRAME_RATE = 30;
-const MOBILE_BREAKPOINT = 768;
 
-// Element IDs
-const CANVAS_CONTAINER_ID = "boids-canvas";
-const HERO_WORDMARK_ID = "hero-wordmark";
+/**
+ * Target frame rate for the animation.
+ */
+const FRAME_RATE = 30;
+
+/**
+ * Screen width threshold for mobile behaviour.
+ */
+const MOBILE_BREAKPOINT = 768;
 
 // =============================================================================
 // Colour Utilities
@@ -646,7 +740,7 @@ const drawNetworkLines = (p: p5, boids: Boid[], colour: RGBColour): void => {
 
 const sketch = (p: p5): void => {
   p.setup = (): void => {
-    const container = document.getElementById(CANVAS_CONTAINER_ID);
+    const container = document.getElementById(DOM_IDS.BOIDS_CANVAS);
 
     if (!container) {
       return;
@@ -777,7 +871,7 @@ const triggerRespawn = (): void => {
 // =============================================================================
 
 const setupScrollObserver = (): void => {
-  const heroWordmark = document.getElementById(HERO_WORDMARK_ID);
+  const heroWordmark = document.getElementById(DOM_IDS.HERO_WORDMARK);
 
   if (!heroWordmark) {
     return;
@@ -856,7 +950,7 @@ const cleanup = (): void => {
 };
 
 const init = (): void => {
-  const container = document.getElementById(CANVAS_CONTAINER_ID);
+  const container = document.getElementById(DOM_IDS.BOIDS_CANVAS);
 
   if (!container) {
     return;

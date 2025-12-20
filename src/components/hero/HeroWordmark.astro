@@ -7,6 +7,7 @@
  * to toggle fixed header visibility.
  */
 
+import {DOM_IDS} from "../../config/dom/selectors";
 import {LARGE_SHEEN} from "../../config/sheen";
 
 import {SheenText} from "../typography";
@@ -19,7 +20,7 @@ const {class: className} = Astro.props;
 ---
 
 <h1
-  id="hero-wordmark"
+  id={DOM_IDS.HERO_WORDMARK}
   class:list={["hero-wordmark", className]}
   data-scroll-trigger
 >
