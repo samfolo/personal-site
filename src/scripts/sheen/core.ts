@@ -5,11 +5,33 @@
  * Used by both SheenText component and prose links.
  */
 
+/**
+ * State object for a sheen animation instance.
+ */
 export interface SheenState {
+  /**
+   * Character span elements in the animated text.
+   */
   chars: HTMLSpanElement[];
+
+  /**
+   * Delay in milliseconds between each frame.
+   */
   interval: number;
+
+  /**
+   * Number of characters in the highlight gradient.
+   */
   spread: number;
+
+  /**
+   * Active setInterval ID, or null when stopped.
+   */
   animationId: number | null;
+
+  /**
+   * Current frame index in the animation.
+   */
   frame: number;
 }
 

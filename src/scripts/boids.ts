@@ -247,8 +247,19 @@ const getCenterOpacityFactor = (x: number, screenWidth: number): number => {
  * Target edge point for scatter behaviour.
  */
 interface TargetEdge {
+  /**
+   * X coordinate of the target point.
+   */
   x: number;
+
+  /**
+   * Y coordinate of the target point.
+   */
   y: number;
+
+  /**
+   * Distance from boid to target point.
+   */
   d: number;
 }
 
@@ -256,7 +267,14 @@ interface TargetEdge {
  * Nearby boid with distance for network line calculations.
  */
 interface NearbyBoid {
+  /**
+   * The neighbouring boid entity.
+   */
   boid: Boid;
+
+  /**
+   * Distance to this neighbour.
+   */
   distance: number;
 }
 
@@ -591,7 +609,14 @@ class Boid {
  * Active fade effect triggering opacity animation from 0 to 1.
  */
 interface FadeEffect {
+  /**
+   * Timestamp when the fade animation started.
+   */
   startTime: number;
+
+  /**
+   * Total duration of the fade in milliseconds.
+   */
   duration: number;
 }
 
