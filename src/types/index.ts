@@ -6,12 +6,14 @@
 
 export type {OGType} from "./og";
 export type {
-  JSONLDArticle,
   JSONLDArticleData,
+  JSONLDBlog,
+  JSONLDBlogPosting,
   JSONLDOrganization,
   JSONLDPerson,
-  JSONLDPersonEntity,
   JSONLDPostalAddress,
+  JSONLDProfilePage,
+  JSONLDRef,
   JSONLDType,
   JSONLDWebSite,
 } from "./json-ld";

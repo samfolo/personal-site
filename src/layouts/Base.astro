@@ -9,7 +9,7 @@
 import {ClientRouter} from "astro:transitions";
 
 import {FixedFooter, FixedHeader} from "../components/chrome";
-import {JSONLD, SEO} from "../components/seo";
+import {SEO} from "../components/seo";
 import {ThemeSwitcher} from "../components/theme";
 import {STORAGE_KEYS} from "../config/storage";
 import {THEME_CLASSES} from "../config/themes";
@@ -125,7 +125,6 @@ const {
       updatedDate={updatedDate}
       tags={tags}
     />
-    <JSONLD type="Person" />
 
     <!-- Preload critical fonts -->
     <link

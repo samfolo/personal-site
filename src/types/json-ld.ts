@@ -1,14 +1,23 @@
 /**
  * JSON-LD Type Definitions
  *
- * Minimal schema.org types for structured data used in the site.
+ * Identity-first schema.org types for structured data.
+ * Person entity is defined once on /about and referenced via @id elsewhere.
  * See: https://schema.org/
  */
 
 /**
  * Supported JSON-LD schema types.
  */
-export type JSONLDType = "WebSite" | "Article" | "Person";
+export type JSONLDType = "WebSite" | "ProfilePage" | "Blog" | "BlogPosting";
+
+/**
+ * Reference to an entity by @id.
+ * Used to link schemas without duplicating data.
+ */
+export interface JSONLDRef {
+  "@id": string;
+}
 
 /**
  * schema.org Organization.
@@ -52,7 +61,8 @@ export interface JSONLDPostalAddress {
 }
 
 /**
- * schema.org Person (embedded as author).
+ * schema.org Person with @id for cross-referencing.
+ * Full entity defined once on /about as mainEntity of ProfilePage.
  */
 export interface JSONLDPerson {
   /**
@@ -61,39 +71,9 @@ export interface JSONLDPerson {
   "@type": "Person";
 
   /**
-   * Person's full name.
+   * Canonical identifier for cross-page references.
    */
-  name: string;
-
-  /**
-   * Person's website URL.
-   */
-  url?: string;
-
-  /**
-   * Person's job title.
-   */
-  jobTitle?: string;
-
-  /**
-   * Social profile URLs for identity verification.
-   */
-  sameAs?: string[];
-}
-
-/**
- * schema.org Person (top-level entity with full details).
- */
-export interface JSONLDPersonEntity {
-  /**
-   * JSON-LD context URL.
-   */
-  "@context": "https://schema.org";
-
-  /**
-   * JSON-LD type identifier.
-   */
-  "@type": "Person";
+  "@id": string;
 
   /**
    * Person's full name.
@@ -132,6 +112,42 @@ export interface JSONLDPersonEntity {
 }
 
 /**
+ * schema.org ProfilePage.
+ * Entity Home for the Person — defines the full identity.
+ */
+export interface JSONLDProfilePage {
+  /**
+   * JSON-LD context URL.
+   */
+  "@context": "https://schema.org";
+
+  /**
+   * JSON-LD type identifier.
+   */
+  "@type": "ProfilePage";
+
+  /**
+   * Canonical identifier for this page.
+   */
+  "@id": string;
+
+  /**
+   * Page URL.
+   */
+  url: string;
+
+  /**
+   * Page name.
+   */
+  name: string;
+
+  /**
+   * The Person entity this page is about.
+   */
+  mainEntity: JSONLDPerson;
+}
+
+/**
  * schema.org WebSite.
  */
 export interface JSONLDWebSite {
@@ -144,6 +160,11 @@ export interface JSONLDWebSite {
    * JSON-LD type identifier.
    */
   "@type": "WebSite";
+
+  /**
+   * Canonical identifier for this website.
+   */
+  "@id": string;
 
   /**
    * Website name.
@@ -161,15 +182,15 @@ export interface JSONLDWebSite {
   description: string;
 
   /**
-   * Website author.
+   * Website author (reference to Person).
    */
-  author: JSONLDPerson;
+  author: JSONLDRef;
 }
 
 /**
- * schema.org Article.
+ * schema.org Blog.
  */
-export interface JSONLDArticle {
+export interface JSONLDBlog {
   /**
    * JSON-LD context URL.
    */
@@ -178,7 +199,47 @@ export interface JSONLDArticle {
   /**
    * JSON-LD type identifier.
    */
-  "@type": "Article";
+  "@type": "Blog";
+
+  /**
+   * Canonical identifier for this blog.
+   */
+  "@id": string;
+
+  /**
+   * Blog URL.
+   */
+  url: string;
+
+  /**
+   * Blog name.
+   */
+  name: string;
+
+  /**
+   * Blog description.
+   */
+  description: string;
+
+  /**
+   * Blog publisher (reference to Person).
+   */
+  publisher: JSONLDRef;
+}
+
+/**
+ * schema.org BlogPosting.
+ */
+export interface JSONLDBlogPosting {
+  /**
+   * JSON-LD context URL.
+   */
+  "@context": "https://schema.org";
+
+  /**
+   * JSON-LD type identifier.
+   */
+  "@type": "BlogPosting";
 
   /**
    * Article headline.
@@ -206,9 +267,14 @@ export interface JSONLDArticle {
   dateModified: string;
 
   /**
-   * Article author.
+   * Article author (reference to Person).
    */
-  author: JSONLDPerson;
+  author: JSONLDRef;
+
+  /**
+   * Parent Blog this post belongs to.
+   */
+  isPartOf: JSONLDRef;
 
   /**
    * Comma-separated keywords.

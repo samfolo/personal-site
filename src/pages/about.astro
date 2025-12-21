@@ -7,6 +7,7 @@
 
 import {getEntry, render} from "astro:content";
 
+import {JSONLD} from "../components/seo";
 import Prose from "../layouts/Prose.astro";
 
 const page = await getEntry("pages", "about");
@@ -27,5 +28,6 @@ const {Content} = await render(page);
     updatedDate: page.data.updatedDate,
   }}
 >
+  <JSONLD type="ProfilePage" />
   <Content />
 </Prose>

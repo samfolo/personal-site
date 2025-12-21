@@ -2,18 +2,20 @@
 /**
  * JSON-LD Component
  *
- * Provides structured data for search engines:
- * - Person schema for the site owner (primary entity)
- * - Article schema for blog posts
- * - WebSite schema (legacy, retained for compatibility)
+ * Identity-first structured data for search engines:
+ * - ProfilePage: Entity Home for Person (About page only)
+ * - WebSite: Site metadata with author reference (Home page)
+ * - Blog: Blog metadata with publisher reference (Blog index)
+ * - BlogPosting: Article with author reference (Blog posts)
  */
 
 import {SITE} from "../../config";
 import type {
-  JSONLDArticle,
   JSONLDArticleData,
-  JSONLDPerson,
-  JSONLDPersonEntity,
+  JSONLDBlog,
+  JSONLDBlogPosting,
+  JSONLDProfilePage,
+  JSONLDRef,
   JSONLDType,
   JSONLDWebSite,
 } from "../../types";
@@ -28,73 +30,99 @@ interface Props {
   type: JSONLDType;
 
   /**
-   * Article data for Article schema type.
+   * Article data for BlogPosting schema type.
    */
   article?: JSONLDArticleData;
 }
 
 const {type, article} = Astro.props;
 
-// Canonical URL for article: strip query params
+// Canonical URL for articles
 const articleUrl = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
 
-const author: JSONLDPerson = {
-  "@type": "Person",
-  name: SITE.author.name,
-  url: SITE.url,
-  jobTitle: SITE.author.jobTitle,
-  sameAs: [SITE.author.github, SITE.author.linkedin],
-};
+// Reference to Person entity (defined on /about)
+const personRef: JSONLDRef = {"@id": SITE.entityIds.person};
 
 /**
  * Build the appropriate schema based on type.
  */
-const buildSchema = (): JSONLDPersonEntity | JSONLDArticle | JSONLDWebSite => {
-  if (type === "Person") {
-    return {
-      "@context": "https://schema.org",
-      "@type": "Person",
-      name: SITE.author.name,
-      url: SITE.url,
-      jobTitle: SITE.author.jobTitle,
-      description: SITE.description,
-      worksFor: {
-        "@type": "Organization",
-        name: SITE.author.worksFor.name,
-        url: SITE.author.worksFor.url,
-      },
-      address: {
-        "@type": "PostalAddress",
-        addressLocality: SITE.author.address.locality,
-        addressCountry: SITE.author.address.country,
-      },
-      sameAs: [SITE.author.github, SITE.author.linkedin],
-    };
-  }
+const buildSchema = ():
+  | JSONLDProfilePage
+  | JSONLDWebSite
+  | JSONLDBlog
+  | JSONLDBlogPosting => {
+  switch (type) {
+    case "ProfilePage":
+      // Entity Home: full Person definition
+      return {
+        "@context": "https://schema.org",
+        "@type": "ProfilePage",
+        "@id": `${SITE.url}/about/#profilepage`,
+        url: `${SITE.url}/about`,
+        name: `About | ${SITE.author.name}`,
+        mainEntity: {
+          "@type": "Person",
+          "@id": SITE.entityIds.person,
+          name: SITE.author.name,
+          url: SITE.url,
+          jobTitle: SITE.author.jobTitle,
+          description: SITE.description,
+          worksFor: {
+            "@type": "Organization",
+            name: SITE.author.worksFor.name,
+            url: SITE.author.worksFor.url,
+          },
+          address: {
+            "@type": "PostalAddress",
+            addressLocality: SITE.author.address.locality,
+            addressCountry: SITE.author.address.country,
+          },
+          sameAs: [SITE.author.github, SITE.author.linkedin],
+        },
+      };
 
-  if (type === "Article" && article) {
-    return {
-      "@context": "https://schema.org",
-      "@type": "Article",
-      headline: article.headline,
-      description: article.description,
-      url: articleUrl,
-      datePublished: article.publishDate.toISOString(),
-      dateModified: (article.updatedDate ?? article.publishDate).toISOString(),
-      author,
-      keywords: article.tags?.join(", "),
-    };
-  }
+    case "Blog":
+      return {
+        "@context": "https://schema.org",
+        "@type": "Blog",
+        "@id": SITE.entityIds.blog,
+        url: `${SITE.url}/blog`,
+        name: `Blog | ${SITE.author.name}`,
+        description:
+          "Writing about AI agents, creative coding, and software engineering.",
+        publisher: personRef,
+      };
 
-  // WebSite fallback
-  return {
-    "@context": "https://schema.org",
-    "@type": "WebSite",
-    name: SITE.name,
-    url: SITE.url,
-    description: SITE.description,
-    author,
-  };
+    case "BlogPosting":
+      if (!article) {
+        throw new Error("BlogPosting requires article data");
+      }
+
+      return {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        headline: article.headline,
+        description: article.description,
+        url: articleUrl,
+        datePublished: article.publishDate.toISOString(),
+        dateModified: (article.updatedDate ?? article.publishDate).toISOString(),
+        author: personRef,
+        isPartOf: {"@id": SITE.entityIds.blog},
+        keywords: article.tags?.join(", "),
+      };
+
+    case "WebSite":
+    default:
+      return {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "@id": SITE.entityIds.website,
+        name: SITE.name,
+        url: SITE.url,
+        description: SITE.description,
+        author: personRef,
+      };
+  }
 };
 
 const schema = buildSchema();

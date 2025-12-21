@@ -19,4 +19,9 @@ export const SITE = {
       country: "GB",
     },
   },
+  entityIds: {
+    person: "https://samfolorunsho.com/#person",
+    website: "https://samfolorunsho.com/#website",
+    blog: "https://samfolorunsho.com/blog/#blog",
+  },
 } as const;
