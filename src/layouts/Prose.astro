@@ -6,6 +6,7 @@
  * Provides consistent container structure with header and content sections.
  *
  * Named slots:
+ *   - head: Content injected into document <head> (e.g., JSONLD)
  *   - meta: Content after the title (e.g., PostMeta, PostTags)
  *   - before: Content before prose body, outside .prose styling (e.g., BlogList)
  *   - after: Content after the prose body (e.g., PostNav)
@@ -76,6 +77,9 @@ const {ogImage, ogType, publishDate, updatedDate, tags} = seo;
   {updatedDate}
   {tags}
 >
+  <Fragment slot="head">
+    <slot name="head" />
+  </Fragment>
   <main class="prose-page">
     <article class="prose-article">
       <header class="prose-header">

@@ -5,6 +5,7 @@
  * Identity-first structured data for search engines:
  * - ProfilePage: Entity Home for Person (About page only)
  * - WebSite: Site metadata with author reference (Home page)
+ * - WebPage: Generic page with author reference (e.g., Uses)
  * - Blog: Blog metadata with publisher reference (Blog index)
  * - BlogPosting: Article with author reference (Blog posts)
  */
@@ -17,8 +18,24 @@ import type {
   JSONLDProfilePage,
   JSONLDRef,
   JSONLDType,
+  JSONLDWebPage,
   JSONLDWebSite,
 } from "../../types";
+
+/**
+ * Page data for WebPage schema type.
+ */
+interface PageData {
+  /**
+   * Page name/title.
+   */
+  name: string;
+
+  /**
+   * Page description.
+   */
+  description: string;
+}
 
 /**
  * Props for the JSONLD component.
@@ -33,12 +50,17 @@ interface Props {
    * Article data for BlogPosting schema type.
    */
   article?: JSONLDArticleData;
+
+  /**
+   * Page data for WebPage schema type.
+   */
+  page?: PageData;
 }
 
-const {type, article} = Astro.props;
+const {type, article, page} = Astro.props;
 
-// Canonical URL for articles
-const articleUrl = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
+// Canonical URL for this page
+const pageUrl = new URL(Astro.url.pathname, Astro.site ?? SITE.url).href;
 
 // Reference to Person entity (defined on /about)
 const personRef: JSONLDRef = {"@id": SITE.entityIds.person};
@@ -49,6 +71,7 @@ const personRef: JSONLDRef = {"@id": SITE.entityIds.person};
 const buildSchema = ():
   | JSONLDProfilePage
   | JSONLDWebSite
+  | JSONLDWebPage
   | JSONLDBlog
   | JSONLDBlogPosting => {
   switch (type) {
@@ -103,12 +126,27 @@ const buildSchema = ():
         "@type": "BlogPosting",
         headline: article.headline,
         description: article.description,
-        url: articleUrl,
+        url: pageUrl,
         datePublished: article.publishDate.toISOString(),
         dateModified: (article.updatedDate ?? article.publishDate).toISOString(),
         author: personRef,
         isPartOf: {"@id": SITE.entityIds.blog},
         keywords: article.tags?.join(", "),
+      };
+
+    case "WebPage":
+      if (!page) {
+        throw new Error("WebPage requires page data");
+      }
+
+      return {
+        "@context": "https://schema.org",
+        "@type": "WebPage",
+        url: pageUrl,
+        name: page.name,
+        description: page.description,
+        author: personRef,
+        isPartOf: {"@id": SITE.entityIds.website},
       };
 
     case "WebSite":

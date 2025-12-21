@@ -9,7 +9,12 @@
 /**
  * Supported JSON-LD schema types.
  */
-export type JSONLDType = "WebSite" | "ProfilePage" | "Blog" | "BlogPosting";
+export type JSONLDType =
+  | "WebSite"
+  | "WebPage"
+  | "ProfilePage"
+  | "Blog"
+  | "BlogPosting";
 
 /**
  * Reference to an entity by @id.
@@ -185,6 +190,47 @@ export interface JSONLDWebSite {
    * Website author (reference to Person).
    */
   author: JSONLDRef;
+}
+
+/**
+ * schema.org WebPage.
+ * Generic page schema for pages without a more specific type.
+ */
+export interface JSONLDWebPage {
+  /**
+   * JSON-LD context URL.
+   */
+  "@context": "https://schema.org";
+
+  /**
+   * JSON-LD type identifier.
+   */
+  "@type": "WebPage";
+
+  /**
+   * Page URL.
+   */
+  url: string;
+
+  /**
+   * Page name.
+   */
+  name: string;
+
+  /**
+   * Page description.
+   */
+  description: string;
+
+  /**
+   * Page author (reference to Person).
+   */
+  author: JSONLDRef;
+
+  /**
+   * Parent website this page belongs to.
+   */
+  isPartOf: JSONLDRef;
 }
 
 /**

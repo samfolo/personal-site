@@ -28,6 +28,6 @@ const {Content} = await render(page);
     updatedDate: page.data.updatedDate,
   }}
 >
-  <JSONLD type="ProfilePage" />
+  <JSONLD slot="head" type="ProfilePage" />
   <Content />
 </Prose>

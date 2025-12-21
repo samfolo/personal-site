@@ -15,5 +15,6 @@ export type {
   JSONLDProfilePage,
   JSONLDRef,
   JSONLDType,
+  JSONLDWebPage,
   JSONLDWebSite,
 } from "./json-ld";

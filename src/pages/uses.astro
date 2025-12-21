@@ -5,14 +5,20 @@
  * Placeholder page for tools, gear, and setup details.
  */
 
+import {JSONLD} from "../components/seo";
 import Prose from "../layouts/Prose.astro";
+
+const PAGE_NAME = "Uses | Sam Folorunsho";
+const PAGE_DESCRIPTION =
+  "A curated list of the software, hardware, and tools I use to work efficiently and make the most of my free time.";
 ---
 
-<Prose
-  title="Uses | Sam Folorunsho"
-  description="Tools, gear, and setup."
-  heading="Uses"
->
+<Prose title={PAGE_NAME} description={PAGE_DESCRIPTION} heading="Uses">
+  <JSONLD
+    slot="head"
+    type="WebPage"
+    page={{name: PAGE_NAME, description: PAGE_DESCRIPTION}}
+  />
   <p class="coming-soon">Coming soon.</p>
 </Prose>
 
