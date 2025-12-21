@@ -3,3 +3,4 @@ export {default as Caption} from "./Caption.astro";
 export {default as Body} from "./Body.astro";
 export {default as SheenText} from "./SheenText.astro";
 export type {TypographyColor} from "./types";
+export {AttioLogoLockup} from "./marks";

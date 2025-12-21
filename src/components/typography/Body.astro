@@ -18,7 +18,8 @@ import type {BaseTypographyProps} from "./types";
 /**
  * Props for the Body component.
  */
-interface Props extends BaseTypographyProps, Omit<HTMLAttributes<"span">, "color"> {}
+interface Props
+  extends BaseTypographyProps, Omit<HTMLAttributes<"span">, "color"> {}
 
 const {
   tag: Tag = "span",
