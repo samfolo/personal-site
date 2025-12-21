@@ -8,10 +8,51 @@
 /**
  * Supported JSON-LD schema types.
  */
-export type JSONLDType = "WebSite" | "Article";
+export type JSONLDType = "WebSite" | "Article" | "Person";
 
 /**
- * schema.org Person.
+ * schema.org Organization.
+ * Note: Type name uses American spelling per schema.org convention.
+ */
+export interface JSONLDOrganization {
+  /**
+   * JSON-LD type identifier.
+   */
+  "@type": "Organization";
+
+  /**
+   * Organisation name.
+   */
+  name: string;
+
+  /**
+   * Organisation website URL.
+   */
+  url?: string;
+}
+
+/**
+ * schema.org PostalAddress.
+ */
+export interface JSONLDPostalAddress {
+  /**
+   * JSON-LD type identifier.
+   */
+  "@type": "PostalAddress";
+
+  /**
+   * City or locality.
+   */
+  addressLocality: string;
+
+  /**
+   * Country code (ISO 3166-1 alpha-2).
+   */
+  addressCountry: string;
+}
+
+/**
+ * schema.org Person (embedded as author).
  */
 export interface JSONLDPerson {
   /**
@@ -38,6 +79,56 @@ export interface JSONLDPerson {
    * Social profile URLs for identity verification.
    */
   sameAs?: string[];
+}
+
+/**
+ * schema.org Person (top-level entity with full details).
+ */
+export interface JSONLDPersonEntity {
+  /**
+   * JSON-LD context URL.
+   */
+  "@context": "https://schema.org";
+
+  /**
+   * JSON-LD type identifier.
+   */
+  "@type": "Person";
+
+  /**
+   * Person's full name.
+   */
+  name: string;
+
+  /**
+   * Person's website URL.
+   */
+  url: string;
+
+  /**
+   * Person's job title.
+   */
+  jobTitle: string;
+
+  /**
+   * Short description of the person.
+   */
+  description: string;
+
+  /**
+   * Organisation the person works for.
+   */
+  worksFor: JSONLDOrganization;
+
+  /**
+   * Person's location.
+   */
+  address: JSONLDPostalAddress;
+
+  /**
+   * Social profile URLs for identity verification.
+   */
+  sameAs: string[];
 }
 
 /**

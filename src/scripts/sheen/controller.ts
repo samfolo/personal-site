@@ -9,7 +9,7 @@ import {DOM_SELECTORS} from "../../config/dom";
 import {MEDIUM_SHEEN} from "../../config/sheen";
 
 import type {SheenState} from "./core";
-import {CHAR_CLASS, startAnimation, stopAnimation, createState} from "./core";
+import {CHAR_CLASS, createState, startAnimation, stopAnimation} from "./core";
 
 // Track state for each sheen element
 const sheenStates = new WeakMap<HTMLElement, SheenState>();

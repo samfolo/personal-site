@@ -9,10 +9,10 @@ import {MEDIUM_SHEEN} from "../../config/sheen";
 
 import type {SheenState} from "./core";
 import {
+  createState,
   splitIntoChars,
   startAnimation,
   stopAnimation,
-  createState,
 } from "./core";
 
 // Track state for each heading

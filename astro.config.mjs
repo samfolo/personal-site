@@ -3,8 +3,8 @@ import mdx from "@astrojs/mdx";
 import node from "@astrojs/node";
 import {
   transformerNotationDiff,
-  transformerNotationHighlight,
   transformerNotationFocus,
+  transformerNotationHighlight,
   transformerNotationWordHighlight,
 } from "@shikijs/transformers";
 import tailwindcss from "@tailwindcss/vite";

@@ -6,7 +6,7 @@
  */
 
 import GithubSlugger from "github-slugger";
-import type {Root, Element} from "hast";
+import type {Element, Root} from "hast";
 import {toString} from "hast-util-to-string";
 import {visit} from "unist-util-visit";
 

@@ -7,6 +7,8 @@ description: SEO maintenance for the site. Consult when adding content, modifyin
 
 SEO maintenance for the site. Keep metadata accurate, content discoverable, and AI systems informed.
 
+British English throughout—code, comments, documentation, content.
+
 ## When to Use
 
 Consult this skill when adding blog posts, creating static pages, modifying titles or descriptions, updating site-wide configuration, or making any change that affects how the site appears to search engines, social platforms, or AI systems.

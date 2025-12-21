@@ -53,6 +53,7 @@ const fullImageUrl = new URL(ogImage, Astro.site ?? SITE.url).href;
 ---
 
 <meta name="description" content={description} />
+<meta name="author" content={SITE.author.name} />
 <link rel="canonical" href={canonicalUrl} />
 
 <!-- Open Graph -->

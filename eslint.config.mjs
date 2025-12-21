@@ -13,6 +13,16 @@ import tseslint from "typescript-eslint";
 // Shared rules for all file types
 const sharedRules = {
   // === Import Ordering ===
+  // Sort named imports alphabetically within each import statement
+  "sort-imports": [
+    "error",
+    {
+      ignoreCase: true,
+      ignoreDeclarationSort: true, // Let import/order handle statement sorting
+      ignoreMemberSort: false,
+      memberSyntaxSortOrder: ["none", "all", "multiple", "single"],
+    },
+  ],
   // Group imports logically: builtins, external deps, internal, relative paths
   "import/order": [
     "error",

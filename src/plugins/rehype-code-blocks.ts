@@ -10,7 +10,7 @@
  * by structure (pre > code) rather than by class name.
  */
 
-import type {Root, Element, ElementContent} from "hast";
+import type {Element, ElementContent, Root} from "hast";
 import {visit} from "unist-util-visit";
 
 /**

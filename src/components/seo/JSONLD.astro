@@ -3,8 +3,9 @@
  * JSON-LD Component
  *
  * Provides structured data for search engines:
- * - WebSite schema for general pages
+ * - Person schema for the site owner (primary entity)
  * - Article schema for blog posts
+ * - WebSite schema (legacy, retained for compatibility)
  */
 
 import {SITE} from "../../config";
@@ -12,6 +13,7 @@ import type {
   JSONLDArticle,
   JSONLDArticleData,
   JSONLDPerson,
+  JSONLDPersonEntity,
   JSONLDType,
   JSONLDWebSite,
 } from "../../types";
@@ -44,29 +46,58 @@ const author: JSONLDPerson = {
   sameAs: [SITE.author.github, SITE.author.linkedin],
 };
 
-const schema: JSONLDWebSite | JSONLDArticle =
-  type === "Article" && article
-    ? {
-        "@context": "https://schema.org",
-        "@type": "Article",
-        headline: article.headline,
-        description: article.description,
-        url: articleUrl,
-        datePublished: article.publishDate.toISOString(),
-        dateModified: (
-          article.updatedDate ?? article.publishDate
-        ).toISOString(),
-        author,
-        keywords: article.tags?.join(", "),
-      }
-    : {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        name: SITE.name,
-        url: SITE.url,
-        description: SITE.description,
-        author,
-      };
+/**
+ * Build the appropriate schema based on type.
+ */
+const buildSchema = (): JSONLDPersonEntity | JSONLDArticle | JSONLDWebSite => {
+  if (type === "Person") {
+    return {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      name: SITE.author.name,
+      url: SITE.url,
+      jobTitle: SITE.author.jobTitle,
+      description: SITE.description,
+      worksFor: {
+        "@type": "Organization",
+        name: SITE.author.worksFor.name,
+        url: SITE.author.worksFor.url,
+      },
+      address: {
+        "@type": "PostalAddress",
+        addressLocality: SITE.author.address.locality,
+        addressCountry: SITE.author.address.country,
+      },
+      sameAs: [SITE.author.github, SITE.author.linkedin],
+    };
+  }
+
+  if (type === "Article" && article) {
+    return {
+      "@context": "https://schema.org",
+      "@type": "Article",
+      headline: article.headline,
+      description: article.description,
+      url: articleUrl,
+      datePublished: article.publishDate.toISOString(),
+      dateModified: (article.updatedDate ?? article.publishDate).toISOString(),
+      author,
+      keywords: article.tags?.join(", "),
+    };
+  }
+
+  // WebSite fallback
+  return {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: SITE.name,
+    url: SITE.url,
+    description: SITE.description,
+    author,
+  };
+};
+
+const schema = buildSchema();
 ---
 
 <script
