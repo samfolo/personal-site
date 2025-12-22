@@ -71,6 +71,15 @@ import {Overline} from "../typography";
     }
   }
 
+  let themeObserver: MutationObserver | null = null;
+
+  const cleanup = (): void => {
+    if (themeObserver) {
+      themeObserver.disconnect();
+      themeObserver = null;
+    }
+  };
+
   const getThemeLabel = (): string => {
     for (const cls of document.documentElement.classList) {
       if (cls.startsWith("theme-")) {
@@ -90,7 +99,7 @@ import {Overline} from "../typography";
 
   // Observe html element class changes for theme updates
   const observeThemeChanges = (): void => {
-    const observer = new MutationObserver((mutations) => {
+    themeObserver = new MutationObserver((mutations) => {
       mutations.forEach((mutation) => {
         if (mutation.attributeName === "class") {
           updateThemeName();
@@ -98,13 +107,14 @@ import {Overline} from "../typography";
       });
     });
 
-    observer.observe(document.documentElement, {
+    themeObserver.observe(document.documentElement, {
       attributes: true,
       attributeFilter: ["class"],
     });
   };
 
   const init = (): void => {
+    cleanup();
     updateThemeName();
     observeThemeChanges();
   };

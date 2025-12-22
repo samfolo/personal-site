@@ -42,9 +42,11 @@ const isExactMatch = pathname === href;
 </a>
 
 <script>
+  let handlerAttached = false;
+
   /**
-   * Sync nav link active states with current URL
-   * Required because header uses transition:persist, so DOM isn't replaced on navigation
+   * Sync nav link active states with current URL.
+   * Required because header uses transition:persist, so DOM isn't replaced on navigation.
    */
   const syncNavLinkStates = (): void => {
     const pathname = window.location.pathname;
@@ -79,33 +81,33 @@ const isExactMatch = pathname === href;
   };
 
   /**
-   * Prevent navigation when clicking on exact match links
+   * Attach delegated click handler for nav links.
+   * Uses capture phase to intercept before Astro's ClientRouter.
    */
-  const initActiveLinks = (): void => {
-    document
-      .querySelectorAll<HTMLAnchorElement>("a.nav-link")
-      .forEach((link) => {
-        // Remove existing listeners by cloning (prevents duplicates on re-init)
-        const newLink = link.cloneNode(true) as HTMLAnchorElement;
-        link.parentNode?.replaceChild(newLink, link);
+  const attachClickHandler = (): void => {
+    if (handlerAttached) {
+      return;
+    }
+    handlerAttached = true;
 
-        newLink.addEventListener("click", (e) => {
-          if (newLink.getAttribute("data-nav-exact") === "true") {
-            e.preventDefault();
-          }
-        });
-      });
+    document.addEventListener(
+      "click",
+      (e) => {
+        const link = (e.target as Element).closest("a.nav-link");
+        if (link?.getAttribute("data-nav-exact") === "true") {
+          e.preventDefault();
+        }
+      },
+      {capture: true}
+    );
   };
 
   // Initial setup
   syncNavLinkStates();
-  initActiveLinks();
+  attachClickHandler();
 
-  // Re-sync after Astro view transitions
-  document.addEventListener("astro:after-swap", () => {
-    syncNavLinkStates();
-    initActiveLinks();
-  });
+  // Re-sync after Astro view transitions (handler persists via delegation)
+  document.addEventListener("astro:after-swap", syncNavLinkStates);
 </script>
 
 <style>

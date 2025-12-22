@@ -11,7 +11,17 @@
 import {DOM_IDS, DOM_SELECTORS} from "../config/dom";
 
 ((): void => {
+  let currentObserver: IntersectionObserver | null = null;
+
+  const cleanup = (): void => {
+    if (currentObserver) {
+      currentObserver.disconnect();
+      currentObserver = null;
+    }
+  };
+
   const init = (): void => {
+    cleanup();
     const header = document.getElementById(DOM_IDS.FIXED_HEADER);
     const scrollTrigger = document.querySelector<HTMLElement>(
       DOM_SELECTORS.SCROLL_TRIGGER
@@ -35,7 +45,7 @@ import {DOM_IDS, DOM_SELECTORS} from "../config/dom";
     }
 
     // Home page: use intersection observer for scroll-based visibility
-    const observer = new IntersectionObserver(
+    currentObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
@@ -56,7 +66,7 @@ import {DOM_IDS, DOM_SELECTORS} from "../config/dom";
       }
     );
 
-    observer.observe(scrollTrigger);
+    currentObserver.observe(scrollTrigger);
   };
 
   // Initialise on load and after Astro page transitions
