@@ -24,5 +24,6 @@ pnpm-debug.log*
 # Playwright MCP
 .playwright-mcp/
 
-# Context notes (local documentation)
+# Local docs
 .contextnotes/
+.todo/
