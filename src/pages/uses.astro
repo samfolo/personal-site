@@ -2,30 +2,36 @@
 /**
  * Uses Page
  *
- * Placeholder page for tools, gear, and setup details.
+ * Renders the Uses page content from the pages collection.
  */
+
+import {getEntry, render} from "astro:content";
 
 import {JSONLD} from "../components/seo";
 import Prose from "../layouts/Prose.astro";
 
-const PAGE_NAME = "Uses | Sam Folorunsho";
-const PAGE_DESCRIPTION =
-  "A curated list of the software, hardware, and tools I use to work efficiently and make the most of my free time.";
+const page = await getEntry("pages", "uses");
+
+if (!page) {
+  return Astro.redirect("/404");
+}
+
+const {Content} = await render(page);
 ---
 
-<Prose title={PAGE_NAME} description={PAGE_DESCRIPTION} heading="Uses">
+<Prose
+  title={`${page.data.title} | Sam Folorunsho`}
+  description={page.data.description}
+  heading={page.data.title}
+  seo={{
+    ogType: "website",
+    updatedDate: page.data.updatedDate,
+  }}
+>
   <JSONLD
     slot="head"
     type="WebPage"
-    page={{name: PAGE_NAME, description: PAGE_DESCRIPTION}}
+    page={{name: `${page.data.title} | Sam Folorunsho`, description: page.data.description}}
   />
-  <p class="coming-soon">Coming soon.</p>
+  <Content />
 </Prose>
-
-<style>
-  .coming-soon {
-    font-size: var(--text-base);
-    line-height: var(--leading-24);
-    color: var(--muted);
-  }
-</style>

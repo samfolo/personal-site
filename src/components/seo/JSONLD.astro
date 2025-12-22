@@ -128,7 +128,9 @@ const buildSchema = ():
         description: article.description,
         url: pageUrl,
         datePublished: article.publishDate.toISOString(),
-        dateModified: (article.updatedDate ?? article.publishDate).toISOString(),
+        dateModified: (
+          article.updatedDate ?? article.publishDate
+        ).toISOString(),
         author: personRef,
         isPartOf: {"@id": SITE.entityIds.blog},
         keywords: article.tags?.join(", "),
