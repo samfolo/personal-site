@@ -1,2 +1,8 @@
 export {default as NavigationHeading} from "./NavigationHeading.astro";
-export type {DisplaySegment, HeadingTag, LinkSegment, Segment} from "./types";
+export type {
+  NavigationHeadingDisplaySegment,
+  NavigationHeadingLinkSegment,
+  NavigationHeadingLinkTarget,
+  NavigationHeadingSegment,
+  NavigationHeadingTag,
+} from "./types";

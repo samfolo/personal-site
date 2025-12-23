@@ -31,7 +31,10 @@ const {Content} = await render(page);
   <JSONLD
     slot="head"
     type="WebPage"
-    page={{name: `${page.data.title} | Sam Folorunsho`, description: page.data.description}}
+    page={{
+      name: `${page.data.title} | Sam Folorunsho`,
+      description: page.data.description,
+    }}
   />
   <Content />
 </Prose>

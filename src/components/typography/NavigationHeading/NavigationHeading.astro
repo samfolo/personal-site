@@ -23,7 +23,7 @@
 
 import type {HTMLAttributes} from "astro/types";
 
-import type {HeadingTag, Segment} from "./types";
+import type {NavigationHeadingSegment, NavigationHeadingTag} from "./types";
 
 /**
  * Props for the NavigationHeading component.
@@ -32,13 +32,13 @@ interface Props extends Omit<HTMLAttributes<"h2">, "aria-label"> {
   /**
    * Array of display and link segments to render.
    */
-  segments: Segment[];
+  segments: NavigationHeadingSegment[];
 
   /**
    * Heading tag level.
    * @default "h2"
    */
-  tag?: HeadingTag;
+  tag?: NavigationHeadingTag;
 
   /**
    * Accessible label describing the navigation purpose.

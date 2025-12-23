@@ -8,12 +8,17 @@
 /**
  * Allowed heading tag levels for NavigationHeading.
  */
-export type HeadingTag = "h1" | "h2" | "h3" | "h4" | "h5";
+export type NavigationHeadingTag = "h1" | "h2" | "h3" | "h4" | "h5";
+
+/**
+ * Link target behaviour.
+ */
+export type NavigationHeadingLinkTarget = "_self" | "_blank";
 
 /**
  * A static text segment that renders as a span.
  */
-export interface DisplaySegment {
+export interface NavigationHeadingDisplaySegment {
   type: "display";
   value: string;
 }
@@ -21,14 +26,16 @@ export interface DisplaySegment {
 /**
  * A link segment that renders as an anchor element.
  */
-export interface LinkSegment {
+export interface NavigationHeadingLinkSegment {
   type: "link";
   value: string;
   href: string;
-  target?: "_self" | "_blank";
+  target?: NavigationHeadingLinkTarget;
 }
 
 /**
  * A segment in the NavigationHeading, either static text or a link.
  */
-export type Segment = DisplaySegment | LinkSegment;
+export type NavigationHeadingSegment =
+  | NavigationHeadingDisplaySegment
+  | NavigationHeadingLinkSegment;
