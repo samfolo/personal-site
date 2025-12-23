@@ -11,7 +11,9 @@ Sam Folorunsho
 - [Home](https://samfolorunsho.com/) — Recent blog posts and introduction
 - [Blog](https://samfolorunsho.com/blog) — Technical writing on software engineering, AI, and creative coding
 - [About](https://samfolorunsho.com/about) — Background and professional information
-- [Uses](https://samfolorunsho.com/uses) — Tools, hardware, and setup
+- [Uses: Then](https://samfolorunsho.com/uses/then) — Tools, hardware, and setup from the past
+- [Uses: Now](https://samfolorunsho.com/uses/now) — Current tools, hardware, and setup
+- [Uses: Next](https://samfolorunsho.com/uses/next) — Tools and technologies being explored
 
 ## Feeds
 

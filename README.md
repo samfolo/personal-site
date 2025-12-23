@@ -53,7 +53,7 @@ Open [localhost:4321](http://localhost:4321).
 src/
 ├── components/     # Astro components, organised by domain
 ├── config/         # Constants (themes, navigation, DOM selectors)
-├── content/blog/   # MDX blog posts
+├── content/        # MDX content (blog posts, uses pages)
 ├── layouts/        # Page layouts
 ├── lib/            # Internal libraries (OG image generation, Shiki theme)
 ├── pages/          # File-based routing
@@ -73,7 +73,8 @@ Static assets in `public/`. Deployment config in `.github/workflows/`.
 | `/blog`        | `src/pages/blog/index.astro`    | Blog index                   |
 | `/blog/[slug]` | `src/pages/blog/[slug].astro`   | Individual posts (SSR)       |
 | `/about`       | `src/pages/about.astro`         | About page                   |
-| `/uses`        | `src/pages/uses.astro`          | Uses page                    |
+| `/uses`        | `src/pages/uses/index.astro`    | Redirects to `/uses/now`     |
+| `/uses/[tab]`  | `src/pages/uses/[tab].astro`    | Uses tabs (then, now, next)  |
 | `/rss.xml`     | `src/pages/rss.xml.ts`          | RSS feed                     |
 | `/sitemap.xml` | `src/pages/sitemap.xml.ts`      | XML sitemap                  |
 | `/og/*.png`    | `src/pages/og/[...slug].png.ts` | Dynamic OG images            |

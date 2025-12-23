@@ -11,7 +11,9 @@ export const GET = async (context: APIContext) => {
     {url: "", changefreq: "weekly", priority: "1.0"},
     {url: "blog", changefreq: "weekly", priority: "0.9"},
     {url: "about", changefreq: "monthly", priority: "0.8"},
-    {url: "uses", changefreq: "monthly", priority: "0.6"},
+    {url: "uses/then", changefreq: "monthly", priority: "0.6"},
+    {url: "uses/now", changefreq: "monthly", priority: "0.6"},
+    {url: "uses/next", changefreq: "monthly", priority: "0.6"},
   ];
 
   const blogPages = posts.map((post) => ({
