@@ -30,4 +30,12 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = {blog, pages};
+const uses = defineCollection({
+  loader: glob({pattern: "**/*.mdx", base: "./src/content/uses"}),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+  }),
+});
+
+export const collections = {blog, pages, uses};
