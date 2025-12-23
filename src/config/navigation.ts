@@ -26,5 +26,5 @@ export interface NavLink {
 export const NAV_LINKS: NavLink[] = [
   {href: "/blog", label: "Blog"},
   {href: "/about", label: "About"},
-  {href: "/uses/now", label: "Uses"},
+  {href: "/uses", label: "Uses"},
 ];

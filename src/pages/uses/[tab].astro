@@ -97,7 +97,6 @@ const pageDescription = entry.data.description || DEFAULT_DESCRIPTION;
   description={pageDescription}
   heading="Uses"
   seo={{ogType: "website"}}
-  headerTransition={{name: "uses-header", persist: true}}
 >
   <JSONLD
     slot="head"
@@ -113,9 +112,6 @@ const pageDescription = entry.data.description || DEFAULT_DESCRIPTION;
       segments={segments}
       aria-label="Tabs for the Uses page content, stylised as a sentence: then, now and next."
       class="uses-tabs"
-      data-uses-tabs
-      transition:persist
-      transition:name="uses-tabs"
     />
   </Fragment>
 
@@ -208,39 +204,3 @@ const pageDescription = entry.data.description || DEFAULT_DESCRIPTION;
   }
 </style>
 
-<script>
-  /**
-   * Sync NavigationHeading active states after view transitions.
-   * Required because the element uses transition:persist, so the DOM
-   * isn't re-rendered on navigation and active state becomes stale.
-   */
-  const syncUsesTabStates = (): void => {
-    const pathname = window.location.pathname;
-    const nav = document.querySelector("[data-uses-tabs]");
-
-    if (!nav) {
-      return;
-    }
-
-    nav.querySelectorAll<HTMLAnchorElement>("a").forEach((link) => {
-      const href = link.getAttribute("href");
-
-      if (!href) {
-        return;
-      }
-
-      const isActive = pathname === href;
-      link.classList.toggle("active", isActive);
-
-      if (isActive) {
-        link.setAttribute("aria-current", "page");
-      } else {
-        link.removeAttribute("aria-current");
-      }
-    });
-  };
-
-  syncUsesTabStates();
-
-  document.addEventListener("astro:after-swap", syncUsesTabStates);
-</script>
