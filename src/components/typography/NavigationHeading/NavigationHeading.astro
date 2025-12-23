@@ -1,0 +1,168 @@
+---
+/**
+ * NavigationHeading Component
+ *
+ * A heading element with mixed static and link segments for tabbed navigation.
+ * Link segments highlight based on URL match, creating a navigation-as-heading pattern.
+ *
+ * Typography uses shared heading tokens for consistency with prose styles.
+ * Colour progression: muted (idle) → fg (hover) → highlight (active).
+ *
+ * @example
+ * <NavigationHeading
+ *   aria-label="Uses sections"
+ *   segments={[
+ *     {type: "link", value: "Then", href: "/uses/then"},
+ *     {type: "display", value: ", "},
+ *     {type: "link", value: "now", href: "/uses/now"},
+ *     {type: "display", value: " and "},
+ *     {type: "link", value: "next", href: "/uses/next"},
+ *   ]}
+ * />
+ */
+
+import type {HTMLAttributes} from "astro/types";
+
+import type {HeadingTag, Segment} from "./types";
+
+/**
+ * Props for the NavigationHeading component.
+ */
+interface Props extends Omit<HTMLAttributes<"h2">, "aria-label"> {
+  /**
+   * Array of display and link segments to render.
+   */
+  segments: Segment[];
+
+  /**
+   * Heading tag level.
+   * @default "h2"
+   */
+  tag?: HeadingTag;
+
+  /**
+   * Accessible label describing the navigation purpose.
+   * Required for screen reader context.
+   */
+  "aria-label": string;
+}
+
+const {
+  segments,
+  tag: Tag = "h2",
+  "aria-label": ariaLabel,
+  class: className,
+  ...attrs
+} = Astro.props;
+
+const pathname = Astro.url.pathname;
+
+/**
+ * Check if a link segment is the current page.
+ */
+const isActive = (href: string): boolean => pathname === href;
+---
+
+<Tag
+  class:list={["sf-navheading", `sf-navheading-${Tag}`, className]}
+  aria-label={ariaLabel}
+  {...attrs}
+>
+  {
+    segments.map((segment) => {
+      if (segment.type === "display") {
+        return <span class="sf-navheading-display">{segment.value}</span>;
+      }
+
+      const active = isActive(segment.href);
+      return (
+        <a
+          href={segment.href}
+          class:list={["sf-navheading-link", {active}]}
+          aria-current={active ? "page" : undefined}
+          target={segment.target}
+        >
+          {segment.value}
+        </a>
+      );
+    })
+  }
+</Tag>
+
+<style>
+  /* Base heading styles */
+  .sf-navheading {
+    display: block;
+  }
+
+  /* h1 typography - uses shared heading tokens */
+  .sf-navheading-h1 {
+    font-size: var(--heading-h1-size);
+    font-weight: var(--heading-h1-weight);
+    letter-spacing: var(--heading-h1-tracking);
+    line-height: var(--heading-h1-leading);
+  }
+
+  /* h2 typography */
+  .sf-navheading-h2 {
+    font-size: var(--heading-h2-size);
+    font-weight: var(--heading-h2-weight);
+    letter-spacing: var(--heading-h2-tracking);
+    line-height: var(--heading-h2-leading);
+  }
+
+  /* h3 typography */
+  .sf-navheading-h3 {
+    font-size: var(--heading-h3-size);
+    font-weight: var(--heading-h3-weight);
+    letter-spacing: var(--heading-h3-tracking);
+    line-height: var(--heading-h3-leading);
+  }
+
+  /* h4 typography */
+  .sf-navheading-h4 {
+    font-size: var(--heading-h4-size);
+    font-weight: var(--heading-h4-weight);
+    line-height: var(--heading-h4-leading);
+  }
+
+  /* h5 typography */
+  .sf-navheading-h5 {
+    font-size: var(--heading-h5-size);
+    font-weight: var(--heading-h5-weight);
+    line-height: var(--heading-h5-leading);
+  }
+
+  /* Display segments */
+  .sf-navheading-display {
+    color: var(--muted);
+  }
+
+  /* Link segments */
+  .sf-navheading-link {
+    color: var(--muted);
+    text-decoration: none;
+    transition: color var(--transition-fast);
+  }
+
+  .sf-navheading-link:hover {
+    color: var(--fg);
+  }
+
+  .sf-navheading-link.active,
+  .sf-navheading-link[aria-current="page"] {
+    color: var(--highlight);
+  }
+
+  .sf-navheading-link:focus-visible {
+    outline: var(--outline-width) solid var(--fg);
+    outline-offset: var(--outline-offset);
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce) {
+    .sf-navheading-link {
+      transition: none;
+    }
+  }
+</style>
