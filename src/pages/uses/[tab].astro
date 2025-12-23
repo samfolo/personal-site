@@ -1,0 +1,244 @@
+---
+/**
+ * Uses Tab Page
+ *
+ * Dynamic route for rendering Uses content tabs.
+ * Validates tab param and renders corresponding MDX content.
+ */
+
+import type {NavigationHeadingSegment} from "../../components/typography";
+
+import {getEntry, render} from "astro:content";
+
+import {JSONLD} from "../../components/seo";
+import {NavigationHeading, Overline} from "../../components/typography";
+import Prose from "../../layouts/Prose.astro";
+
+/**
+ * Valid tab identifiers.
+ */
+type Tab = "then" | "now" | "next";
+
+/**
+ * Previous/next tab mapping.
+ */
+interface TabNavigation {
+  prev: Tab | null;
+  next: Tab | null;
+}
+
+/**
+ * Valid tabs for parameter validation.
+ */
+const VALID_TABS: ReadonlySet<Tab> = new Set(["then", "now", "next"]);
+
+/**
+ * Get previous and next tabs for navigation.
+ */
+const getTabNavigation = (tab: Tab): TabNavigation => {
+  switch (tab) {
+    case "then":
+      return {prev: null, next: "now"};
+    case "now":
+      return {prev: "then", next: "next"};
+    case "next":
+      return {prev: "now", next: null};
+    default:
+      return {prev: null, next: null};
+  }
+};
+
+/**
+ * Capitalise first letter of tab name for display.
+ */
+const capitalise = (str: string): string =>
+  str.charAt(0).toUpperCase() + str.slice(1);
+
+const {tab} = Astro.params;
+
+if (!tab || !VALID_TABS.has(tab as Tab)) {
+  return Astro.redirect("/404");
+}
+
+const validTab = tab as Tab;
+const entry = await getEntry("uses", validTab);
+
+if (!entry) {
+  return Astro.redirect("/404");
+}
+
+const {Content} = await render(entry);
+const {prev, next} = getTabNavigation(validTab);
+
+/**
+ * Heading segments for NavigationHeading.
+ */
+const segments: NavigationHeadingSegment[] = [
+  {type: "link", value: "Then", href: "/uses/then"},
+  {type: "display", value: ", "},
+  {type: "link", value: "now", href: "/uses/now"},
+  {type: "display", value: " and "},
+  {type: "link", value: "next", href: "/uses/next"},
+];
+
+/**
+ * Default description when entry lacks one.
+ */
+const DEFAULT_DESCRIPTION =
+  "A curated list of the software, hardware, and tools I use to work efficiently and make the most of my free time.";
+
+const pageTitle = `Uses (${capitalise(validTab)}) | Sam Folorunsho`;
+const pageDescription = entry.data.description || DEFAULT_DESCRIPTION;
+---
+
+<Prose
+  title={pageTitle}
+  description={pageDescription}
+  heading="Uses"
+  seo={{ogType: "website"}}
+>
+  <JSONLD
+    slot="head"
+    type="WebPage"
+    page={{
+      name: pageTitle,
+      description: pageDescription,
+    }}
+  />
+
+  <Fragment slot="before">
+    <NavigationHeading
+      segments={segments}
+      aria-label="Tabs for the Uses page content, stylised as a sentence: then, now and next."
+      class="uses-tabs"
+      data-uses-tabs
+      transition:persist
+      transition:name="uses-tabs"
+    />
+  </Fragment>
+
+  <Content />
+
+  {
+    (prev || next) && (
+      <nav slot="after" class="tab-nav" aria-label="Uses section navigation">
+        <div class="tab-nav-item tab-nav-prev">
+          {prev && (
+            <>
+              <Overline>Previous</Overline>
+              <a href={`/uses/${prev}`} class="tab-nav-link">
+                {capitalise(prev)}
+              </a>
+            </>
+          )}
+        </div>
+
+        <div class="tab-nav-item tab-nav-next">
+          {next && (
+            <>
+              <Overline>Next</Overline>
+              <a href={`/uses/${next}`} class="tab-nav-link">
+                {capitalise(next)}
+              </a>
+            </>
+          )}
+        </div>
+      </nav>
+    )
+  }
+</Prose>
+
+<style>
+  .uses-tabs {
+    margin-bottom: var(--space-6);
+  }
+
+  .tab-nav {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-5);
+    margin-top: var(--space-8);
+    padding-top: var(--space-6);
+    border-top: var(--border-hairline) solid var(--rule);
+  }
+
+  .tab-nav-item {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+  }
+
+  .tab-nav-next {
+    text-align: right;
+  }
+
+  .tab-nav-link {
+    font-size: var(--text-md);
+    font-weight: var(--font-medium);
+    line-height: var(--leading-24);
+    color: var(--muted);
+    transition: color var(--transition-fast);
+  }
+
+  .tab-nav-link:hover {
+    color: var(--fg);
+  }
+
+  .tab-nav-link:focus-visible {
+    outline: var(--outline-width) solid var(--fg);
+    outline-offset: var(--outline-offset);
+  }
+
+  @container page (max-width: 640px) {
+    .tab-nav {
+      grid-template-columns: 1fr;
+    }
+
+    .tab-nav-next {
+      text-align: left;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tab-nav-link {
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Sync NavigationHeading active states after view transitions.
+   * Required because the element uses transition:persist, so the DOM
+   * isn't re-rendered on navigation and active state becomes stale.
+   */
+  const syncUsesTabStates = (): void => {
+    const pathname = window.location.pathname;
+    const nav = document.querySelector("[data-uses-tabs]");
+
+    if (!nav) {
+      return;
+    }
+
+    nav.querySelectorAll<HTMLAnchorElement>("a").forEach((link) => {
+      const href = link.getAttribute("href");
+
+      if (!href) {
+        return;
+      }
+
+      const isActive = pathname === href;
+      link.classList.toggle("active", isActive);
+
+      if (isActive) {
+        link.setAttribute("aria-current", "page");
+      } else {
+        link.removeAttribute("aria-current");
+      }
+    });
+  };
+
+  syncUsesTabStates();
+
+  document.addEventListener("astro:after-swap", syncUsesTabStates);
+</script>
