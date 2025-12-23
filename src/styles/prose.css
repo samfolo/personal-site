@@ -33,61 +33,61 @@
   max-width: none;
 }
 
-/* Heading styles - all line-heights on 8px grid */
+/* Heading styles - typography from tokens, spacing prose-specific */
 .prose :where(h1):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-  font-size: var(--text-2xl);
-  font-weight: var(--font-bold);
-  letter-spacing: var(--tracking-display);
-  line-height: var(--leading-40);
+  font-size: var(--heading-h1-size);
+  font-weight: var(--heading-h1-weight);
+  letter-spacing: var(--heading-h1-tracking);
+  line-height: var(--heading-h1-leading);
   margin-top: var(--space-8);
   margin-bottom: var(--space-4);
   color: var(--emphasis);
 }
 
 .prose :where(h2):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-  font-size: var(--text-xl);
-  font-weight: var(--font-bold);
-  letter-spacing: var(--tracking-display);
-  line-height: var(--leading-32);
+  font-size: var(--heading-h2-size);
+  font-weight: var(--heading-h2-weight);
+  letter-spacing: var(--heading-h2-tracking);
+  line-height: var(--heading-h2-leading);
   margin-top: var(--space-8);
   margin-bottom: var(--space-4);
   color: var(--emphasis);
 }
 
 .prose :where(h3):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-  font-size: var(--text-lg);
-  font-weight: var(--font-semibold);
-  letter-spacing: var(--tracking-display);
-  line-height: var(--leading-32);
+  font-size: var(--heading-h3-size);
+  font-weight: var(--heading-h3-weight);
+  letter-spacing: var(--heading-h3-tracking);
+  line-height: var(--heading-h3-leading);
   margin-top: var(--space-6);
   margin-bottom: var(--space-3);
   color: var(--emphasis);
 }
 
 .prose :where(h4):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-  font-size: var(--text-md);
-  font-weight: var(--font-semibold);
-  line-height: var(--leading-24);
+  font-size: var(--heading-h4-size);
+  font-weight: var(--heading-h4-weight);
+  line-height: var(--heading-h4-leading);
   margin-top: var(--space-5);
   margin-bottom: var(--space-2);
   color: var(--emphasis);
 }
 
 .prose :where(h5):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-  font-size: var(--text-base);
-  font-weight: var(--font-semibold);
-  line-height: var(--leading-24);
+  font-size: var(--heading-h5-size);
+  font-weight: var(--heading-h5-weight);
+  line-height: var(--heading-h5-leading);
   margin-top: var(--space-4);
   margin-bottom: var(--space-2);
   color: var(--emphasis);
 }
 
 .prose :where(h6):not(:where([class~="not-prose"], [class~="not-prose"] *)) {
-  font-size: var(--text-sm);
-  font-weight: var(--font-semibold);
+  font-size: var(--heading-h6-size);
+  font-weight: var(--heading-h6-weight);
   text-transform: uppercase;
-  letter-spacing: var(--tracking-labels);
-  line-height: var(--leading-16);
+  letter-spacing: var(--heading-h6-tracking);
+  line-height: var(--heading-h6-leading);
   margin-top: var(--space-4);
   margin-bottom: var(--space-2);
   color: var(--muted);

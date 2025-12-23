@@ -91,4 +91,34 @@
   --leading-normal: 1.5;
   --leading-relaxed: 1.75;
   --leading-loose: 2;
+
+  /* Heading tokens - composite styles for h1-h6
+     Single source of truth for prose and typography components */
+  --heading-h1-size: var(--text-2xl);
+  --heading-h1-weight: var(--font-bold);
+  --heading-h1-tracking: var(--tracking-display);
+  --heading-h1-leading: var(--leading-40);
+
+  --heading-h2-size: var(--text-xl);
+  --heading-h2-weight: var(--font-bold);
+  --heading-h2-tracking: var(--tracking-display);
+  --heading-h2-leading: var(--leading-32);
+
+  --heading-h3-size: var(--text-lg);
+  --heading-h3-weight: var(--font-semibold);
+  --heading-h3-tracking: var(--tracking-display);
+  --heading-h3-leading: var(--leading-32);
+
+  --heading-h4-size: var(--text-md);
+  --heading-h4-weight: var(--font-semibold);
+  --heading-h4-leading: var(--leading-24);
+
+  --heading-h5-size: var(--text-base);
+  --heading-h5-weight: var(--font-semibold);
+  --heading-h5-leading: var(--leading-24);
+
+  --heading-h6-size: var(--text-sm);
+  --heading-h6-weight: var(--font-semibold);
+  --heading-h6-tracking: var(--tracking-labels);
+  --heading-h6-leading: var(--leading-16);
 }
