@@ -28,22 +28,17 @@ const pathname = Astro.url.pathname;
 // Check if this link is the current page
 // Handle both exact matches and nested routes (e.g., /blog matches /blog/post-slug)
 const isActive = pathname === href || pathname.startsWith(`${href}/`);
-// Exact match used for preventing refetch on current page
-const isExactMatch = pathname === href;
 ---
 
 <a
   href={href}
   class:list={["nav-link", {active: isActive}, className]}
   aria-current={isActive ? "page" : undefined}
-  data-nav-exact={isExactMatch ? "true" : undefined}
 >
   <slot />
 </a>
 
 <script>
-  let handlerAttached = false;
-
   /**
    * Sync nav link active states with current URL.
    * Required because header uses transition:persist, so DOM isn't replaced on navigation.
@@ -61,8 +56,6 @@ const isExactMatch = pathname === href;
 
         // Check for active state (exact match or nested route)
         const isActive = pathname === href || pathname.startsWith(`${href}/`);
-        // Check for exact match (used for preventing refetch)
-        const isExactMatch = pathname === href;
 
         // Update classes and attributes
         link.classList.toggle("active", isActive);
@@ -71,42 +64,12 @@ const isExactMatch = pathname === href;
         } else {
           link.removeAttribute("aria-current");
         }
-
-        if (isExactMatch) {
-          link.setAttribute("data-nav-exact", "true");
-        } else {
-          link.removeAttribute("data-nav-exact");
-        }
       });
   };
 
-  /**
-   * Attach delegated click handler for nav links.
-   * Uses capture phase to intercept before Astro's ClientRouter.
-   */
-  const attachClickHandler = (): void => {
-    if (handlerAttached) {
-      return;
-    }
-    handlerAttached = true;
-
-    document.addEventListener(
-      "click",
-      (e) => {
-        const link = (e.target as Element).closest("a.nav-link");
-        if (link?.getAttribute("data-nav-exact") === "true") {
-          e.preventDefault();
-        }
-      },
-      {capture: true}
-    );
-  };
-
-  // Initial setup
   syncNavLinkStates();
-  attachClickHandler();
 
-  // Re-sync after Astro view transitions (handler persists via delegation)
+  // Re-sync after Astro view transitions
   document.addEventListener("astro:after-swap", syncNavLinkStates);
 </script>
 
@@ -125,7 +88,7 @@ const isExactMatch = pathname === href;
   }
 
   .nav-link:hover {
-    color: var(--fg);
+    color: var(--highlight);
   }
 
   .nav-link.active,

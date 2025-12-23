@@ -10,13 +10,19 @@
   background-color: var(--bg);
 }
 
-/* Header and footer: no animation, stay in place */
+/* Persistent elements: no animation, stay in place */
 ::view-transition-group(header),
 ::view-transition-group(footer),
+::view-transition-group(uses-header),
+::view-transition-group(uses-tabs),
 ::view-transition-old(header),
 ::view-transition-new(header),
 ::view-transition-old(footer),
-::view-transition-new(footer) {
+::view-transition-new(footer),
+::view-transition-old(uses-header),
+::view-transition-new(uses-header),
+::view-transition-old(uses-tabs),
+::view-transition-new(uses-tabs) {
   animation: none;
 }
 

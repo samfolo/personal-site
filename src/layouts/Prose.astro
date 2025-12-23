@@ -63,6 +63,7 @@ const {
   seo = {},
   sheenConfig = LARGE_SHEEN,
   headingId = "page-title",
+  headerTransition = {name: "", persist: false},
 } = Astro.props;
 
 const {ogImage, ogType, publishDate, updatedDate, tags} = seo;
@@ -82,7 +83,11 @@ const {ogImage, ogType, publishDate, updatedDate, tags} = seo;
   </Fragment>
   <main class="prose-page">
     <article class="prose-article">
-      <header class="prose-header">
+      <header
+        class="prose-header"
+        transition:name={headerTransition.name}
+        transition:persist={headerTransition.persist}
+      >
         <SheenText
           text={heading}
           tag="h1"

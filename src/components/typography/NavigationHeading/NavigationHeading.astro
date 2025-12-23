@@ -6,7 +6,7 @@
  * Link segments highlight based on URL match, creating a navigation-as-heading pattern.
  *
  * Typography uses shared heading tokens for consistency with prose styles.
- * Colour progression: muted (idle) → fg (hover) → highlight (active).
+ * Colour progression: muted (idle) → highlight (hover) → emphasis (active).
  *
  * @example
  * <NavigationHeading
@@ -24,6 +24,8 @@
 import type {HTMLAttributes} from "astro/types";
 
 import type {NavigationHeadingSegment, NavigationHeadingTag} from "./types";
+
+type AnchorProps = HTMLAttributes<"a">;
 
 /**
  * Props for the NavigationHeading component.
@@ -75,16 +77,16 @@ const isActive = (href: string): boolean => pathname === href;
       }
 
       const active = isActive(segment.href);
-      return (
-        <a
-          href={segment.href}
-          class:list={["sf-navheading-link", {active}]}
-          aria-current={active ? "page" : undefined}
-          target={segment.target}
-        >
-          {segment.value}
-        </a>
-      );
+
+      // Using prop object to avoid introducing whitespace in generated HTML - Astro quirk.
+      const props: AnchorProps = {
+        href: segment.href,
+        "class:list": ["sf-navheading-link", {active}],
+        "aria-current": active ? "page" : undefined,
+        target: segment.target,
+      };
+
+      return <a {...props}>{segment.value}</a>;
     })
   }
 </Tag>
@@ -146,12 +148,12 @@ const isActive = (href: string): boolean => pathname === href;
   }
 
   .sf-navheading-link:hover {
-    color: var(--fg);
+    color: var(--highlight);
   }
 
   .sf-navheading-link.active,
   .sf-navheading-link[aria-current="page"] {
-    color: var(--highlight);
+    color: var(--emphasis);
   }
 
   .sf-navheading-link:focus-visible {

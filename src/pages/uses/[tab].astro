@@ -77,8 +77,9 @@ const segments: NavigationHeadingSegment[] = [
   {type: "link", value: "Then", href: "/uses/then"},
   {type: "display", value: ", "},
   {type: "link", value: "now", href: "/uses/now"},
-  {type: "display", value: " and "},
+  {type: "display", value: ", and "},
   {type: "link", value: "next", href: "/uses/next"},
+  {type: "display", value: "."},
 ];
 
 /**
@@ -96,6 +97,7 @@ const pageDescription = entry.data.description || DEFAULT_DESCRIPTION;
   description={pageDescription}
   heading="Uses"
   seo={{ogType: "website"}}
+  headerTransition={{name: "uses-header", persist: true}}
 >
   <JSONLD
     slot="head"
