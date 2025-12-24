@@ -4,52 +4,14 @@
  * Font families: Switzer (variable), CommitMono
  * Type scale: Minor Third (1.2 ratio)
  * Line heights: Aligned to 8px grid
+ *
+ * Font loading is handled by Astro's experimental fonts API (astro.config.mjs),
+ * which generates --font-switzer and --font-commit-mono.
  */
 
-/* ==========================================================================
-   Font Face Declarations
-   ========================================================================== */
-
-@font-face {
-  font-family: "Switzer";
-  src: url("/fonts/Switzer-Variable.woff2") format("woff2-variations");
-  font-weight: 100 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "Switzer";
-  src: url("/fonts/Switzer-VariableItalic.woff2") format("woff2-variations");
-  font-weight: 100 900;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "CommitMono";
-  src: url("/fonts/CommitMono-PersonalSite-400-Regular.otf") format("opentype");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: "CommitMono";
-  src: url("/fonts/CommitMono-PersonalSite-700-Regular.otf") format("opentype");
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* ==========================================================================
-   Typography Tokens
-   ========================================================================== */
-
 :root {
-  /* Font families */
-  --font-sans: "Switzer", system-ui, -apple-system, sans-serif;
-  --font-mono: "CommitMono", "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: var(--font-switzer);
+  --font-mono: var(--font-commit-mono);
 
   /* Type scale - Minor Third (1.2 ratio)
      Base: 16px
