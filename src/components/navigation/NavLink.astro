@@ -40,12 +40,10 @@ const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
 <script>
   /**
-   * Sync nav link active states with current URL.
+   * Update nav link active states for a given pathname.
    * Required because header uses transition:persist, so DOM isn't replaced on navigation.
    */
-  const syncNavLinkStates = (): void => {
-    const pathname = window.location.pathname;
-
+  const updateNavLinksForPath = (pathname: string): void => {
     document
       .querySelectorAll<HTMLAnchorElement>("a.nav-link")
       .forEach((link) => {
@@ -54,10 +52,8 @@ const isActive = pathname === href || pathname.startsWith(`${href}/`);
           return;
         }
 
-        // Check for active state (exact match or nested route)
         const isActive = pathname === href || pathname.startsWith(`${href}/`);
 
-        // Update classes and attributes
         link.classList.toggle("active", isActive);
         if (isActive) {
           link.setAttribute("aria-current", "page");
@@ -67,9 +63,25 @@ const isActive = pathname === href || pathname.startsWith(`${href}/`);
       });
   };
 
+  /**
+   * Sync nav link active states with current URL.
+   */
+  const syncNavLinkStates = (): void =>
+    updateNavLinksForPath(window.location.pathname);
+
   syncNavLinkStates();
 
-  // Re-sync after Astro view transitions
+  // Update active states BEFORE swap to prevent flicker on persisted header
+  document.addEventListener("astro:before-swap", (e) => {
+    const newPathname = e.to.pathname;
+    if (newPathname === window.location.pathname) {
+      return;
+    }
+
+    updateNavLinksForPath(newPathname);
+  });
+
+  // Re-sync after swap as fallback (handles browser back/forward, direct navigation)
   document.addEventListener("astro:after-swap", syncNavLinkStates);
 </script>
 
