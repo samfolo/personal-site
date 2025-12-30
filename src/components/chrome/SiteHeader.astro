@@ -1,0 +1,196 @@
+---
+/**
+ * SiteHeader Component
+ *
+ * Unified header that transitions between two visual states:
+ * - State A (hero visible): Transparent, full-width, large theme switcher
+ * - State B (scrolled): Opaque background, clamped container, compact layout
+ *
+ * Always visible (no slide-in animation). Uses CSS transitions for smooth
+ * state changes triggered by scroll position via scroll-header.ts.
+ *
+ * State is controlled via data-state attribute:
+ * - "hero": Initial state on home page (transparent, full-width)
+ * - "scrolled": State after scrolling past hero or on non-home pages
+ *
+ * Animation Timing:
+ * - A→B: Background/container/switcher animate together (0-300ms),
+ *        then logo/nav fade in with stagger (200-400ms)
+ * - B→A: All properties animate simultaneously (no stagger)
+ */
+
+import {NAV_LINKS} from "../../config/navigation";
+
+import {LogoMark, Nav} from "../navigation";
+import {ThemeSwitcher} from "../theme";
+
+/**
+ * Determine initial state based on page.
+ * Home page starts in "hero" state; other pages start in "scrolled" state.
+ * This prevents flash of incorrect state before JavaScript runs.
+ */
+const isHomePage = Astro.url.pathname === "/";
+const initialState = isHomePage ? "hero" : "scrolled";
+---
+
+<header
+  id="site-header"
+  class="site-header"
+  data-state={initialState}
+  transition:persist
+  transition:name="header"
+>
+  {/* Background layer - separate for independent opacity animation */}
+  <div class="site-header-bg"></div>
+
+  {/* Content layer */}
+  <div class="site-header-content">
+    {/* Left section: Logo + Nav (fade in on scroll) */}
+    <div class="site-header-left">
+      <LogoMark href="/" label="Go to home" onClick="scrollToTop" />
+      <Nav links={NAV_LINKS} aria-label="Main navigation" />
+    </div>
+
+    {/* Right section: Theme switcher (size animates via CSS custom property) */}
+    <div class="site-header-right">
+      <ThemeSwitcher />
+    </div>
+  </div>
+</header>
+
+<style>
+  /* ==========================================================================
+     Base Layout (always present)
+     ========================================================================== */
+
+  .site-header {
+    position: fixed;
+    top: var(--safe-area-top);
+    left: 0;
+    right: 0;
+    z-index: var(--z-header);
+    display: flex;
+    justify-content: center;
+  }
+
+  .site-header-bg {
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    transition:
+      opacity var(--transition-slow),
+      background var(--transition-slow);
+  }
+
+  .site-header-content {
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: auto;
+    width: 100%;
+    transition:
+      max-width var(--transition-slow),
+      padding var(--transition-slow);
+  }
+
+  .site-header-left {
+    display: flex;
+    align-items: center;
+    gap: var(--space-6);
+  }
+
+  .site-header-right {
+    display: flex;
+    align-items: center;
+  }
+
+  /* ==========================================================================
+     State A: Hero Visible (transparent, full-width)
+     ========================================================================== */
+
+  .site-header[data-state="hero"] .site-header-bg {
+    opacity: 0;
+  }
+
+  .site-header[data-state="hero"] .site-header-content {
+    max-width: 100%;
+    padding: var(--space-4) var(--space-5);
+  }
+
+  .site-header[data-state="hero"] .site-header-left {
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(-8px);
+    transition:
+      opacity 0.15s var(--ease-default),
+      transform 0.15s var(--ease-default);
+  }
+
+  /* Theme switcher at large size */
+  .site-header[data-state="hero"] {
+    --theme-switcher-size: var(--size-7);
+  }
+
+  /* ==========================================================================
+     State B: Scrolled (opaque, clamped)
+     ========================================================================== */
+
+  .site-header[data-state="scrolled"] .site-header-bg {
+    opacity: 1;
+  }
+
+  .site-header[data-state="scrolled"] .site-header-content {
+    max-width: var(--container-max);
+    padding: var(--space-4) var(--container-px);
+  }
+
+  .site-header[data-state="scrolled"] .site-header-left {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+    /* Staggered fade-in: starts 200ms into transition */
+    transition:
+      opacity 0.2s var(--ease-default) 0.2s,
+      transform 0.2s var(--ease-default) 0.2s;
+  }
+
+  /* Theme switcher at small size */
+  .site-header[data-state="scrolled"] {
+    --theme-switcher-size: var(--size-6);
+  }
+
+  /* ==========================================================================
+     Reduced Motion
+     ========================================================================== */
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header-bg,
+    .site-header-content,
+    .site-header-left {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * Scroll-to-top behavior for LogoMark on home page.
+   * Prevents navigation and smoothly scrolls to top instead.
+   */
+  const initScrollToTop = (): void => {
+    const logomark = document.querySelector(
+      '.logomark[data-onclick="scrollToTop"]'
+    );
+
+    logomark?.addEventListener("click", (e) => {
+      if (window.location.pathname === "/") {
+        e.preventDefault();
+        window.scrollTo({top: 0, behavior: "smooth"});
+      }
+    });
+  };
+
+  initScrollToTop();
+  document.addEventListener("astro:after-swap", initScrollToTop);
+</script>

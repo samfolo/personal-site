@@ -6,8 +6,7 @@
  */
 
 export const DOM_IDS = {
-  FIXED_HEADER: "fixed-header",
-  INITIAL_THEME_SWITCHER: "initial-theme-switcher",
+  SITE_HEADER: "site-header",
   THEME_NAME: "theme-name",
   FIXED_FOOTER: "fixed-footer",
   BOIDS_CANVAS: "boids-canvas",

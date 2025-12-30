@@ -9,9 +9,8 @@
 import {Font} from "astro:assets";
 import {ClientRouter} from "astro:transitions";
 
-import {FixedFooter, FixedHeader} from "../components/chrome";
+import {FixedFooter, SiteHeader} from "../components/chrome";
 import {SEO} from "../components/seo";
-import {ThemeSwitcher} from "../components/theme";
 import {STORAGE_KEYS} from "../config/storage";
 import {THEME_CLASSES} from "../config/themes";
 import type {Theme} from "../config/themes";
@@ -172,12 +171,7 @@ const {
       })();
     </script>
 
-    <!-- Initial theme switcher (visible when hero wordmark is in view) -->
-    <div id="initial-theme-switcher" class="initial-theme-switcher">
-      <ThemeSwitcher />
-    </div>
-
-    <FixedHeader />
+    <SiteHeader />
     <slot />
     <FixedFooter />
 
@@ -187,17 +181,3 @@ const {
   </body>
 </html>
 
-<style>
-  .initial-theme-switcher {
-    position: fixed;
-    top: calc(var(--space-5) + var(--safe-area-top));
-    right: var(--space-5);
-    z-index: var(--z-overlay);
-    transition: opacity var(--transition-slow);
-  }
-
-  .initial-theme-switcher.hidden {
-    opacity: 0;
-    pointer-events: none;
-  }
-</style>

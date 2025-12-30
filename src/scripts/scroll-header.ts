@@ -1,14 +1,20 @@
 /**
  * Scroll Header Controller
  *
- * Uses Intersection Observer to toggle fixed header visibility
+ * Uses Intersection Observer to toggle site header state
  * when the scroll trigger element scrolls out of view.
  *
- * On the home page (with scroll trigger): header appears when hero scrolls out
- * On other pages (no scroll trigger): header is always visible
+ * On the home page (with scroll trigger): header transitions between states
+ * On other pages (no scroll trigger): header is always in scrolled state
  */
 
 import {DOM_IDS, DOM_SELECTORS} from "../config/dom";
+
+type HeaderState = "hero" | "scrolled";
+
+const setHeaderState = (header: HTMLElement, state: HeaderState): void => {
+  header.dataset.state = state;
+};
 
 ((): void => {
   let currentObserver: IntersectionObserver | null = null;
@@ -22,12 +28,10 @@ import {DOM_IDS, DOM_SELECTORS} from "../config/dom";
 
   const init = (): void => {
     cleanup();
-    const header = document.getElementById(DOM_IDS.FIXED_HEADER);
+
+    const header = document.getElementById(DOM_IDS.SITE_HEADER);
     const scrollTrigger = document.querySelector<HTMLElement>(
       DOM_SELECTORS.SCROLL_TRIGGER
-    );
-    const initialSwitcher = document.getElementById(
-      DOM_IDS.INITIAL_THEME_SWITCHER
     );
 
     if (!header) {
@@ -38,30 +42,25 @@ import {DOM_IDS, DOM_SELECTORS} from "../config/dom";
     const isHomePage = scrollTrigger !== null;
 
     if (!isHomePage) {
-      // Non-home pages: always show header, hide initial theme switcher
-      header.classList.add("visible");
-      initialSwitcher?.classList.add("hidden");
+      // Non-home pages: always show scrolled state
+      setHeaderState(header, "scrolled");
       return;
     }
 
-    // Home page: use intersection observer for scroll-based visibility
+    // Home page: use intersection observer for scroll-based state
     currentObserver = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
-            // Trigger visible: hide header, show initial switcher
-            header.classList.remove("visible");
-            initialSwitcher?.classList.remove("hidden");
+            setHeaderState(header, "hero");
           } else {
-            // Trigger not visible: show header, hide initial switcher
-            header.classList.add("visible");
-            initialSwitcher?.classList.add("hidden");
+            setHeaderState(header, "scrolled");
           }
         });
       },
       {
         // Offset roughly matches header height (~76px) to trigger
-        // visibility change just before/after header would overlap content.
+        // state change just before/after header would overlap content.
         rootMargin: "-80px 0px 0px 0px",
       }
     );

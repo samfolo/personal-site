@@ -4,21 +4,20 @@
  *
  * Reusable theme button with diagonal colour preview.
  * Used by ThemeSwitcher for both desktop buttons and mobile toggle.
+ *
+ * Sizing Note:
+ * Button size is controlled via the --theme-switcher-size CSS custom property,
+ * which can be set by parent components. This enables smooth size transitions
+ * when the property changes (e.g., in SiteHeader state changes).
+ * Defaults to --size-7 (32px) if not set.
  */
 
 import type {Theme} from "../../config/themes";
-
-import type {ThemeSwitcherSize} from "./types";
 
 /**
  * Props for the ThemeSwitcherButton component.
  */
 interface Props {
-  /**
-   * Button size variant.
-   */
-  size?: ThemeSwitcherSize;
-
   /**
    * Theme to preview. If omitted, shows current theme colours.
    */
@@ -40,15 +39,7 @@ interface Props {
   class?: string;
 }
 
-const {
-  size = "md",
-  theme,
-  isActive = false,
-  label,
-  class: className,
-} = Astro.props;
-
-const buttonSize = size === "sm" ? "var(--size-6)" : "var(--size-7)";
+const {theme, isActive = false, label, class: className} = Astro.props;
 ---
 
 <button
@@ -61,15 +52,18 @@ const buttonSize = size === "sm" ? "var(--size-6)" : "var(--size-7)";
   <span class="theme-switcher-button-visual"></span>
 </button>
 
-<style define:vars={{buttonSize}}>
+<style>
   .theme-switcher-button {
     display: flex;
     align-items: center;
     justify-content: center;
-    width: var(--buttonSize);
-    height: var(--buttonSize);
+    width: var(--theme-switcher-size, var(--size-7));
+    height: var(--theme-switcher-size, var(--size-7));
     cursor: pointer;
-    transition: transform var(--transition-fast);
+    transition:
+      transform var(--transition-fast),
+      width var(--transition-slow),
+      height var(--transition-slow);
     outline: var(--outline-width) solid transparent;
     outline-offset: var(--outline-offset-tight);
     background: transparent;
@@ -99,7 +93,7 @@ const buttonSize = size === "sm" ? "var(--size-6)" : "var(--size-7)";
 
   @media (prefers-reduced-motion: reduce) {
     .theme-switcher-button {
-      transition: none;
+      transition: none !important;
     }
   }
 </style>

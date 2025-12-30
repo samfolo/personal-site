@@ -11,6 +11,11 @@
  * individual buttons with visual styling for both desktop (four buttons) and
  * mobile (single cycle button).
  *
+ * Sizing Note:
+ * Button size is controlled by the --theme-switcher-size CSS custom property,
+ * which can be set by parent components (e.g., SiteHeader). This enables smooth
+ * size transitions. Defaults to --size-7 (32px) if not set.
+ *
  * :global() Usage:
  * The .theme-toggle-mobile class uses :global() because the button is rendered
  * by ThemeSwitcherButton (child component) and Astro scopes styles to the
@@ -27,17 +32,6 @@ import {THEME_LABELS, THEME_ORDER} from "../../config/themes";
 import type {Theme} from "../../config/themes";
 
 import ThemeSwitcherButton from "./ThemeSwitcherButton.astro";
-import type {ThemeSwitcherSize} from "./types";
-
-/**
- * Props for the ThemeSwitcher component.
- */
-interface Props {
-  /**
-   * Button size variant for theme buttons.
-   */
-  size?: ThemeSwitcherSize;
-}
 
 /**
  * Theme option for rendering in the switcher.
@@ -54,21 +48,18 @@ interface ThemeOption {
   label: string;
 }
 
-const {size = "md"} = Astro.props;
-
 const THEMES: ThemeOption[] = THEME_ORDER.map((id) => ({
   id,
   label: THEME_LABELS[id],
 }));
 ---
 
-<div class="theme-switcher" data-size={size}>
+<div class="theme-switcher">
   {/* Desktop: four-button switcher */}
   <div class="theme-switcher-desktop gap-2">
     {
       THEMES.map((theme) => (
         <ThemeSwitcherButton
-          size={size}
           theme={theme.id}
           label={theme.label}
           class="theme-button"
@@ -79,7 +70,6 @@ const THEMES: ThemeOption[] = THEME_ORDER.map((id) => ({
 
   {/* Mobile: single cycle button (shows current theme) */}
   <ThemeSwitcherButton
-    size="md"
     isActive={true}
     label="Cycle colour theme"
     class="theme-toggle-mobile"
