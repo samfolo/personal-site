@@ -13,11 +13,15 @@
 /* Persistent elements: no animation, stay in place */
 ::view-transition-group(header),
 ::view-transition-group(footer),
-::view-transition-old(header),
 ::view-transition-new(header),
 ::view-transition-old(footer),
 ::view-transition-new(footer) {
   animation: none;
+}
+
+/* Hide old header snapshot to prevent afterimage during state transitions */
+::view-transition-old(header) {
+  display: none;
 }
 
 /* Sequential fade: out then in */

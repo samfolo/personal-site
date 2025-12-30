@@ -167,6 +167,14 @@ const {
           if (currentFavicon && currentFavicon.href && newFavicon) {
             newFavicon.href = currentFavicon.href;
           }
+
+          // Sync header state to destination before snapshot
+          const header = document.getElementById("site-header");
+          if (header) {
+            const isNavigatingToHome =
+              new URL(e.to, location.origin).pathname === "/";
+            header.dataset.state = isNavigatingToHome ? "hero" : "scrolled";
+          }
         });
       })();
     </script>
