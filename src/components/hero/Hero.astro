@@ -111,4 +111,33 @@ const {class: className} = Astro.props;
     height: var(--size-px);
     background-color: var(--rule);
   }
+
+  /* ==========================================================================
+     Scroll-Linked Fade Animation
+     ========================================================================== */
+
+  @keyframes hero-fade {
+    from {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    to {
+      opacity: 0;
+      pointer-events: none;
+    }
+  }
+
+  @supports (animation-timeline: view()) {
+    .hero-content {
+      animation: hero-fade linear forwards;
+      animation-timeline: view();
+      animation-range: exit 0% exit 40%;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .hero-content {
+        animation: none;
+      }
+    }
+  }
 </style>
