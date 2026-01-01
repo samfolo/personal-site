@@ -52,12 +52,12 @@ export default defineConfig({
           {
             weight: 400,
             style: "normal",
-            src: ["./src/assets/fonts/CommitMono-PersonalSite-400-Regular.otf"],
+            src: ["./src/assets/fonts/CommitMono-PersonalSite-400-Regular.woff2"],
           },
           {
             weight: 700,
             style: "normal",
-            src: ["./src/assets/fonts/CommitMono-PersonalSite-700-Regular.otf"],
+            src: ["./src/assets/fonts/CommitMono-PersonalSite-700-Regular.woff2"],
           },
         ],
       },
