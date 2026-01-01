@@ -6,7 +6,6 @@
  * All pages should use this layout for consistent styling.
  */
 
-import {Font} from "astro:assets";
 import {ClientRouter} from "astro:transitions";
 
 import {FixedFooter, SiteHeader} from "../components/chrome";
@@ -128,7 +127,13 @@ const {
     <slot name="head" />
 
     <!-- Preload critical fonts -->
-    <Font cssVariable="--font-switzer" preload />
+    <link
+      rel="preload"
+      href="/fonts/Switzer-Variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
 
     <!-- View Transitions for smooth page navigation -->
     <ClientRouter />

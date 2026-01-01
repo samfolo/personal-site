@@ -4,10 +4,23 @@
  * Font families: Switzer (variable), CommitMono
  * Type scale: Minor Third (1.2 ratio)
  * Line heights: Aligned to 8px grid
- *
- * Switzer is loaded via Astro's experimental fonts API (astro.config.mjs).
- * CommitMono uses manual @font-face as a workaround for an Astro fonts issue.
  */
+
+@font-face {
+  font-family: Switzer;
+  src: url("/fonts/Switzer-Variable.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Switzer;
+  src: url("/fonts/Switzer-VariableItalic.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
 
 @font-face {
   font-family: CommitMono;
@@ -26,7 +39,7 @@
 }
 
 :root {
-  --font-sans: var(--font-switzer);
+  --font-sans: Switzer, system-ui, -apple-system, sans-serif;
   --font-mono: CommitMono, "JetBrains Mono", ui-monospace, monospace;
 
   /* Type scale - Minor Third (1.2 ratio)

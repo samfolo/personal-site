@@ -23,47 +23,6 @@ export default defineConfig({
     mode: "standalone",
   }),
 
-  experimental: {
-    fonts: [
-      {
-        provider: "local",
-        name: "Switzer",
-        cssVariable: "--font-switzer",
-        fallbacks: ["system-ui", "-apple-system", "sans-serif"],
-        variants: [
-          {
-            weight: "100 900",
-            style: "normal",
-            src: ["./src/assets/fonts/Switzer-Variable.woff2"],
-          },
-          {
-            weight: "100 900",
-            style: "italic",
-            src: ["./src/assets/fonts/Switzer-VariableItalic.woff2"],
-          },
-        ],
-      },
-      {
-        provider: "local",
-        name: "CommitMono",
-        cssVariable: "--font-commit-mono",
-        fallbacks: ["JetBrains Mono", "ui-monospace", "monospace"],
-        variants: [
-          {
-            weight: 400,
-            style: "normal",
-            src: ["./src/assets/fonts/CommitMono-PersonalSite-400-Regular.woff2"],
-          },
-          {
-            weight: 700,
-            style: "normal",
-            src: ["./src/assets/fonts/CommitMono-PersonalSite-700-Regular.woff2"],
-          },
-        ],
-      },
-    ],
-  },
-
   integrations: [mdx()],
 
   markdown: {
