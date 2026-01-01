@@ -3,19 +3,19 @@
  * SiteHeader Component
  *
  * Unified header that transitions between two visual states:
- * - State A (hero visible): Transparent, full-width, large theme switcher
- * - State B (scrolled): Opaque background, clamped container, compact layout
+ * - State A (hero visible): Transparent background, large theme switcher at viewport edge
+ * - State B (scrolled): Opaque background, compact layout with logo/nav visible
  *
- * Always visible (no slide-in animation). Uses CSS transitions for smooth
- * state changes triggered by scroll position via scroll-header.ts.
+ * Container is always clamped to --container-max. In hero state, the theme switcher
+ * uses transform to reach the viewport edge while the container position stays fixed.
+ * This prevents left content drift during the fade-in transition.
  *
  * State is controlled via data-state attribute:
- * - "hero": Initial state on home page (transparent, full-width)
+ * - "hero": Initial state on home page (transparent, switcher at viewport edge)
  * - "scrolled": State after scrolling past hero or on non-home pages
  *
  * Animation Timing:
- * - A→B: Background/container/switcher animate together (0-300ms),
- *        then logo/nav fade in with stagger (200-400ms)
+ * - A→B: Background and switcher animate together, then logo/nav fade in with stagger
  * - B→A: All properties animate simultaneously (no stagger)
  */
 
@@ -89,9 +89,8 @@ const initialState = isHomePage ? "hero" : "scrolled";
     align-items: center;
     height: auto;
     width: 100%;
-    transition:
-      max-width var(--transition-slow),
-      padding var(--transition-slow);
+    max-width: var(--container-max);
+    padding: var(--space-4) var(--container-px);
   }
 
   .site-header-left {
@@ -103,6 +102,11 @@ const initialState = isHomePage ? "hero" : "scrolled";
   .site-header-right {
     display: flex;
     align-items: center;
+    --switcher-offset: calc(
+      max(0px, (100cqw - var(--container-max)) / 2) + var(--container-px) -
+        var(--space-5)
+    );
+    transition: transform var(--transition-slow);
   }
 
   /* ==========================================================================
@@ -113,20 +117,19 @@ const initialState = isHomePage ? "hero" : "scrolled";
     opacity: 0;
   }
 
-  .site-header[data-state="hero"] .site-header-content {
-    max-width: 100%;
-    padding: var(--space-4) var(--space-5);
-  }
-
   .site-header[data-state="hero"] .site-header-left {
     opacity: 0;
     pointer-events: none;
     transition: opacity var(--transition-fast);
   }
 
-  /* Theme switcher at large size */
+  /* Theme switcher at large size, positioned at viewport edge */
   .site-header[data-state="hero"] {
     --theme-switcher-size: var(--size-7);
+  }
+
+  .site-header[data-state="hero"] .site-header-right {
+    transform: translateX(var(--switcher-offset));
   }
 
   /* ==========================================================================
@@ -135,11 +138,6 @@ const initialState = isHomePage ? "hero" : "scrolled";
 
   .site-header[data-state="scrolled"] .site-header-bg {
     opacity: 1;
-  }
-
-  .site-header[data-state="scrolled"] .site-header-content {
-    max-width: var(--container-max);
-    padding: var(--space-4) var(--container-px);
   }
 
   .site-header[data-state="scrolled"] .site-header-left {
@@ -160,8 +158,8 @@ const initialState = isHomePage ? "hero" : "scrolled";
 
   @media (prefers-reduced-motion: reduce) {
     .site-header-bg,
-    .site-header-content,
-    .site-header-left {
+    .site-header-left,
+    .site-header-right {
       transition: none !important;
     }
   }
