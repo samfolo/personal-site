@@ -1,8 +1,7 @@
 export const SITE = {
   name: "Sam Folorunsho",
   url: "https://samfolorunsho.com",
-  description:
-    "Sam Folorunsho · Senior Product Engineer based in London · Building AI-native CRM at Attio.",
+  description: "Sam Folorunsho · Senior Product Engineer based in London.",
   locale: "en-GB",
   ogLocale: "en_GB",
   author: {
@@ -10,10 +9,6 @@ export const SITE = {
     jobTitle: "Senior Product Engineer",
     github: "https://github.com/samfolo",
     linkedin: "https://www.linkedin.com/in/sam-folorunsho",
-    worksFor: {
-      name: "Attio",
-      url: "https://attio.com",
-    },
     address: {
       locality: "London",
       country: "GB",

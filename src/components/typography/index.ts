@@ -11,4 +11,4 @@ export type {
   NavigationHeadingSegment,
   NavigationHeadingTag,
 } from "./NavigationHeading";
-export {AttioLogoLockup} from "./marks";
+export {TribalLogoLockup} from "./marks";
