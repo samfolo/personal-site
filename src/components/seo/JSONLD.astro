@@ -90,11 +90,6 @@ const buildSchema = ():
           url: SITE.url,
           jobTitle: SITE.author.jobTitle,
           description: SITE.description,
-          worksFor: {
-            "@type": "Organization",
-            name: SITE.author.worksFor.name,
-            url: SITE.author.worksFor.url,
-          },
           address: {
             "@type": "PostalAddress",
             addressLocality: SITE.author.address.locality,

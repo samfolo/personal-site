@@ -1,1 +1,1 @@
-export {default as AttioLogoLockup} from "./AttioLogoLockup.astro";
+export {default as TribalLogoLockup} from "./TribalLogoLockup.astro";

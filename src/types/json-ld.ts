@@ -103,7 +103,7 @@ export interface JSONLDPerson {
   /**
    * Organisation the person works for.
    */
-  worksFor: JSONLDOrganization;
+  worksFor?: JSONLDOrganization;
 
   /**
    * Person's location.
