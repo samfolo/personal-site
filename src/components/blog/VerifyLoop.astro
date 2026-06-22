@@ -1,0 +1,48 @@
+---
+/**
+ * VerifyLoop
+ *
+ * Canvas schematic of the submit-and-verify hand-off. The main thread runs a
+ * sequence of steps and, at submit, hands off to a separate verifier thread; a
+ * pass commits, a fail returns the critique to the thread. Rendering lives in
+ * scripts/diagrams/verify-loop.ts; this component is the mount point and the
+ * accessible description.
+ *
+ * Self-contained: takes no props.
+ */
+---
+
+<figure class="not-prose diagram" aria-labelledby="verify-loop-caption">
+  <canvas
+    class="diagram__canvas"
+    data-diagram="verify-loop"
+    role="img"
+    aria-label="The main thread runs a sequence of steps – search, read, reason, submit. Submitting hands off to a separate verifier thread, which reviews and reaches a verdict. A pass commits to the graph; a fail returns the critique to the thread, which tries again."
+  ></canvas>
+  <figcaption id="verify-loop-caption" class="diagram__caption">
+    The main thread hands off to a separate verifier; a pass commits, a fail
+    returns the critique to the thread.
+  </figcaption>
+</figure>
+
+<script src="../../scripts/diagrams/verify-loop.ts"></script>
+
+<style>
+  .diagram {
+    margin: var(--space-6) 0;
+  }
+
+  .diagram__canvas {
+    display: block;
+    width: 100%;
+    aspect-ratio: 820 / 300;
+  }
+
+  .diagram__caption {
+    margin-top: var(--space-3);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    line-height: var(--leading-24);
+    color: var(--muted);
+  }
+</style>

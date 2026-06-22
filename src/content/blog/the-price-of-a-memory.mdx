@@ -1,0 +1,74 @@
+---
+title: "The price of a memory"
+description: "Software usually lets you scale quality for almost nothing; the tools I reached for don't. An accounting of paying more, on purpose, for a better memory – and why I decided it was."
+publishDate: 2026-06-21
+tags: ["Engineering", "Agents", "Ideas", "Design", "Operational cost"]
+draft: false
+---
+
+import {TribalLogoLockup} from "../../components/typography";
+import {PipelineComparison, VerifyLoop} from "../../components/blog";
+
+Software is one of the best businesses anyone has worked out how to run. You build the thing once and serve it to ten people or ten million for roughly the same effort – the quality you put in scales out at almost no marginal cost. That is most of why the companies investors chase are software companies and not hardware ones: the unit economics are a gift physical products never get.
+
+The current wave of tooling bends that. Models open up things that were out of reach a year ago, but they move the economics with them – to get the best quality out of them you pay more, and usually you pay someone else, a bill that scales with how much you use it rather than a cost you absorb once. It shapes the decisions you make about a product, down to its architecture; it shaped one of mine.
+
+I took out a part of my system that worked. It was deterministic, bounded, predictable – the kind of thing you can hold in your head – and I pulled the centre of it out and replaced it with something slower, stochastic and far more expensive, on purpose.
+
+Underneath it is the same trade every time: give up something you can reason about for something you can only trust, and watch. I keep meeting it whenever I'm tempted to hand a problem to a model instead of writing the code myself.
+
+I've been building <TribalLogoLockup />, a semantic memory system. It holds the reasoning behind decisions, the heuristics, the things that usually evaporate the moment the work is done, and keeps them as a graph of connected knowledge. The part I changed is ingestion: the stretch that reads raw text and works out what it means, and how it connects to everything already there. The option to run that ingestion on an agentic runtime, rather than a single pass, is one of the things that shipped in `0.4.0` – the release that just landed, and most of why I'm writing now.
+
+## The version you can hold in your head
+
+The original ingestion path commits in a single pass. You give it text; it decides; it moves on. The step that matters most here is the one that draws the connections between a new piece of knowledge and what's already in the graph. In the single-pass version, that step is handed a fixed set of candidates – the new claims, plus whatever a similarity search pulled up as possibly related – and it refers to each one by its position in the set: position one, position two.
+
+This is traditional engineering at its most comfortable: the whole thing fits in your head. The model still has a say in the parts that aren't fixed – how many candidates the text fragments into, how many of the relations between them it judges real, which moves a little with the model and the attempt – but the procedure around it stays put, and so does the rough size of the bill. It works in a closed, packed room.
+
+Why that room is sealed is easy to wave away, and it's the reason the rest of this happened.
+
+A single pass only gets to think about what's already in front of it. So before it runs, there's a retrieval step – the classic [RAG](https://arxiv.org/abs/2005.11401) move: the new text is embedded, a similarity search pulls its nearest neighbours back out of the graph, and that handful is the entire view of what Tribal already knows that the pass will ever get.
+
+Anything the search misses, the pass can't see. A claim worded differently enough to fall outside the match. A claim that's relevant for a reason similarity doesn't measure – a contradiction rather than a resemblance, which is often the kind that matters most. The step can't go and look for these; it works with what it was given, or not at all. One search, one view, one shot.
+
+And for knowledge, that's a poor fit, because the connection you most want is usually the one you'd never have thought to look for. The single pass wasn't wrong, it was provisional: the obvious first version, the one that got something working so I could move on, never the one I expected to keep. Running it in the wild settled that – on its own it wasn't enough, and the version that actually does this job was always going to be the one that can go and look. So I stopped adding to the single pass and handed the problem to something that works differently. The comfortable part ends there.
+
+## The move, and the bill
+
+I gave the connecting step tools and let it look around. Instead of a fixed set, it can run its own searches, read a claim in full, walk a claim's neighbourhood to see what it already touches, and reach across project boundaries entirely. It retrieves as it reasons, not once up front, so when the first search misses it can phrase another, follow a thread, and go find the node nobody put on the table. The contradiction three teams over surfaces. A connection into another project's knowledge stops being an error and becomes a result worth keeping.
+
+That does not come cheap. For a page of text that becomes six candidate claims, the single-pass path is eight calls, each one and done; the agentic path is fifteen-odd durable threads, most of them running several turns, each result checked by a separate reviewer – roughly an order of magnitude more inference for the same page, and several times the wall-clock: an ingest that used to finish in about a minute now takes three or four. Run flat out on a cheap cloud model, it adds up to a few pounds an hour – which, for reading notes, is a lot.
+
+<PipelineComparison />
+
+The money is the smaller half. The real thing I gave up is the ability to say beforehand what the system will do. The single pass I could reason about. This I can only watch. I traded something I understood for something I have to trust, and trust is an uncomfortable word to write about your own infrastructure.
+
+## Backing the trade
+
+So why back it? Not because the new thing is tidy – it isn't. Because the certainty I was holding onto was thinner than it looked.
+
+The architecture was simple, and that simplicity gave me real control over the shape of the computation: how it ran, what it cost, when it finished. What it was never going to give me is control over the mess going in. Unstructured human text doesn't get more tractable because the code reading it is neat. The single pass let me predict the procedure; it never let me predict the material.
+
+What makes losing prediction survivable is that I didn't lose knowing. The source of truth stays in Postgres, and every step a thread takes – the prompt as it was sent, the answer that came back, every tool call, every turn – is written down as it happens; there's a metric or a span behind almost everything the engine does. I can't tell you what it will do next. I can show you, exactly, everything it has done. Observability stands in where predictability used to be. You give up knowing in advance and you keep knowing after the fact – which, for material this unruly, is an exchange worth making.
+
+## Fresh eyes
+
+Having an agent check its own work is an idea I'd been playing with before Tribal. The project before this one was called Sigil – generative UI – and it was where I first tried to build [reflexion](https://arxiv.org/abs/2303.11366): letting the model look at its own output and judge it before anything downstream trusted it. I hadn't read the paper then; I came to it afterwards. It's the canonical write-up if you want the idea properly. That first attempt was crude. Closer to a year on, I've found better shapes for it.
+
+The one I reach for now runs the check as a sidecar. When a thread is ready to submit, it doesn't get to commit straight away. A separate sub-agent spins up beside it with fresh context – a stand-in for fresh eyes – and reads the proposed result cold, against the rubric that actually matters: is this supported, is it the right kind of connection, is it real. Pass, and the work goes through. Fail, and it bounces back to the thread with the critique, and the thread tries again.
+
+<VerifyLoop />
+
+It's a small, almost boring loop, and it's most of what separates a result I'll commit to the graph from one I merely hoped was right. (There's a whole post in validation alone; I keep nearly writing it.)
+
+Making that reviewer durable – able to survive the process dying and resume rather than re-run the whole expensive thing – has a fiddly core. The sub-agent and the task that drives it have to reference each other, which a database won't take in a single write: each row points at one that doesn't exist yet. I didn't spot that while building it. It surfaced writing the spec, in an adversarial review with Claude – which is usually where these gaps show themselves for me, you describe the thing precisely enough and the hole appears. The fix is three words, [`DEFERRABLE INITIALLY DEFERRED`](https://www.postgresql.org/docs/current/sql-createtable.html): the constraint holds off until the transaction commits, so both rows can land together and reference each other once they both exist. The harder guarantees around it – how a sub-agent is made to report back even when it fails, how a cancellation travels down to it – are in the [public source](https://github.com/tribal-memory/tribal).
+
+## What it buys
+
+I didn't leave this as an open question. By the time the loop was running, I'd concluded the cost was worth paying, and the reason is fidelity.
+
+A model that can investigate makes better calls about what to keep: cleaner, more atomic claims, the duplicate caught instead of waved through, the real connection drawn instead of the merely similar one – and all of it checked before it lands. Small on their own. They compound. A graph fed this way stays healthy as it grows; one fed by cheaper, sloppier passes accrues noise that every later read pays for.
+
+It also lets a smaller model do work that would otherwise want a larger one – more calls, but cheaper ones, with the structure around the model carrying the quality the model alone can't reach. Run hard, as a primary memory layer, the cost today is real, but it falls every month; this was never a problem that needed a frontier model, and open-weight models are already good enough to sit underneath it. The expensive version now is the ordinary version soon.
+
+What doesn't go away is that quality has a running cost now, the way it does in most other crafts; getting it almost for free was the strange part. What stays scarce is the judgement of where to spend capability like this – and the discipline not to spend it where it won't pay.
