@@ -5,7 +5,9 @@
  * Tabbed, side-by-side view of the two ingestion pipelines and what each
  * costs. The segmented control is CSS-only (no client JavaScript); each panel
  * holds a canvas flow diagram (rendered by scripts/diagrams/pipeline.ts) plus
- * its billing. Themes through the semantic colour tokens.
+ * its billing. The bordered box holds the control; the caption sits below it,
+ * as a figure caption (matching VerifyLoop). Themes through the semantic
+ * colour tokens.
  *
  * Self-contained: takes no props. The content is specific to this article.
  */
@@ -15,50 +17,52 @@
   class="not-prose pipeline"
   aria-label="One-shot versus agentic ingestion, and the cost of each"
 >
-  <input
-    class="pipeline__radio"
-    type="radio"
-    name="pipeline-variant"
-    id="pipeline-oneshot"
-    checked
-  />
-  <input
-    class="pipeline__radio"
-    type="radio"
-    name="pipeline-variant"
-    id="pipeline-agentic"
-  />
+  <div class="pipeline__box">
+    <input
+      class="pipeline__radio"
+      type="radio"
+      name="pipeline-variant"
+      id="pipeline-oneshot"
+      checked
+    />
+    <input
+      class="pipeline__radio"
+      type="radio"
+      name="pipeline-variant"
+      id="pipeline-agentic"
+    />
 
-  <div class="pipeline__tabs" role="presentation">
-    <label class="pipeline__tab" for="pipeline-oneshot">One-shot</label>
-    <label class="pipeline__tab" for="pipeline-agentic">Agentic</label>
-  </div>
+    <div class="pipeline__tabs" role="presentation">
+      <label class="pipeline__tab" for="pipeline-oneshot">One-shot</label>
+      <label class="pipeline__tab" for="pipeline-agentic">Agentic</label>
+    </div>
 
-  <div class="pipeline__panel pipeline__panel--oneshot">
-    <canvas
-      class="pipeline__canvas"
-      data-diagram="pipeline-oneshot"
-      role="img"
-      aria-label="Extract fans out to one triage task per candidate, which converge on a single relate task before the graph. Each stage is a single call."
-    ></canvas>
-    <p class="pipeline__note">
-      Triage still fans out to one task per candidate – but each stage is a
-      single call, so the bill stays close to the number of candidates.
-    </p>
-  </div>
+    <div class="pipeline__panel pipeline__panel--oneshot">
+      <canvas
+        class="pipeline__canvas"
+        data-diagram="pipeline-oneshot"
+        role="img"
+        aria-label="Extract fans out to one triage task per candidate, which converge on a single relate task before the graph. Each stage is a single call."
+      ></canvas>
+      <p class="pipeline__note">
+        Triage still fans out to one task per candidate – but each stage is a
+        single call, so the bill stays close to the number of candidates.
+      </p>
+    </div>
 
-  <div class="pipeline__panel pipeline__panel--agentic">
-    <canvas
-      class="pipeline__canvas"
-      data-diagram="pipeline-agentic"
-      role="img"
-      aria-label="The same fan-out: extract to one triage thread per candidate, converging on a single relate thread before the graph. Each triage and relate thread is a loop of up to 25 turns, then a verifier of up to 2 tries."
-    ></canvas>
-    <p class="pipeline__note">
-      The same fan-out – but each triage and relate unit is a durable thread: a
-      loop of up to 25 turns, then a verifier (up to 2 tries). That is where the
-      order-of-magnitude more inference goes.
-    </p>
+    <div class="pipeline__panel pipeline__panel--agentic">
+      <canvas
+        class="pipeline__canvas"
+        data-diagram="pipeline-agentic"
+        role="img"
+        aria-label="The same fan-out: extract to one triage thread per candidate, converging on a single relate thread before the graph. Each triage and relate thread is a loop of up to 25 turns, then a verifier of up to 2 tries."
+      ></canvas>
+      <p class="pipeline__note">
+        The same fan-out – but each triage and relate unit is a durable thread:
+        a loop of up to 25 turns, then a verifier (up to 2 tries). That is where
+        the order-of-magnitude more inference goes.
+      </p>
+    </div>
   </div>
 
   <figcaption class="pipeline__caption">
@@ -70,8 +74,11 @@
 
 <style>
   .pipeline {
-    position: relative;
     margin: var(--space-6) 0;
+  }
+
+  .pipeline__box {
+    position: relative;
     border: var(--border-hairline) solid var(--rule);
     border-radius: var(--space-1);
   }
@@ -151,7 +158,7 @@
   }
 
   .pipeline__caption {
-    padding: 0 var(--space-4) var(--space-4);
+    margin-top: var(--space-3);
     font-family: var(--font-sans);
     font-size: var(--text-sm);
     line-height: var(--leading-24);
