@@ -1,6 +1,6 @@
 ---
 title: "The price of a memory"
-description: "Software usually lets you scale quality for almost nothing; the tools I reached for don't. An accounting of paying more, on purpose, for a better memory – and why I decided it was."
+description: "Software usually lets you scale quality for almost nothing; the tools I reached for don't. An accounting of paying more, on purpose, for a better memory – and why I decided it was worth it."
 publishDate: 2026-06-21
 tags: ["Engineering", "Agents", "Ideas", "Design", "Operational cost"]
 draft: false
@@ -11,17 +11,17 @@ import {PipelineComparison, VerifyLoop} from "../../components/blog";
 
 Software is one of the best businesses anyone has worked out how to run. You build the thing once and serve it to ten people or ten million for roughly the same effort – the quality you put in scales out at almost no marginal cost. That is most of why the companies investors chase are software companies and not hardware ones: the unit economics are a gift physical products never get.
 
-The current wave of tooling bends that. Models open up things that were out of reach a year ago, but they move the economics with them – to get the best quality out of them you pay more, and usually you pay someone else, a bill that scales with how much you use it rather than a cost you absorb once. It shapes the decisions you make about a product, down to its architecture; it shaped one of mine.
+The current wave of tooling bends that. Models open up things that were out of reach a year ago, but they move the economics with them – to get the best quality out of them you pay more, and usually you pay someone else, a bill that scales with how much you use it rather than a cost you absorb once. It shapes the decisions you make about a product, down to its architecture; it even shaped one of mine.
 
 I took out a part of my system that worked. It was deterministic, bounded, predictable – the kind of thing you can hold in your head – and I pulled the centre of it out and replaced it with something slower, stochastic and far more expensive, on purpose.
 
 Underneath it is the same trade every time: give up something you can reason about for something you can only trust, and watch. I keep meeting it whenever I'm tempted to hand a problem to a model instead of writing the code myself.
 
-I've been building <TribalLogoLockup />, a semantic memory system. It holds the reasoning behind decisions, the heuristics, the things that usually evaporate the moment the work is done, and keeps them as a graph of connected knowledge. The part I changed is ingestion: the stretch that reads raw text and works out what it means, and how it connects to everything already there. The option to run that ingestion on an agentic runtime, rather than a single pass, is one of the things that shipped in `0.4.0` – the release that just landed, and most of why I'm writing now.
+I've been building a semantic memory system called <TribalLogoLockup />. It holds the reasoning behind decisions, the heuristics, the things that usually evaporate the moment the work is done, and keeps them as a graph of connected knowledge. I made a change to the ingestion pipeline: the stretch that reads raw text and works out what it means, and how it connects to everything already there. The option to run that ingestion on an agentic runtime, rather than a single pass, is one of the things that shipped in `0.4.0` – the release that just landed, and most of why I'm writing now.
 
 ## The version you can hold in your head
 
-The original ingestion path commits in a single pass. You give it text; it decides; it moves on. The step that matters most here is the one that draws the connections between a new piece of knowledge and what's already in the graph. In the single-pass version, that step is handed a fixed set of candidates – the new claims, plus whatever a similarity search pulled up as possibly related – and it refers to each one by its position in the set: position one, position two.
+The original ingestion path commits in a single pass. You give it text; it decides; it moves on. The step that matters most here is the one that draws the connections between a new piece of knowledge and what's already in the graph. In the single-pass version, that step is handed a fixed set of candidates – the new claims, plus whatever a similarity search pulled up as possibly related – and it refers to each one by its position in the set: position one, position two, and so on.
 
 This is traditional engineering at its most comfortable: the whole thing fits in your head. The model still has a say in the parts that aren't fixed – how many candidates the text fragments into, how many of the relations between them it judges real, which moves a little with the model and the attempt – but the procedure around it stays put, and so does the rough size of the bill. It works in a closed, packed room.
 
@@ -29,13 +29,13 @@ Why that room is sealed is easy to wave away, and it's the reason the rest of th
 
 A single pass only gets to think about what's already in front of it. So before it runs, there's a retrieval step – the classic [RAG](https://arxiv.org/abs/2005.11401) move: the new text is embedded, a similarity search pulls its nearest neighbours back out of the graph, and that handful is the entire view of what Tribal already knows that the pass will ever get.
 
-Anything the search misses, the pass can't see. A claim worded differently enough to fall outside the match. A claim that's relevant for a reason similarity doesn't measure – a contradiction rather than a resemblance, which is often the kind that matters most. The step can't go and look for these; it works with what it was given, or not at all. One search, one view, one shot.
+Anything the search misses, the pass can't see: a claim worded differently enough to fall outside the match; a claim that's relevant for a reason similarity doesn't measure – a contradiction rather than a resemblance, which is often the kind that matters most. The step can't go and look for these; it works with what it was given, or not at all. One search, one view, one shot.
 
-And for knowledge, that's a poor fit, because the connection you most want is usually the one you'd never have thought to look for. The single pass wasn't wrong, it was provisional: the obvious first version, the one that got something working so I could move on, never the one I expected to keep. Running it in the wild settled that – on its own it wasn't enough, and the version that actually does this job was always going to be the one that can go and look. So I stopped adding to the single pass and handed the problem to something that works differently. The comfortable part ends there.
+For knowledge, that's a poor fit, because the connection you most want is usually the one you'd never have thought to look for. The single pass wasn't wrong, it was provisional: the obvious first version, the one that got something working so I could move on, never the one I expected to keep. Running it in the wild settled that – on its own it wasn't enough, and the version that actually does this job was always going to be the one that can go and look. So I stopped adding to the single pass and handed the problem to something that works differently. The comfortable part ends there.
 
 ## The move, and the bill
 
-I gave the connecting step tools and let it look around. Instead of a fixed set, it can run its own searches, read a claim in full, walk a claim's neighbourhood to see what it already touches, and reach across project boundaries entirely. It retrieves as it reasons, not once up front, so when the first search misses it can phrase another, follow a thread, and go find the node nobody put on the table. The contradiction three teams over surfaces. A connection into another project's knowledge stops being an error and becomes a result worth keeping.
+I gave the agentic stages tools and let them look around. Instead of working from a fixed set pasted into the prompt, each can run its own searches, read a claim in full, and walk a claim's neighbourhood to see what it already touches; the relation stage can reach across project boundaries entirely. They retrieve as they reason, not once up front, so when a search misses they can phrase another, follow a thread, and go find the node nobody put on the table. The contradiction buried elsewhere in the graph surfaces. A connection into another project's knowledge was always the goal; the single pass just couldn't reach it.
 
 That does not come cheap. For a page of text that becomes six candidate claims, the single-pass path is eight calls, each one and done; the agentic path is fifteen-odd durable threads, most of them running several turns, each result checked by a separate reviewer – roughly an order of magnitude more inference for the same page, and several times the wall-clock: an ingest that used to finish in about a minute now takes three or four. Run flat out on a cheap cloud model, it adds up to a few pounds an hour – which, for reading notes, is a lot.
 
@@ -53,7 +53,7 @@ What makes losing prediction survivable is that I didn't lose knowing. The sourc
 
 ## Fresh eyes
 
-Having an agent check its own work is an idea I'd been playing with before Tribal. The project before this one was called Sigil – generative UI – and it was where I first tried to build [reflexion](https://arxiv.org/abs/2303.11366): letting the model look at its own output and judge it before anything downstream trusted it. I hadn't read the paper then; I came to it afterwards. It's the canonical write-up if you want the idea properly. That first attempt was crude. Closer to a year on, I've found better shapes for it.
+Having an agent check its own work is an idea I'd been playing with before Tribal. The project before this one was called Sigil – an experiment in generative UI – and it was where I first tried to build [reflexion](https://arxiv.org/abs/2303.11366): letting the model look at its own output and judge it before anything downstream trusted it. I hadn't read the paper then; I came to it afterwards. It's the canonical write-up if you want the idea properly. That first attempt was crude. Closer to a year on, I've found better shapes for it.
 
 The one I reach for now runs the check as a sidecar. When a thread is ready to submit, it doesn't get to commit straight away. A separate sub-agent spins up beside it with fresh context – a stand-in for fresh eyes – and reads the proposed result cold, against the rubric that actually matters: is this supported, is it the right kind of connection, is it real. Pass, and the work goes through. Fail, and it bounces back to the thread with the critique, and the thread tries again.
 
