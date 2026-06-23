@@ -216,9 +216,17 @@ export const mountSteppedDiagram = (
 // Drawing primitives (logical coordinates)
 // =============================================================================
 
-const MONO = "13px CommitMono, ui-monospace, monospace";
-const SMALL_MONO = "12px CommitMono, ui-monospace, monospace";
-const LABEL = "600 11px Switzer, system-ui, sans-serif";
+/**
+ * Canvas font shorthands. `ctx.font` is a CSS string and cannot read custom
+ * properties, so these mirror the typography tokens by hand — the same hazard
+ * the design system documents for Satori. Keep them in step with
+ * `src/styles/tokens/typography.css`: --font-mono, --font-sans, the type scale
+ * (--text-xs 11px, --text-sm 13px), and --font-semibold 600. SMALL_MONO's 12px
+ * is a deliberate exception — a step between 11 and 13 for dense annotations.
+ */
+const MONO = '13px CommitMono, "JetBrains Mono", ui-monospace, monospace';
+const SMALL_MONO = '12px CommitMono, "JetBrains Mono", ui-monospace, monospace';
+const LABEL = "600 11px Switzer, system-ui, -apple-system, sans-serif";
 
 /**
  * The article content column width in CSS pixels, derived from the design

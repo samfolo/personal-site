@@ -26,7 +26,7 @@ const INITIAL_BLURB =
   "One profile, <code>A</code>, holds every embedding. Searches read from it and new writes land in it. The migration has to keep this working the whole way through.";
 ---
 
-<figure class="not-prose migration" aria-labelledby="migration-caption">
+<figure class="not-prose diagram-figure" aria-labelledby="migration-caption">
   <div class="migration__steps">
     {
       STEPS.map((_, i) => (
@@ -63,7 +63,7 @@ const INITIAL_BLURB =
 
   <figcaption id="migration-caption" class="migration__caption">
     <p class="migration__title" data-step-title set:html={INITIAL_TITLE} />
-    <p class="migration__note" data-step-note set:html={INITIAL_BLURB} />
+    <p class="diagram-caption migration__note" data-step-note set:html={INITIAL_BLURB} />
   </figcaption>
 
   <div class="diagram-desc" id="migration-diagram-desc">
@@ -89,24 +89,6 @@ const INITIAL_BLURB =
 <script src="../../scripts/diagrams/migration.ts"></script>
 
 <style>
-  .migration {
-    margin: var(--space-6) 0;
-  }
-
-  /* A complete text description for assistive tech and non-rendering crawlers,
-     since the canvas (and its JS-injected step copy) is otherwise opaque. */
-  .diagram-desc {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
   /* Radios drive the stepper; kept focusable, removed from layout. */
   .migration__radio {
     position: absolute;
@@ -208,17 +190,13 @@ const INITIAL_BLURB =
   }
 
   .migration__note {
-    font-family: var(--font-sans);
-    font-size: var(--text-sm);
-    line-height: var(--leading-24);
-    color: var(--muted);
     margin: 0;
   }
 
   .migration__caption :global(code) {
     font-family: var(--font-mono);
-    font-size: 0.85em;
-    padding: 0.1em 0.3em;
+    font-size: var(--text-xs);
+    padding: var(--space-05) var(--space-1);
     border-radius: var(--space-1);
     background: var(--rule);
     color: var(--fg);

@@ -1,0 +1,39 @@
+/**
+ * Diagram shell
+ *
+ * Shared conventions for the blog's canvas diagram components: the figure
+ * shell margin, the muted multi-line caption/note typography, and the
+ * visually-hidden text description that gives assistive tech and non-rendering
+ * crawlers a full account of an otherwise-opaque canvas. Per-diagram specifics
+ * (aspect ratios, the control skins, individual caption margins) stay local in
+ * each component's scoped styles.
+ */
+
+@layer components {
+  /* Outer figure shell. */
+  .diagram-figure {
+    margin: var(--space-6) 0;
+  }
+
+  /* Muted, multi-line caption / note typography. Per-element margins live on
+     the element's own class. */
+  .diagram-caption {
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    line-height: var(--leading-24);
+    color: var(--muted);
+  }
+
+  /* Full text description for assistive tech and non-rendering crawlers. */
+  .diagram-desc {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+}
