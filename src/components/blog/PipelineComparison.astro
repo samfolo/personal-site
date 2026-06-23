@@ -16,6 +16,7 @@
 <figure
   class="not-prose pipeline"
   aria-label="One-shot versus agentic ingestion, and the cost of each"
+  aria-describedby="pipeline-desc"
 >
   <div class="pipeline__box">
     <input
@@ -68,6 +69,17 @@
   <figcaption class="pipeline__caption">
     Ingestion, one-shot versus agentic – and what each costs.
   </figcaption>
+
+  <div class="diagram-desc" id="pipeline-desc">
+    Two views of the ingestion pipeline, selectable with a one-shot / agentic
+    tab. Both share the same shape: an extract stage fans out to one triage
+    task per candidate claim, which converge on a single relate stage before
+    the knowledge graph. In the one-shot view each stage is a single model
+    call, so for six candidates the run is roughly eight calls. In the agentic
+    view each triage and relate unit is instead a durable thread — a tool-using
+    loop of up to 25 turns followed by a fresh-context verifier of up to two
+    tries — which is where the order-of-magnitude increase in inference goes.
+  </div>
 </figure>
 
 <script src="../../scripts/diagrams/pipeline.ts"></script>
@@ -75,6 +87,19 @@
 <style>
   .pipeline {
     margin: var(--space-6) 0;
+  }
+
+  /* Complete text description for assistive tech and non-rendering crawlers. */
+  .diagram-desc {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .pipeline__box {

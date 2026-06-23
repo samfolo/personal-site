@@ -17,12 +17,21 @@
     class="diagram__canvas"
     data-diagram="verify-loop"
     role="img"
-    aria-label="The main thread runs a sequence of steps – search, read, reason, submit. Submitting hands off to a separate verifier thread, which reviews and reaches a verdict. A pass commits to the graph; a fail returns the critique to the thread, which tries again."
+    aria-label="The submit-and-verify hand-off."
+    aria-describedby="verify-loop-desc"
   ></canvas>
   <figcaption id="verify-loop-caption" class="diagram__caption">
     The main thread hands off to a separate verifier; a pass commits, a fail
     returns the critique to the thread.
   </figcaption>
+
+  <div class="diagram-desc" id="verify-loop-desc">
+    The main thread runs a sequence of steps — search, read, reason, submit.
+    Submitting hands off to a separate verifier thread that runs with fresh
+    context, reviews the proposed result against a rubric, and reaches a
+    verdict: a pass commits the result to the knowledge graph; a fail returns
+    the critique to the main thread, which tries again.
+  </div>
 </figure>
 
 <script src="../../scripts/diagrams/verify-loop.ts"></script>
@@ -30,6 +39,19 @@
 <style>
   .diagram {
     margin: var(--space-6) 0;
+  }
+
+  /* Complete text description for assistive tech and non-rendering crawlers. */
+  .diagram-desc {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .diagram__canvas {
