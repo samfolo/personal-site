@@ -1,0 +1,66 @@
+---
+title: "Keeping system-shaped promises"
+description: "Making one thing configurable – the embedding model – turned out to promise far more than it looked: embedding migration as a capability of the system. On the weight a small promise carries once there's something to lose."
+publishDate: 2026-06-23
+tags: ["Engineering", "Architecture", "Embeddings", "Infrastructure", "Design"]
+draft: true
+---
+
+import {TribalLogoLockup} from "../../components/typography";
+import {MigrationWalkthrough} from "../../components/blog";
+
+Some tools have to be system-shaped – built to live inside a system someone else is already running, and to take on its shape rather than impose one of their own. Building one well, I think, starts by honouring something about those systems: their shape is a response, not a design. It answers requirements that arrived without warning, and the realities of building the thing over time – people come and go, customers come and go, priorities shift. Once a product is in motion it can only turn; it rarely gets the chance to stop and walk back to the starting line. So whatever you hand someone has to meet a system that's already moving, already bent into a shape neither of you would have chosen from scratch.
+
+That's what I try to hold onto whenever I build something other people are meant to build *with*. A component that's going to live inside someone else's architecture has to bend to it – not infinitely, but enough to be tuned to a workflow nobody anticipated. The dev tools people reach for without bracing themselves are the configurable ones; what you're really shipping isn't a feature so much as the confidence that the thing will still fit once the constraints shift again, as they always do.
+
+The trouble is that configurability is a promise, and how big it looks on the surface tells you very little about how big it is to keep. *Use whichever embedding provider you like, and switch whenever you want* is one line in a README. What it actually commits you to is embedding migration as a capability of the system – most of an engineering project, folded up behind a sentence.
+
+I know how big, because I made that promise before I understood it. Had I understood it sooner, I might have made it later – but I'd have made it. It came out of a conflation a lot of people make. I knew inference and embedding were different models doing different jobs; what I underweighted was how differently they behave when you change one. I treated them as two settings of the same kind – two endpoints, two keys, two lines of config…
+
+They aren't the same kind of thing.
+
+Your inference provider sits at the boundary of the system, almost invisible: swap it and the next request just goes somewhere else, and nothing you've already stored has to move. The embedding model sits inside the walls. It's load-bearing – every piece of knowledge you've ever ingested into the system has been shaped by it, so changing it doesn't reroute a request, it invalidates everything you already hold. The new model describes text in a space the old vectors can't be compared against, and until you've rebuilt all of them, a search can't put the old and the new in the same room.
+
+## An audience of one
+
+I started building <TribalLogoLockup /> as a tool with an audience of one. The embedding geometry was fixed to match: 768 dimensions, produced by `text-embedding-3-small`, a model I'd used on other projects and trusted to be cheap. Cheapness mattered more than it sounds like it should, because embedding isn't something Tribal does now and then – it embeds every claim as it comes in and every query as it searches. A cheap one meant I could leave the system going, feed it real work, and study how it behaved without studying a bill.
+
+That's worth dwelling on for a second, because it's bigger than my project. A lot of what stops people experimenting with these models is that every attempt has a price. When each run and each revision costs real money, it starts to feel as though there's a cap on how many times you're allowed to try – how hard you can push on an idea before you can no longer justify pushing further. It teaches you, quietly, to treat understanding as something for people with deep pockets.
+
+That was my fear, and a cheap embedding model was one way I bought myself the room to be wrong as often as I needed to be: the meter still ran, it just ran slow. It's a real part of why local, open-weight models are a gift – they take the meter off the wall entirely.
+
+So when I designed Tribal, hyper-configurability swept the embedding model up almost by reflex. I gave it a config option and considered it handled – that's what configurable means, isn't it: there's a setting, you change the setting. The trap only surfaces once a graph has lived a while.
+
+In development your graphs are disposable: a Docker container spun up for an end-to-end test and thrown away the moment it passes. A disposable graph holds nothing, so re-embedding it costs nothing, so changing the embedding model really is just a setting – no heavier than changing the number of workers. The weight stays invisible right up until there's something to lose. The first graph with real history in it is the one that tells you the embedding model was never a setting like the others.
+
+## What it demands
+
+Making it a real setting meant reckoning with what that change actually costs. Because a new model embeds into a [different space](https://arxiv.org/abs/2209.15430) from the old, it means re-embedding the whole corpus before a single search can trust what it finds. On a tool with an audience of one, you'd take it offline for an afternoon and rebuild; on something other people lean on, you can't: the graph has to keep answering questions and taking new ones while it's rebuilt underneath them. That, not the config line, is the real promise – online embedding migration, the kind that never goes dark.
+
+The first thing that falls out of it is a question that sounds trivial and isn't. While two versions of the corpus exist at once – the old one being served, the new one being built – how does the system know which is live? It feels natural to reach for a flag – a field, a column, somewhere you mark one model as the active one and change when you want another. I've designed systems like that before, and I know where it goes; I didn't want to make that mistake here.
+
+A flag like that is a second source of truth, and a second source of truth can drift from the first – written on its own, it quietly comes to disagree with the thing it describes, pointing at a model whose vectors aren't all there yet, or one half-deleted. That's a drift surface, the kind of thing I want gone from a design before it's built. The alternative, and the better option, is to never introduce it to begin with. I've always been fond of append-only logs, immutable lists. You walk them and see what truth falls out the other end, rather than keep a value by hand. Each activation of a model is a row in the log – an embedding profile: the model in force, and every vector written under it. The active profile is never stored, only derived: it's always the most recent one to have finished building. Nothing to keep in sync, because nothing can disagree. The states where the system serves from a profile that isn't ready can't be written down at all.
+
+Once I knew I could trust the shape of the migration, I could shift my focus to the hard parts. The new profile is built off to the side while the old one stays live, and "going live" is nothing more than that derived answer changing – the instant the new profile becomes the most recent finished one. Here is the whole arc:
+
+<MigrationWalkthrough />
+
+## Chasing a moving target
+
+The interesting part is how the new profile fills, because the obvious way is the wrong way. The way I first planned to do it was to write every new embedding to both profiles while the migration runs, so the new one is always current. Instead, the new profile is filled by a single background worker: it asks the database which pieces of knowledge don't yet have an embedding in the new profile, and it embeds them. That is the whole job.
+
+The catch is that the answer keeps changing, because the system is live. While the worker grinds through the backlog, new knowledge is still arriving, and every new piece is written only to the old profile – which means it immediately shows up on the worker's list of things still missing from the new one. The worker is chasing a target that moves every time someone uses the system. It's a faintly comic image, a process forever a few steps behind, but it converges: the trickle of new writes is small next to the corpus, and the worker is quicker than the trickle.
+
+This is an old pattern, and the cleanest version of it I know is [gh-ost](https://github.com/github/gh-ost), GitHub's tool for changing a live database table without taking it down. gh-ost builds a shadow copy of the table and keeps it in lockstep with the original by tailing the database's change log – every write to the real table is replayed onto the shadow as it lands. Tribal doesn't do that. It never holds the new profile in step; it just keeps asking what's missing and filling it, and lets the gap close on its own. Where gh-ost syncs the shadow, Tribal derives it. It's the lazier design, and it's the same instinct as refusing the active flag: don't maintain a second thing you have to keep in agreement with the first, when you can work the difference out from the truth you already have.
+
+All the design choices so far are what make the final flip pleasantly boring. When the worker finally reports nothing missing, the system takes a short lock – the one moment in the entire migration that anything pauses – drains the handful of writes still in flight, embeds any stragglers that landed at the last second, confirms the count is really zero, and marks the new profile finished. That last act is the cutover: one row's status changing. Because the active profile was never stored, only derived as the most recent finished one, that single change is what makes the new model live. Searches never stop – they're reading the old profile right up to the instant they're reading the new one. Writes pause for a moment measured in a couple of database statements: no model calls, nothing slow. Then it's done.
+
+There was a deadline in all this, and a tension I should be honest about. I like to take my time and get a thing right before it meets anyone – and I'd been feeling the opposite pull just as hard, to ship, to let the project make contact with reality before I spent another month perfecting the wrong thing in private. I gave myself the end of May; it slipped by a week, but the date never got to decide the engineering.
+
+## Why now
+
+Step back, and the whole thing is an asymmetry. Changing the model that *writes* your text – the inference model, the one at the boundary – is still a line of config: the next request just goes somewhere else. The embedding model – the one in the walls, that *reads your meaning* – is the expensive one: changing it took a profile log, a background worker, a shadow build, a lock, a flip. The same word, *configurable*, sits in front of both, with wildly different bills behind it. That gap is the entire reason this work exists.
+
+Which leaves the last question – why build it now, before Tribal is big enough to force the issue? Because the version you build later is the dear one. The embedding model is a decision you make early, when you know least; I picked a cheap one for an audience of one. It is exactly the kind of decision you'll want to revisit once the system actually matters – and by then the corpus is large, people are leaning on it, and bolting the capability on after the fact means a destructive change to the schema everything already sits on. So you build the door before you're in the room that needs it.
+
+In [The price of a memory](/blog/the-price-of-a-memory) I wrote about paying a running cost, per use, for quality that software usually hands you for free. This is the other half of that bargain: an up-front cost, paid once, for the right to change your mind later. The promise was cheap to make and expensive to keep – and what the expense buys back is the freedom to change my mind without taking the whole thing dark to do it.

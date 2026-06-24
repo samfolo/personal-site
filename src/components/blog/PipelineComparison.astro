@@ -14,8 +14,9 @@
 ---
 
 <figure
-  class="not-prose pipeline"
+  class="not-prose diagram-figure"
   aria-label="One-shot versus agentic ingestion, and the cost of each"
+  aria-describedby="pipeline-desc"
 >
   <div class="pipeline__box">
     <input
@@ -44,7 +45,7 @@
         role="img"
         aria-label="Extract fans out to one triage task per candidate, which converge on a single relate task before the graph. Each stage is a single call."
       ></canvas>
-      <p class="pipeline__note">
+      <p class="diagram-caption pipeline__note">
         Triage still fans out to one task per candidate – but each stage is a
         single call, so the bill stays close to the number of candidates.
       </p>
@@ -57,7 +58,7 @@
         role="img"
         aria-label="The same fan-out: extract to one triage thread per candidate, converging on a single relate thread before the graph. Each triage and relate thread is a loop of up to 25 turns, then a verifier of up to 2 tries."
       ></canvas>
-      <p class="pipeline__note">
+      <p class="diagram-caption pipeline__note">
         The same fan-out – but each triage and relate unit is a durable thread:
         a loop of up to 25 turns, then a verifier (up to 2 tries). That is where
         the order-of-magnitude more inference goes.
@@ -65,18 +66,25 @@
     </div>
   </div>
 
-  <figcaption class="pipeline__caption">
+  <figcaption class="diagram-caption pipeline__caption">
     Ingestion, one-shot versus agentic – and what each costs.
   </figcaption>
+
+  <div class="diagram-desc" id="pipeline-desc">
+    Two views of the ingestion pipeline, selectable with a one-shot / agentic
+    tab. Both share the same shape: an extract stage fans out to one triage
+    task per candidate claim, which converge on a single relate stage before
+    the knowledge graph. In the one-shot view each stage is a single model
+    call, so for six candidates the run is roughly eight calls. In the agentic
+    view each triage and relate unit is instead a durable thread — a tool-using
+    loop of up to 25 turns followed by a fresh-context verifier of up to two
+    tries — which is where the order-of-magnitude increase in inference goes.
+  </div>
 </figure>
 
 <script src="../../scripts/diagrams/pipeline.ts"></script>
 
 <style>
-  .pipeline {
-    margin: var(--space-6) 0;
-  }
-
   .pipeline__box {
     position: relative;
     border: var(--border-hairline) solid var(--rule);
@@ -151,18 +159,10 @@
 
   .pipeline__note {
     margin-top: var(--space-3);
-    font-family: var(--font-sans);
-    font-size: var(--text-sm);
-    line-height: var(--leading-24);
-    color: var(--muted);
   }
 
   .pipeline__caption {
     margin-top: var(--space-3);
-    font-family: var(--font-sans);
-    font-size: var(--text-sm);
-    line-height: var(--leading-24);
-    color: var(--muted);
   }
 
   @media (prefers-reduced-motion: reduce) {

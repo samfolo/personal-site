@@ -27,8 +27,11 @@ jobs:
             echo "is_preview=false" >> $GITHUB_OUTPUT
             echo "tag=" >> $GITHUB_OUTPUT
           else
-            # Sanitise branch name for Cloud Run tag (lowercase, alphanumeric + hyphens, max 63 chars)
-            TAG=$(echo "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | sed 's/^-//' | sed 's/-$//' | cut -c1-63)
+            # Sanitise the branch name into a Cloud Run tag. Cloud Run caps the
+            # combined traffic tag + service name at 46 chars, so the tag must
+            # leave room for "$SERVICE_NAME"; trim any hyphen the cut leaves.
+            MAX_TAG=$((46 - ${#SERVICE_NAME} - 1))
+            TAG=$(echo "$BRANCH_NAME" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]/-/g' | sed 's/^-//' | sed 's/-$//' | cut -c1-"$MAX_TAG" | sed 's/-$//')
             # Ensure tag starts with a letter
             if [[ ! "$TAG" =~ ^[a-z] ]]; then
               TAG="br-$TAG"
