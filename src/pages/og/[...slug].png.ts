@@ -46,6 +46,25 @@ export const GET: APIRoute = async ({params}) => {
       date: post.data.publishDate,
       theme: getThemeFromTitle(post.data.title),
     };
+  }
+  // Route: /og/banner/[post-slug].png - 5:2 banner for syndicated articles
+  else if (slugParts.length === 2 && slugParts[0] === "banner") {
+    const post = await getEntry("blog", slugParts[1]);
+
+    if (!post) {
+      return new Response("Not Found", {status: 404});
+    }
+
+    if (import.meta.env.PROD && post.data.draft) {
+      return new Response("Not Found", {status: 404});
+    }
+
+    options = {
+      title: post.data.title,
+      date: post.data.publishDate,
+      theme: getThemeFromTitle(post.data.title),
+      variant: "banner",
+    };
   } else {
     return new Response("Not Found", {status: 404});
   }
