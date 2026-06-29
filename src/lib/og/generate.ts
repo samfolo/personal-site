@@ -9,18 +9,8 @@ import {Resvg} from "@resvg/resvg-js";
 import satori from "satori";
 
 import {FONTS} from "./fonts";
-import {createOgTemplate} from "./template";
+import {createOgTemplate, OG_DIMENSIONS} from "./template";
 import type {OgTemplateOptions} from "./template";
-
-/**
- * OG image width in pixels.
- */
-const WIDTH = 1200;
-
-/**
- * OG image height in pixels.
- */
-const HEIGHT = 630;
 
 /**
  * Generate OG image as PNG buffer.
@@ -32,10 +22,11 @@ export const generateOgImage = async (
   options: OgTemplateOptions
 ): Promise<Buffer> => {
   const template = createOgTemplate(options);
+  const {width, height} = OG_DIMENSIONS[options.variant ?? "og"];
 
   const svg = await satori(template, {
-    width: WIDTH,
-    height: HEIGHT,
+    width,
+    height,
     fonts: FONTS,
   });
 
@@ -43,7 +34,7 @@ export const generateOgImage = async (
   const resvg = new Resvg(svg, {
     fitTo: {
       mode: "width",
-      value: WIDTH,
+      value: width,
     },
   });
 

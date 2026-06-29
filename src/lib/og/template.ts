@@ -17,13 +17,17 @@ import {THEME_COLOURS} from "../theme";
 import type {ThemeColours} from "../theme";
 
 /**
- * Canvas dimensions for OG images.
+ * Canvas dimensions per output variant. The default OG card is 1.91:1 (the
+ * social-preview standard); the banner is 5:2, for article / cover headers.
  */
-const OG = {
-  width: 1200,
-  height: 630,
-  padding: 56,
+export const OG_DIMENSIONS = {
+  og: {width: 1200, height: 630, padding: 56},
+  banner: {width: 1500, height: 600, padding: 64},
 } as const;
+
+export type OgVariant = keyof typeof OG_DIMENSIONS;
+
+type Dimensions = (typeof OG_DIMENSIONS)[OgVariant];
 
 /**
  * Theme button dimensions.
@@ -66,6 +70,11 @@ export interface OgTemplateOptions {
    * Whether this is the default site-level OG image.
    */
   isDefault?: boolean;
+
+  /**
+   * Output variant: the 1.91:1 OG card (default) or the 5:2 banner.
+   */
+  variant?: OgVariant;
 }
 
 /**
@@ -92,10 +101,11 @@ const getButtonStyle = (
  */
 const createDefaultTemplate = (
   theme: Theme,
-  colours: ThemeColours
+  colours: ThemeColours,
+  dims: Dimensions
 ): ReturnType<typeof html> => html`
   <div
-    style="display: flex; flex-direction: column; width: ${OG.width}px; height: ${OG.height}px; background-color: ${colours.bg}; padding: ${OG.padding}px; font-family: 'Switzer';"
+    style="display: flex; flex-direction: column; width: ${dims.width}px; height: ${dims.height}px; background-color: ${colours.bg}; padding: ${dims.padding}px; font-family: 'Switzer';"
   >
     <div style="display: flex; justify-content: flex-end;">
       <div style="display: flex; gap: ${BUTTON.gap}px;">
@@ -162,7 +172,8 @@ const createDefaultTemplate = (
  */
 const createBlogPostTemplate = (
   options: OgTemplateOptions,
-  colours: ThemeColours
+  colours: ThemeColours,
+  dims: Dimensions
 ): ReturnType<typeof html> => {
   const {title, date, theme} = options;
   const formattedDate = date ? formatDate(date, "dot-separated") : "";
@@ -170,7 +181,7 @@ const createBlogPostTemplate = (
 
   return html`
     <div
-      style="display: flex; flex-direction: column; width: ${OG.width}px; height: ${OG.height}px; background-color: ${colours.bg}; padding: ${OG.padding}px; font-family: 'Switzer';"
+      style="display: flex; flex-direction: column; width: ${dims.width}px; height: ${dims.height}px; background-color: ${colours.bg}; padding: ${dims.padding}px; font-family: 'Switzer';"
     >
       <div
         style="display: flex; justify-content: space-between; align-items: flex-start;"
@@ -280,10 +291,11 @@ const createBlogPostTemplate = (
 export const createOgTemplate = (
   options: OgTemplateOptions
 ): ReturnType<typeof html> => {
-  const {theme, isDefault = false} = options;
+  const {theme, isDefault = false, variant = "og"} = options;
   const colours = THEME_COLOURS[theme];
+  const dims = OG_DIMENSIONS[variant];
 
   return isDefault
-    ? createDefaultTemplate(theme, colours)
-    : createBlogPostTemplate(options, colours);
+    ? createDefaultTemplate(theme, colours, dims)
+    : createBlogPostTemplate(options, colours, dims);
 };

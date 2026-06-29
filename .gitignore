@@ -27,3 +27,6 @@ pnpm-debug.log*
 # Local docs
 .contextnotes/
 .todo/
+
+# Local syndication asset exports (generated, not source)
+exports/

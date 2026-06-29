@@ -1,0 +1,184 @@
+---
+/**
+ * Diagram export surface (DEV ONLY)
+ *
+ * A chrome-less, theme-pinned page that renders ONE diagram on a solid
+ * background, sized to an arbitrary output frame, for screenshotting into a
+ * static figure that travels to platforms which can't run the canvas (LinkedIn,
+ * Substack, X). Not the article — just the figure, on a controlled surface, so
+ * it reads as a designed image rather than a screenshot of the site.
+ *
+ * The frame is fully parameterised so it adapts to whatever dimensions a
+ * platform wants WITHOUT code changes. The diagram itself is determined by a
+ * single number — its render width — because the engine scales the whole
+ * logical space (fonts included) to fit; there is no separate font knob. The
+ * query params only size the frame the diagram is fitted into.
+ *
+ *   /export/migration?step=3             (tight: frame wraps the diagram)
+ *   /export/pipeline?view=agentic&w=1600
+ *   /export/verify-loop?w=1200&h=630     (card: exact 1200×630, centred)
+ *
+ * Params: w (output width px), pad (uniform margin px), h (OPTIONAL — when
+ * given, makes an exact w×h card with the diagram contained and centred; when
+ * omitted, the frame wraps the diagram tightly with uniform padding, no slack),
+ * theme (pinned palette, default charcoal), step (migration 0–6), view
+ * (pipeline oneshot|agentic). Device pixel ratio is the screenshot tool's job
+ * (Playwright deviceScaleFactor), not a param.
+ *
+ * Returns 404 in production — run it against `npm run dev` + Playwright.
+ */
+import "../../styles/global.css";
+
+export const prerender = false;
+
+// Diagram logical aspect ratios — mirror each script's {width, height}. If a
+// diagram's logical dimensions change, update the matching entry here.
+const ASPECT: Record<string, number> = {
+  migration: 672 / 320,
+  pipeline: 800 / 240,
+  "verify-loop": 820 / 300,
+};
+
+const {diagram} = Astro.params;
+
+if (import.meta.env.PROD || !diagram || !(diagram in ASPECT)) {
+  return new Response("Not found", {status: 404});
+}
+
+const q = Astro.url.searchParams;
+const clampInt = (v: number, min: number, max: number): number =>
+  Math.min(max, Math.max(min, Math.round(v)));
+const num = (key: string, fallback: number): number => {
+  const raw = q.get(key);
+  if (raw === null || raw.trim() === "") {
+    return fallback;
+  }
+  const v = Number(raw);
+  return Number.isFinite(v) ? v : fallback;
+};
+
+const w = clampInt(num("w", 1200), 16, 4096);
+const pad = clampInt(num("pad", 64), 0, 1024);
+const step = clampInt(num("step", 0), 0, 6);
+const theme = q.get("theme") ?? "charcoal";
+const view = q.get("view") === "agentic" ? "agentic" : "oneshot";
+
+// An explicit `h` switches to fixed-card mode: the diagram is contained and
+// centred in an exact w×h frame (for a platform that wants set dimensions).
+// With no `h`, the frame wraps the diagram tightly with uniform padding.
+const hRaw = q.get("h");
+const h =
+  hRaw !== null && hRaw.trim() !== "" && Number.isFinite(Number(hRaw))
+    ? clampInt(Number(hRaw), 16, 4096)
+    : null;
+
+const ar = ASPECT[diagram];
+let cw: number;
+let ch: number;
+let frameH: number;
+if (h !== null) {
+  // Fixed card: contain the diagram inside the padded w×h frame.
+  const availW = Math.max(1, w - 2 * pad);
+  const availH = Math.max(1, h - 2 * pad);
+  cw = availW;
+  ch = cw / ar;
+  if (ch > availH) {
+    ch = availH;
+    cw = ch * ar;
+  }
+  frameH = h;
+} else {
+  // Tight: the diagram at (w − 2·pad), the frame wrapping it with uniform pad.
+  cw = Math.max(1, w - 2 * pad);
+  ch = cw / ar;
+  frameH = Math.round(ch + 2 * pad);
+}
+const canvasStyle = `width:${Math.round(cw)}px;height:${Math.round(ch)}px`;
+---
+
+<!doctype html>
+<html lang="en" class={`theme-${theme}`}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="robots" content="noindex" />
+    <title>export · {diagram}</title>
+    <link
+      rel="preload"
+      href="/fonts/Switzer-Variable.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      href="/fonts/CommitMono-400.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <style is:global>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        background: var(--bg);
+      }
+
+      /* The dev toolbar would otherwise leak into export screenshots. */
+      astro-dev-toolbar {
+        display: none;
+      }
+
+      .export-frame {
+        background: var(--bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .export-frame figure {
+        margin: 0;
+        line-height: 0;
+      }
+
+      .export-frame canvas {
+        display: block;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="export-frame" style={`width:${w}px;height:${frameH}px`}>
+      <figure>
+        {
+          diagram === "migration" && (
+            <>
+              <input
+                type="radio"
+                name="migration-step"
+                data-step={step}
+                checked
+                hidden
+              />
+              <canvas data-diagram="migration" style={canvasStyle} />
+            </>
+          )
+        }
+        {
+          diagram === "pipeline" && (
+            <canvas data-diagram={`pipeline-${view}`} style={canvasStyle} />
+          )
+        }
+        {
+          diagram === "verify-loop" && (
+            <canvas data-diagram="verify-loop" style={canvasStyle} />
+          )
+        }
+      </figure>
+    </div>
+
+    <script src="../../scripts/diagrams/migration.ts"></script>
+    <script src="../../scripts/diagrams/pipeline.ts"></script>
+    <script src="../../scripts/diagrams/verify-loop.ts"></script>
+  </body>
+</html>
