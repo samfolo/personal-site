@@ -15,7 +15,7 @@ That's what I try to hold onto whenever I build something other people are meant
 
 The trouble is that configurability is a promise, and how big it looks on the surface tells you very little about how big it is to keep. _"Use whichever embedding provider you like, and switch whenever you want"_ is one line in a README. What it actually commits you to is embedding migration as a capability of the system – most of an engineering project, folded up behind a sentence.
 
-I know how big, because I made that promise before I understood it. Had I understood it sooner, I might have made it later – but I'd have made it. It came out of a conflation a lot of people make. I knew inference and embedding were different models doing different jobs; what I underweighted was how differently they behave when you change one. I treated them as two settings of the same kind – two endpoints, two keys, two lines of config…
+I know how big, because I made that promise before I understood it. Had I understood it sooner, I might have made it later – but I made it, and I'm glad I had to make it true. It came out of a conflation a lot of people make. I knew inference and embedding were different models doing different jobs; what I underweighted was how differently they behave when you change one. I treated them as two settings of the same kind – two endpoints, two keys, two lines of config…
 
 They aren't the same kind of thing.
 
@@ -29,7 +29,7 @@ That's worth dwelling on for a second, because it's bigger than my project. A lo
 
 That was my fear, and a cheap embedding model was one way I bought myself the room to be wrong as often as I needed to be: the meter still ran, it just ran slow. It's a real part of why local, open-weight models are a gift – they take the meter off the wall entirely.
 
-So when I designed Tribal, the promise of hyper-configurability swept the embedding model up with everything else, almost by reflex. I gave it a config option and considered it handled – that's what configurable means, isn't it? There's a setting, you change the setting.
+So when I designed the config schema, the promise of hyper-configurability swept the embedding model up with everything else, almost by reflex. I gave it a config option and considered it handled – that's what configurable means, isn't it? There's a setting, you change the setting.
 
 The trap only surfaces once a graph has lived a while.
 
