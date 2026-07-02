@@ -1,0 +1,114 @@
+---
+/**
+ * Diagram SDK preview (DEV ONLY)
+ *
+ * A plain article-width surface rendering every registered SDK diagram, for
+ * composing and iterating without touching a post. Returns 404 in
+ * production.
+ *
+ *   /dev/diagrams                theme-steel, no grid
+ *   /dev/diagrams?theme=teal     pin any theme class
+ *   /dev/diagrams?grid=1         overlay the module grid on every figure
+ */
+import {Diagram, SteppedDiagram} from "../../components/blog";
+import {migration, oneShotPipeline, verifyLoop} from "../../diagrams";
+import "../../styles/global.css";
+
+export const prerender = false;
+
+if (import.meta.env.PROD) {
+  return new Response("Not found", {status: 404});
+}
+
+const query = Astro.url.searchParams;
+const theme = query.get("theme") ?? "steel";
+const debugGrid = query.get("grid") === "1";
+---
+
+<html lang="en-GB" class={`theme-${theme}`}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex" />
+    <title>diagrams · dev</title>
+  </head>
+  <body>
+    <main>
+      <h1>Diagram SDK preview</h1>
+
+      <Diagram
+        of={verifyLoop}
+        caption="The verify loop — drafting stays on the main thread; verification runs on its own thread and can veto a publish."
+        debugGrid={debugGrid}
+      >
+        <Fragment slot="description">
+          A schematic of the verify loop. On the main thread, a claim node leads
+          to a draft node, which leads to a publish node. Below, inside a dashed
+          boundary marked as the verifier on a separate thread, a verify node
+          leads to a judge node. The draft hands off to verify; a judge pass
+          leads up to publish; a verify fail returns to draft for redrafting.
+        </Fragment>
+      </Diagram>
+
+      <Diagram
+        of={oneShotPipeline}
+        caption="One-shot ingestion — extract fans out to one triage task per candidate; each stage is a single call."
+        debugGrid={debugGrid}
+      >
+        <Fragment slot="description">
+          A flowchart of the one-shot ingestion pipeline. An extract node fans
+          out to three triage nodes, one per candidate claim, labelled one, two,
+          and n. The triage nodes converge on a single relate node, which leads
+          to the knowledge graph. Annotations note one call for extract, one
+          call per triage task, one call for relate — roughly eight calls per
+          run in total.
+        </Fragment>
+      </Diagram>
+
+      <SteppedDiagram of={migration} debugGrid={debugGrid}>
+        <Fragment slot="description">
+          A seven-step diagram of a zero-downtime embedding migration.
+          Throughout, reads and writes are served by the active profile —
+          profile A, the older model text-embedding-3-small at 768 dimensions —
+          while a background reindex worker fills a new profile, profile B, the
+          newer model embeddinggemma; the system never dual-writes. The steps:
+          (1) Steady state — one active profile serves every read and write. (2)
+          Kickoff — an empty new profile B is created. (3) List — the worker
+          enumerates the items that do not yet have a B-embedding. (4) Backfill
+          — the worker re-embeds the corpus into B, while new writes keep
+          landing only in A and so keep reappearing on the worker's list, a
+          target that moves as the system is used. (5) Index — B's search index
+          is built. (6) Reconcile and flip — under a brief lock the last
+          in-flight writes drain, any stragglers are embedded, and the new
+          profile is marked finished. (7) After — that single state change makes
+          B live; reads were never interrupted and the old profile is later
+          retired.
+        </Fragment>
+      </SteppedDiagram>
+    </main>
+  </body>
+</html>
+
+<style>
+  body {
+    margin: 0;
+    background: var(--bg);
+    font-family: var(--font-sans);
+  }
+
+  main {
+    max-width: 45rem;
+    margin: 0 auto;
+    padding: var(--space-7) var(--space-5);
+  }
+
+  h1 {
+    font-family: var(--font-sans);
+    font-size: var(--text-xs);
+    font-weight: var(--font-semibold);
+    letter-spacing: var(--tracking-labels);
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 var(--space-6);
+  }
+</style>

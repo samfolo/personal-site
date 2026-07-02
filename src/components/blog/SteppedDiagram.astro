@@ -1,0 +1,88 @@
+---
+/**
+ * SteppedDiagram
+ *
+ * Figure shell for a walk-through SDK diagram: a CSS-only chip stepper
+ * (radios inside their labels — no per-step selectors, no client
+ * JavaScript) drives which step's scene and caption are visible. Every
+ * step's copy is real DOM, so the whole walk-through is crawlable. Step
+ * order, chip labels, and caption copy all come from the definition's
+ * step objects.
+ */
+import type {SteppedDiagramDef} from "../../lib/diagrams";
+import {renderSteppedDiagram} from "../../lib/diagrams";
+
+/**
+ * The stepper CSS switches scenes for up to this many steps.
+ */
+const MAX_STEPS = 12;
+
+interface Props {
+  /**
+   * The stepped diagram definition to render.
+   */
+  of: SteppedDiagramDef;
+
+  /**
+   * Overlay the module grid — a development aid for composing on the grid.
+   */
+  debugGrid?: boolean;
+}
+
+const {of: diagram, debugGrid = false} = Astro.props;
+
+if (!Astro.slots.has("description")) {
+  throw new Error(
+    `SteppedDiagram "${diagram.id}": a description slot is required — the full text alternative for assistive tech and crawlers.`
+  );
+}
+if (diagram.steps.length > MAX_STEPS) {
+  throw new Error(
+    `SteppedDiagram "${diagram.id}": the stepper control supports up to ${MAX_STEPS} steps.`
+  );
+}
+
+const descId = `${diagram.id}-desc`;
+const radioName = `${diagram.id}-step`;
+const svg = renderSteppedDiagram(diagram, {describedBy: descId, debugGrid});
+---
+
+<figure
+  class="not-prose diagram-figure diagram-stepper"
+  style={`--diagram-steps: ${diagram.steps.length}`}
+>
+  <div class="diagram-stepper__tabs" role="presentation">
+    {
+      diagram.steps.map((step, index) => (
+        <label class="diagram-stepper__tab" data-step={index}>
+          <input
+            class="diagram-stepper__radio"
+            type="radio"
+            name={radioName}
+            checked={index === 0}
+          />
+          <span class="diagram-stepper__idx">{index + 1}</span>
+          <span class="diagram-stepper__lbl">{step.tab}</span>
+        </label>
+      ))
+    }
+  </div>
+
+  <Fragment set:html={svg} />
+
+  <figcaption class="diagram-stepper__caption">
+    {
+      diagram.steps.map((step, index) => (
+        <div class="diagram-stepper__cap" data-step={index}>
+          <p class="diagram-stepper__title" set:html={step.title} />
+          <p
+            class="diagram-caption diagram-stepper__note"
+            set:html={step.note}
+          />
+        </div>
+      ))
+    }
+  </figcaption>
+
+  <div class="diagram-desc" id={descId}><slot name="description" /></div>
+</figure>

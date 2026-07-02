@@ -1,0 +1,57 @@
+---
+/**
+ * Diagram
+ *
+ * Figure shell for a static SDK diagram (src/lib/diagrams): renders the
+ * scene to SVG at build time inside the shared figure conventions — the
+ * `.diagram-figure` margin, a muted caption, and the required
+ * visually-hidden text description that gives assistive tech and
+ * non-rendering crawlers a full account of the figure. No client
+ * JavaScript; theming resolves through CSS custom properties.
+ */
+import type {DiagramDef} from "../../lib/diagrams";
+import {renderDiagram} from "../../lib/diagrams";
+
+interface Props {
+  /**
+   * The diagram definition to render.
+   */
+  of: DiagramDef;
+
+  /**
+   * Muted one-line figure caption. For richer captions use the caption
+   * slot instead.
+   */
+  caption?: string;
+
+  /**
+   * Overlay the module grid — a development aid for composing on the grid.
+   */
+  debugGrid?: boolean;
+}
+
+const {of: diagram, caption, debugGrid = false} = Astro.props;
+
+if (!Astro.slots.has("description")) {
+  throw new Error(
+    `Diagram "${diagram.id}": a description slot is required — the full text alternative for assistive tech and crawlers.`
+  );
+}
+
+const descId = `${diagram.id}-desc`;
+const svg = renderDiagram(diagram, {describedBy: descId, debugGrid});
+const hasCaption = caption !== undefined || Astro.slots.has("caption");
+---
+
+<figure class="not-prose diagram-figure">
+  <Fragment set:html={svg} />
+  {
+    hasCaption && (
+      <figcaption class="diagram-caption diagram-figure__note">
+        {caption}
+        <slot name="caption" />
+      </figcaption>
+    )
+  }
+  <div class="diagram-desc" id={descId}><slot name="description" /></div>
+</figure>
