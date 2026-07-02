@@ -11,7 +11,7 @@ British English throughout—code, comments, documentation, content.
 
 ## When to Use
 
-Consult this skill when modifying design tokens, adding or updating themes, or changing typography scales. Reference [SHIKI.md](./SHIKI.md) for syntax highlighting changes. Reference [COMPONENT_DESIGN.md](./COMPONENT_DESIGN.md) when creating new components or establishing component patterns. Reference [DIAGRAMS.md](./DIAGRAMS.md) when adding or changing a blog canvas diagram (`src/scripts/diagrams/`, the `src/components/blog/*` diagram components).
+Consult this skill when modifying design tokens, adding or updating themes, or changing typography scales. Reference [SHIKI.md](./SHIKI.md) for syntax highlighting changes. Reference [COMPONENT_DESIGN.md](./COMPONENT_DESIGN.md) when creating new components or establishing component patterns. Reference [DIAGRAMS.md](./DIAGRAMS.md) when a design-system change might affect blog figures; figure authoring itself is the drawing-diagrams skill.
 
 ## Philosophy
 
