@@ -24,6 +24,8 @@ Skills distil the essence of this codebase into agent-parsable context. Leverage
 
 **maintaining-design-system** — Invoke before designing or refining components, or modifying colours, typography, spacing, or themes. Contains token architecture, component design principles, theme synchronisation, and Shiki configuration.
 
+**drawing-diagrams** — Invoke before drawing a new blog figure, changing a scene, or extending the diagram SDK. Contains the diagram's responsibility to the reader, the design contract the SDK enforces, the verification workflow, and extension principles.
+
 **managing-deployment** — Invoke when troubleshooting deployments or modifying CI/CD. Contains workflow structure, Docker build, Cloud Run configuration, and build diagnostics.
 
 Skip skill invocation only for trivial tasks (typo fixes, removing whitespace).
