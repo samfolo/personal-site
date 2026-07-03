@@ -48,6 +48,7 @@ import {
   CARD_WIDTH,
   EDGE_LABEL_GAP,
   ELBOW_LABEL_GAP,
+  ELBOW_RADIUS,
   ENTITY_FIELD_GAP,
   LANE_LABEL_RISE,
   MODULE,
@@ -56,6 +57,8 @@ import {
   NOTE_BOTTOM_RISE,
   NOTE_INSET,
   NOTE_TOP_Y,
+  RETURN_INSET,
+  RETURN_RAIL_RISE,
   TEXT_PAD_X,
   TEXT_SIZE_PRIMARY,
   TEXT_SIZE_SECONDARY,
@@ -815,7 +818,8 @@ const spreadOffset = (
 const resolveEdge = (
   edge: EdgeItem,
   handles: Map<string, ShapeHandle>,
-  usage: SideUsage
+  usage: SideUsage,
+  height: number
 ): ResolvedEdge => {
   const source = handles.get(edge.from);
   const target = handles.get(edge.to);
@@ -848,6 +852,39 @@ const resolveEdge = (
     labelAt: edge.options.labelAt ?? labelAt,
     labelAnchor: edge.options.labelAnchor ?? labelAnchor,
   });
+
+  // Return edges route feedback around the outside: south out of the
+  // source, along a rail near the diagram's bottom edge, back past the
+  // target, and rising in the margin to enter the target's far side at its
+  // centre — the wrap that lets a downstream verdict feed the start of a
+  // thread without crossing anything between them.
+  if (route === "return") {
+    const headsWest = centreX(target) < centreX(source);
+    const sx = centreX(source);
+    const sourceBottom = source.y + source.h;
+    const railY = height - RETURN_RAIL_RISE;
+    if (railY < sourceBottom + ELBOW_RADIUS * 2) {
+      throw new Error(
+        `diagram scene: return edge "${edge.from}" → "${edge.to}" needs room below the source — the rail sits at ${railY}px but the source ends at ${sourceBottom}px`
+      );
+    }
+    const runX = headsWest
+      ? target.x - RETURN_INSET
+      : target.x + target.w + RETURN_INSET;
+    const tx = headsWest ? target.x : target.x + target.w;
+    const ty = centreY(target);
+    return finish(
+      [
+        {x: sx, y: sourceBottom},
+        {x: sx, y: railY},
+        {x: runX, y: railY},
+        {x: runX, y: ty},
+        {x: tx, y: ty},
+      ],
+      {x: sx + ELBOW_LABEL_GAP, y: (sourceBottom + railY) / 2},
+      "start"
+    );
+  }
 
   // Direct edges draw straight between the facing sides — the fan-out
   // treatment. Several can share an anchor and diverge, so they skip the
@@ -1009,7 +1046,7 @@ export const renderSceneBody = (
 
   const edges = state.edges
     .map((edge) => {
-      const resolved = resolveEdge(edge, state.handles, usage);
+      const resolved = resolveEdge(edge, state.handles, usage, state.height);
       const stroke = renderEdge({
         points: resolved.points,
         ink: resolved.ink,

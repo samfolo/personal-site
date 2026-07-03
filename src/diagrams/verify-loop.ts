@@ -1,18 +1,17 @@
 /**
- * The verify loop — faithful port of the canvas figure
+ * The verify loop
  *
  * The submit-and-verify hand-off from "The price of a memory": the main
  * thread runs its sequence — search, read, reason, submit — and submitting
  * hands off to a verifier on its own thread, drawn inside a dashed process
- * boundary. A pass commits to the graph; a fail returns the critique to
- * the start of the thread, which tries again.
+ * boundary. The verifier reviews and reaches a verdict; a pass commits to
+ * the graph, a fail returns the critique to the start of the thread.
  *
- * One departure from the canvas original, forced by the module (the canvas
- * drew at 820 logical pixels; the column is 672): the verdict node folds
- * into the pass and fail edge labels that carried its meaning. The fail
- * return leaves the verifier westward at lane height and rises in the left
- * margin — the same feedback reading as the canvas's wrap-under path, in
- * less ink.
+ * The terminal node is the graph itself (the pipeline figures' destination
+ * vocabulary), placed OUTSIDE the verifier boundary — the pass edge
+ * visibly crosses the boundary to commit, which is what committing is. The
+ * fail edge takes the `return` route: south out of the verdict, along the
+ * bottom rail, and up the left margin into the start of the thread.
  */
 
 import {defineDiagram} from "../lib/diagrams";
@@ -29,16 +28,11 @@ const MAIN_Y = 68;
  */
 const VERIFIER_Y = 204;
 
-/**
- * X of the fail edge's rising run, in the margin left of the thread.
- */
-const FAIL_RUN_X = 16;
-
 export const verifyLoop = defineDiagram({
-  id: "verify-loop-sdk",
-  size: [672, 288],
+  id: "verify-loop",
+  size: [672, 304],
   ariaLabel:
-    "The verify loop: the main thread searches, reads, reasons, and submits; a verifier on a separate thread reviews the submission. A pass commits to the graph; a fail returns the critique to the thread.",
+    "The verify loop: the main thread searches, reads, reasons, and submits; a verifier on a separate thread reviews the submission and reaches a verdict. A pass commits to the graph; a fail returns the critique to the thread.",
   scene(d) {
     const main = d.lane({label: "main thread", centreY: MAIN_Y});
     const search = main.node("search", {x: d.col(0.5), span: 1.5});
@@ -48,12 +42,16 @@ export const verifyLoop = defineDiagram({
 
     const verifier = d.lane({centreY: VERIFIER_Y});
     const review = verifier.node("review", {under: submit});
-    const commit = verifier.node("commit to graph", {
-      x: d.col(8.5),
-      span: 2.5,
+    const verdict = verifier.node("verdict", {x: d.col(8), span: 1.5});
+    d.boundary([review, verdict], {label: "verifier · separate thread"});
+
+    // The graph sits outside the boundary: a pass leaves the verifier —
+    // that crossing is the commit.
+    const graph = verifier.node("graph", {
+      x: d.col(10.5),
+      span: 1,
       variant: "emphasis",
     });
-    d.boundary([review, commit], {label: "verifier · separate thread"});
 
     d.edge(search, read);
     d.edge(read, reason);
@@ -66,12 +64,14 @@ export const verifyLoop = defineDiagram({
       labelStyle: "label",
       labelAt: {x: submit.x + submit.w / 2 + 8, y: submit.y + submit.h + 24},
     });
-    d.edge(review, commit, {label: "pass", labelStyle: "label"});
-    d.edge(review, search, {
+    d.edge(review, verdict);
+    d.edge(verdict, graph, {label: "pass", labelStyle: "label"});
+    d.edge(verdict, search, {
       ink: "fg",
+      route: "return",
       label: "fail",
       labelStyle: "label",
-      via: FAIL_RUN_X,
+      labelAt: {x: 24, y: 170},
     });
   },
 });

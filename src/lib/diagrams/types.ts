@@ -51,9 +51,11 @@ export type EdgeLabelStyle = "text" | "label";
  * How an edge travels: `auto` routes orthogonally (straight when aligned,
  * a rounded elbow when not); `direct` draws a straight line between the
  * facing sides — the fan-out treatment, where several edges leave one
- * anchor and diverge.
+ * anchor and diverge; `return` routes feedback around the outside — south
+ * out of the source, along a rail near the diagram's bottom edge, and
+ * rising in the margin to enter the target's far side.
  */
-export type EdgeRoute = "auto" | "direct";
+export type EdgeRoute = "auto" | "direct" | "return";
 
 /**
  * Ink tone available to a corner badge: `fg` for settled states, `muted`

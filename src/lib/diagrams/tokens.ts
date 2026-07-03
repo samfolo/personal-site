@@ -214,6 +214,18 @@ export const NOTE_BOTTOM_RISE = 16;
 export const ANCHOR_SPREAD = 10;
 
 /**
+ * Rise of a return edge's rail above the diagram's bottom edge (two grid
+ * units — matches the bottom-corner note's rise, so the two never fight).
+ */
+export const RETURN_RAIL_RISE = 16;
+
+/**
+ * Clearance of a return edge's rising run outside the target's entry side —
+ * tight enough to read as a margin run, wide enough to clear the arrowhead.
+ */
+export const RETURN_INSET = 12;
+
+/**
  * Spinner radius (the reindex-worker's three-quarter arc).
  */
 export const SPINNER_RADIUS = 5;
