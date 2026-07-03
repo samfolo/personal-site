@@ -131,6 +131,28 @@ export const ACTOR_WIDTH = 150;
 export const ACTOR_HEIGHT = 56;
 
 /**
+ * Height of an entity's title row (four grid units) — the title baseline
+ * sits centred in it, above the rule that separates title from fields.
+ */
+export const ENTITY_TITLE_HEIGHT = 32;
+
+/**
+ * Height of one entity field row (three grid units).
+ */
+export const ENTITY_ROW_HEIGHT = 24;
+
+/**
+ * Bottom padding under an entity's last field row (one grid unit), so the
+ * final descenders don't sit on the frame.
+ */
+export const ENTITY_PAD_BOTTOM = 8;
+
+/**
+ * Minimum gap between a field's name and its right-aligned note.
+ */
+export const ENTITY_FIELD_GAP = 16;
+
+/**
  * Minimum horizontal padding between a shape's text and its frame.
  */
 export const TEXT_PAD_X = 8;
@@ -190,6 +212,18 @@ export const NOTE_BOTTOM_RISE = 16;
  * a shape — spread, never stacked.
  */
 export const ANCHOR_SPREAD = 10;
+
+/**
+ * Rise of a return edge's rail above the diagram's bottom edge (two grid
+ * units — matches the bottom-corner note's rise, so the two never fight).
+ */
+export const RETURN_RAIL_RISE = 16;
+
+/**
+ * Clearance of a return edge's rising run outside the target's entry side —
+ * tight enough to read as a margin run, wide enough to clear the arrowhead.
+ */
+export const RETURN_INSET = 12;
 
 /**
  * Spinner radius (the reindex-worker's three-quarter arc).

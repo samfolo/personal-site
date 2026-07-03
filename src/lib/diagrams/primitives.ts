@@ -22,6 +22,9 @@ import {
   CARD_RADIUS,
   CONTAINER_LINE_GAP,
   ELBOW_RADIUS,
+  ENTITY_PAD_BOTTOM,
+  ENTITY_ROW_HEIGHT,
+  ENTITY_TITLE_HEIGHT,
   MONO_CAP_HEIGHT,
   MONO_DESCENDER,
   NODE_RADIUS,
@@ -443,6 +446,113 @@ export const renderBoundary = (frame: Frame): string =>
     height: frame.h,
     rx: BOUNDARY_RADIUS,
   });
+
+/**
+ * One field row of an entity: the column name, and an optional note in the
+ * data voice (a type, a key marker, an invariant) set flush right.
+ */
+export interface EntityField {
+  /**
+   * Column name.
+   */
+  name: string;
+
+  /**
+   * Right-aligned note.
+   */
+  note?: string;
+}
+
+/**
+ * An entity: a titled record with typed field rows — the ERD vocabulary.
+ * Height is structural: title row, one row per field, bottom pad. A rule
+ * separates the title from the fields, mirroring how a record reads.
+ */
+export interface EntityShape extends Frame {
+  /**
+   * Record name (rendered as-is — code voice).
+   */
+  title: string;
+
+  /**
+   * Field rows, in declaration order.
+   */
+  fields: EntityField[];
+}
+
+/**
+ * Structural height of an entity: title row, field rows, bottom pad.
+ */
+export const entityHeight = (fieldCount: number): number =>
+  ENTITY_TITLE_HEIGHT + fieldCount * ENTITY_ROW_HEIGHT + ENTITY_PAD_BOTTOM;
+
+/**
+ * Render an entity: frame, title row over a separating rule, field rows
+ * with names set left and notes flush right.
+ */
+export const renderEntity = (entity: EntityShape): string => {
+  const ruleY = entity.y + ENTITY_TITLE_HEIGHT;
+  const title = textEl(
+    {
+      class: "title",
+      x: entity.x + CARD_PAD_X,
+      y: entity.y + ENTITY_TITLE_HEIGHT / 2,
+      "dominant-baseline": "central",
+    },
+    entity.title
+  );
+  const rule = el("line", {
+    class: "rule",
+    x1: entity.x,
+    y1: ruleY,
+    x2: entity.x + entity.w,
+    y2: ruleY,
+  });
+  const rows = entity.fields
+    .map((field, index) => {
+      const rowCentre =
+        ruleY + index * ENTITY_ROW_HEIGHT + ENTITY_ROW_HEIGHT / 2;
+      const name = textEl(
+        {
+          class: "field",
+          x: entity.x + CARD_PAD_X,
+          y: rowCentre,
+          "dominant-baseline": "central",
+        },
+        field.name
+      );
+      if (field.note === undefined) {
+        return name;
+      }
+      const note = textEl(
+        {
+          class: "note",
+          x: entity.x + entity.w - CARD_PAD_X,
+          y: rowCentre,
+          "text-anchor": "end",
+          "dominant-baseline": "central",
+        },
+        field.note
+      );
+      return name + note;
+    })
+    .join("");
+  return el(
+    "g",
+    {class: "d-entity"},
+    el("rect", {
+      class: "frame",
+      x: entity.x,
+      y: entity.y,
+      width: entity.w,
+      height: entity.h,
+      rx: CARD_RADIUS,
+    }),
+    title,
+    rule,
+    rows
+  );
+};
 
 /**
  * A tracked uppercase label — the voice for names of places and states.

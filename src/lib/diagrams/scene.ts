@@ -17,16 +17,24 @@
 import {measureMono} from "./metrics";
 import {
   containerMinHeight,
+  entityHeight,
   renderActor,
   renderAnnotation,
   renderBoundary,
   renderCard,
   renderEdge,
+  renderEntity,
   renderMarkers,
   renderNode,
   renderTrackedLabel,
 } from "./primitives";
-import type {ActorShape, CardShape, NodeShape} from "./primitives";
+import type {
+  ActorShape,
+  CardShape,
+  EntityField,
+  EntityShape,
+  NodeShape,
+} from "./primitives";
 import {el} from "./svg";
 import {
   ACTOR_HEIGHT,
@@ -36,9 +44,12 @@ import {
   BOUNDARY_PAD_X,
   BOUNDARY_PAD_Y,
   CARD_HEIGHT,
+  CARD_PAD_X,
   CARD_WIDTH,
   EDGE_LABEL_GAP,
   ELBOW_LABEL_GAP,
+  ELBOW_RADIUS,
+  ENTITY_FIELD_GAP,
   LANE_LABEL_RISE,
   MODULE,
   NODE_HEIGHT,
@@ -46,6 +57,8 @@ import {
   NOTE_BOTTOM_RISE,
   NOTE_INSET,
   NOTE_TOP_Y,
+  RETURN_INSET,
+  RETURN_RAIL_RISE,
   TEXT_PAD_X,
   TEXT_SIZE_PRIMARY,
   TEXT_SIZE_SECONDARY,
@@ -205,6 +218,37 @@ export interface ActorOptions {
 }
 
 /**
+ * Options for an entity — a titled record with typed field rows. Height is
+ * structural (title row + field rows + pad), never passed in.
+ */
+export interface EntityOptions {
+  /**
+   * Record name (code voice).
+   */
+  title: string;
+
+  /**
+   * Field rows, in declaration order.
+   */
+  fields: EntityField[];
+
+  /**
+   * Left edge.
+   */
+  x: number;
+
+  /**
+   * Top edge.
+   */
+  y: number;
+
+  /**
+   * Width.
+   */
+  w?: number;
+}
+
+/**
  * Options for a profile store card.
  */
 export interface StoreOptions {
@@ -302,6 +346,11 @@ export interface NoteOptions {
    * Which corner the note pins to.
    */
   corner: Corner;
+
+  /**
+   * Ink role — highlight for the figure's headline datum.
+   */
+  ink?: Ink;
 }
 
 /**
@@ -347,6 +396,11 @@ export interface Scene {
    * Declare a labelled actor box.
    */
   actor: (id: string, options: ActorOptions) => ShapeHandle;
+
+  /**
+   * Declare an entity (the ERD record shape).
+   */
+  entity: (id: string, options: EntityOptions) => ShapeHandle;
 
   /**
    * Declare a profile store card.
@@ -588,6 +642,35 @@ export const createScene = (width: number, height: number): SceneBuild => {
       return register(id, shape);
     },
 
+    entity(id, options) {
+      const {w = CARD_WIDTH} = options;
+      const h = entityHeight(options.fields.length);
+      guardWidth(id, options.title, TEXT_SIZE_PRIMARY, w);
+      // Each row must hold its name, its note, and the gap between them.
+      for (const field of options.fields) {
+        const nameWidth = measureMono(field.name, TEXT_SIZE_SECONDARY);
+        const noteWidth = field.note
+          ? measureMono(field.note, TEXT_SIZE_SECONDARY) + ENTITY_FIELD_GAP
+          : 0;
+        const row = nameWidth + noteWidth;
+        if (row > w - CARD_PAD_X * 2) {
+          throw new Error(
+            `diagram scene: entity "${id}" row "${field.name}" needs ${row}px — too wide for its ${w}px frame; widen the entity or shorten the copy`
+          );
+        }
+      }
+      const shape: EntityShape = {
+        x: options.x,
+        y: options.y,
+        w,
+        h,
+        title: options.title,
+        fields: options.fields,
+      };
+      state.shapes.push(() => renderEntity(shape));
+      return register(id, {x: options.x, y: options.y, w, h});
+    },
+
     store(id, options) {
       const {w = CARD_WIDTH, h = CARD_HEIGHT} = options;
       guardWidth(id, options.name, TEXT_SIZE_PRIMARY, w);
@@ -676,6 +759,7 @@ export const createScene = (width: number, height: number): SceneBuild => {
           x: isEast ? width - NOTE_INSET : NOTE_INSET,
           y: isTop ? NOTE_TOP_Y : height - NOTE_BOTTOM_RISE,
           anchor: isEast ? "end" : "start",
+          ink: options.ink,
           centred: true,
         })
       );
@@ -734,7 +818,8 @@ const spreadOffset = (
 const resolveEdge = (
   edge: EdgeItem,
   handles: Map<string, ShapeHandle>,
-  usage: SideUsage
+  usage: SideUsage,
+  height: number
 ): ResolvedEdge => {
   const source = handles.get(edge.from);
   const target = handles.get(edge.to);
@@ -767,6 +852,39 @@ const resolveEdge = (
     labelAt: edge.options.labelAt ?? labelAt,
     labelAnchor: edge.options.labelAnchor ?? labelAnchor,
   });
+
+  // Return edges route feedback around the outside: south out of the
+  // source, along a rail near the diagram's bottom edge, back past the
+  // target, and rising in the margin to enter the target's far side at its
+  // centre — the wrap that lets a downstream verdict feed the start of a
+  // thread without crossing anything between them.
+  if (route === "return") {
+    const headsWest = centreX(target) < centreX(source);
+    const sx = centreX(source);
+    const sourceBottom = source.y + source.h;
+    const railY = height - RETURN_RAIL_RISE;
+    if (railY < sourceBottom + ELBOW_RADIUS * 2) {
+      throw new Error(
+        `diagram scene: return edge "${edge.from}" → "${edge.to}" needs room below the source — the rail sits at ${railY}px but the source ends at ${sourceBottom}px`
+      );
+    }
+    const runX = headsWest
+      ? target.x - RETURN_INSET
+      : target.x + target.w + RETURN_INSET;
+    const tx = headsWest ? target.x : target.x + target.w;
+    const ty = centreY(target);
+    return finish(
+      [
+        {x: sx, y: sourceBottom},
+        {x: sx, y: railY},
+        {x: runX, y: railY},
+        {x: runX, y: ty},
+        {x: tx, y: ty},
+      ],
+      {x: sx + ELBOW_LABEL_GAP, y: (sourceBottom + railY) / 2},
+      "start"
+    );
+  }
 
   // Direct edges draw straight between the facing sides — the fan-out
   // treatment. Several can share an anchor and diverge, so they skip the
@@ -928,7 +1046,7 @@ export const renderSceneBody = (
 
   const edges = state.edges
     .map((edge) => {
-      const resolved = resolveEdge(edge, state.handles, usage);
+      const resolved = resolveEdge(edge, state.handles, usage, state.height);
       const stroke = renderEdge({
         points: resolved.points,
         ink: resolved.ink,
