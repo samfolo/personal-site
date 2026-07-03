@@ -10,8 +10,14 @@
  *   /dev/diagrams?theme=teal     pin any theme class
  *   /dev/diagrams?grid=1         overlay the module grid on every figure
  */
-import {Diagram, SteppedDiagram} from "../../components/blog";
-import {migration, oneShotPipeline, verifyLoop} from "../../diagrams";
+import {ComparedDiagram, Diagram, SteppedDiagram} from "../../components/blog";
+import {
+  agenticPipeline,
+  ledger,
+  migration,
+  oneShotPipeline,
+  verifyLoop,
+} from "../../diagrams";
 import "../../styles/global.css";
 
 export const prerender = false;
@@ -37,33 +43,62 @@ const debugGrid = query.get("grid") === "1";
       <h1>Diagram SDK preview</h1>
 
       <Diagram
-        of={verifyLoop}
-        caption="The verify loop — drafting stays on the main thread; verification runs on its own thread and can veto a publish."
+        of={ledger}
+        caption="A simplified vignette of the billing engine – a credit lot and the entries that consume it. The remainder is derived, never stored, so it can't drift."
         debugGrid={debugGrid}
       >
         <Fragment slot="description">
-          A schematic of the verify loop. On the main thread, a claim node leads
-          to a draft node, which leads to a publish node. Below, inside a dashed
-          boundary marked as the verifier on a separate thread, a verify node
-          leads to a judge node. The draft hands off to verify; a judge pass
-          leads up to publish; a verify fail returns to draft for redrafting.
+          Two database records side by side: a credit lot with an immutable
+          nanodollar amount, and the signed ledger entries that consume it, one
+          lot to many entries. The remaining balance sits below the entries,
+          dashed and badged as derived – the sum of the lot's signed entries,
+          never stored.
         </Fragment>
       </Diagram>
 
       <Diagram
-        of={oneShotPipeline}
-        caption="One-shot ingestion — extract fans out to one triage task per candidate; each stage is a single call."
+        of={verifyLoop}
+        caption="The main thread hands off to a separate verifier; a pass commits, a fail returns the critique to the thread."
         debugGrid={debugGrid}
       >
         <Fragment slot="description">
-          A flowchart of the one-shot ingestion pipeline. An extract node fans
-          out to three triage nodes, one per candidate claim, labelled one, two,
-          and n. The triage nodes converge on a single relate node, which leads
-          to the knowledge graph. Annotations note one call for extract, one
-          call per triage task, one call for relate — roughly eight calls per
-          run in total.
+          The main thread runs a sequence of steps – search, read, reason,
+          submit. Submitting hands off to a separate verifier thread that
+          reviews the proposed result: a pass commits the result to the
+          knowledge graph; a fail returns the critique to the main thread, which
+          tries again.
         </Fragment>
       </Diagram>
+
+      <ComparedDiagram
+        id="ingestion-pipelines"
+        caption="Ingestion, one-shot versus agentic – and what each costs."
+        debugGrid={debugGrid}
+        views={[
+          {
+            tab: "One-shot",
+            of: oneShotPipeline,
+            note: "Triage still fans out to one task per candidate – but each stage is a single call, so the bill stays close to the number of candidates.",
+          },
+          {
+            tab: "Agentic",
+            of: agenticPipeline,
+            note: "The same fan-out – but each triage and relate unit is a durable thread: a loop of up to 25 turns, then a verifier (up to 2 tries). That is where the order-of-magnitude more inference goes.",
+          },
+        ]}
+      >
+        <Fragment slot="description">
+          Two views of the ingestion pipeline, selectable with a one-shot /
+          agentic tab. Both share the same shape: text enters an extract stage,
+          which fans out to one triage task per candidate claim; the tasks
+          converge on a single relate stage before the knowledge graph. In the
+          one-shot view each stage is a single model call, so for six candidates
+          the run is roughly eight calls. In the agentic view each triage and
+          relate unit is instead a durable thread – a tool-using loop of up to
+          25 turns followed by a fresh-context verifier of up to two tries –
+          which is where the order-of-magnitude increase in inference goes.
+        </Fragment>
+      </ComparedDiagram>
 
       <SteppedDiagram of={migration} debugGrid={debugGrid}>
         <Fragment slot="description">

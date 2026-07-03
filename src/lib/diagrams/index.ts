@@ -20,12 +20,14 @@ export {
 } from "./scene";
 export type {
   DiagramDef,
+  EntityOptions,
   Lane,
   RenderOptions,
   Scene,
   StepDef,
   SteppedDiagramDef,
 } from "./scene";
+export type {EntityField} from "./primitives";
 export type {
   Corner,
   EdgeOptions,

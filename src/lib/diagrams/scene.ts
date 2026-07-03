@@ -17,16 +17,24 @@
 import {measureMono} from "./metrics";
 import {
   containerMinHeight,
+  entityHeight,
   renderActor,
   renderAnnotation,
   renderBoundary,
   renderCard,
   renderEdge,
+  renderEntity,
   renderMarkers,
   renderNode,
   renderTrackedLabel,
 } from "./primitives";
-import type {ActorShape, CardShape, NodeShape} from "./primitives";
+import type {
+  ActorShape,
+  CardShape,
+  EntityField,
+  EntityShape,
+  NodeShape,
+} from "./primitives";
 import {el} from "./svg";
 import {
   ACTOR_HEIGHT,
@@ -36,9 +44,11 @@ import {
   BOUNDARY_PAD_X,
   BOUNDARY_PAD_Y,
   CARD_HEIGHT,
+  CARD_PAD_X,
   CARD_WIDTH,
   EDGE_LABEL_GAP,
   ELBOW_LABEL_GAP,
+  ENTITY_FIELD_GAP,
   LANE_LABEL_RISE,
   MODULE,
   NODE_HEIGHT,
@@ -205,6 +215,37 @@ export interface ActorOptions {
 }
 
 /**
+ * Options for an entity — a titled record with typed field rows. Height is
+ * structural (title row + field rows + pad), never passed in.
+ */
+export interface EntityOptions {
+  /**
+   * Record name (code voice).
+   */
+  title: string;
+
+  /**
+   * Field rows, in declaration order.
+   */
+  fields: EntityField[];
+
+  /**
+   * Left edge.
+   */
+  x: number;
+
+  /**
+   * Top edge.
+   */
+  y: number;
+
+  /**
+   * Width.
+   */
+  w?: number;
+}
+
+/**
  * Options for a profile store card.
  */
 export interface StoreOptions {
@@ -302,6 +343,11 @@ export interface NoteOptions {
    * Which corner the note pins to.
    */
   corner: Corner;
+
+  /**
+   * Ink role — highlight for the figure's headline datum.
+   */
+  ink?: Ink;
 }
 
 /**
@@ -347,6 +393,11 @@ export interface Scene {
    * Declare a labelled actor box.
    */
   actor: (id: string, options: ActorOptions) => ShapeHandle;
+
+  /**
+   * Declare an entity (the ERD record shape).
+   */
+  entity: (id: string, options: EntityOptions) => ShapeHandle;
 
   /**
    * Declare a profile store card.
@@ -588,6 +639,35 @@ export const createScene = (width: number, height: number): SceneBuild => {
       return register(id, shape);
     },
 
+    entity(id, options) {
+      const {w = CARD_WIDTH} = options;
+      const h = entityHeight(options.fields.length);
+      guardWidth(id, options.title, TEXT_SIZE_PRIMARY, w);
+      // Each row must hold its name, its note, and the gap between them.
+      for (const field of options.fields) {
+        const nameWidth = measureMono(field.name, TEXT_SIZE_SECONDARY);
+        const noteWidth = field.note
+          ? measureMono(field.note, TEXT_SIZE_SECONDARY) + ENTITY_FIELD_GAP
+          : 0;
+        const row = nameWidth + noteWidth;
+        if (row > w - CARD_PAD_X * 2) {
+          throw new Error(
+            `diagram scene: entity "${id}" row "${field.name}" needs ${row}px — too wide for its ${w}px frame; widen the entity or shorten the copy`
+          );
+        }
+      }
+      const shape: EntityShape = {
+        x: options.x,
+        y: options.y,
+        w,
+        h,
+        title: options.title,
+        fields: options.fields,
+      };
+      state.shapes.push(() => renderEntity(shape));
+      return register(id, {x: options.x, y: options.y, w, h});
+    },
+
     store(id, options) {
       const {w = CARD_WIDTH, h = CARD_HEIGHT} = options;
       guardWidth(id, options.name, TEXT_SIZE_PRIMARY, w);
@@ -676,6 +756,7 @@ export const createScene = (width: number, height: number): SceneBuild => {
           x: isEast ? width - NOTE_INSET : NOTE_INSET,
           y: isTop ? NOTE_TOP_Y : height - NOTE_BOTTOM_RISE,
           anchor: isEast ? "end" : "start",
+          ink: options.ink,
           centred: true,
         })
       );

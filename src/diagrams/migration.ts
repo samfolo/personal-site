@@ -122,7 +122,7 @@ const declareWorker = (d: Scene, sub: string, link?: WorkerLink): void => {
 };
 
 export const migration = defineSteppedDiagram({
-  id: "migration-sdk",
+  id: "migration",
   size: [672, 336],
   ariaLabel: "Zero-downtime embedding migration: a seven-step walkthrough.",
   base: declareBase,

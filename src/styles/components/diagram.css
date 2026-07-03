@@ -136,6 +136,38 @@
     font-size: 12px;
   }
 
+  /* Entity: a titled record with typed field rows — the ERD vocabulary.
+     The title row sits over a separating rule; field names set left in the
+     data voice, notes flush right in muted ink. */
+  .d-entity rect.frame {
+    fill: var(--bg);
+    stroke: var(--rule);
+    stroke-width: 1;
+  }
+
+  .d-entity line.rule {
+    stroke: var(--rule);
+    stroke-width: 1;
+  }
+
+  .d-entity text.title {
+    fill: var(--fg);
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+  }
+
+  .d-entity text.field {
+    fill: var(--fg);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  .d-entity text.note {
+    fill: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
   /* Corner badge: nests near-concentrically into the container corner. */
   .d-badge rect {
     fill: var(--bg);
@@ -361,6 +393,96 @@
     display: block;
   }
 
+  /* ==========================================================
+     Comparison control (alternative-view figures)
+     The stepper's sibling: radios inside chip labels switch which
+     view's panel — diagram plus note — is visible. Supports up to
+     four views.
+     ========================================================== */
+
+  .diagram-compare__radio {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Chips hug their labels and sit left by default; the stretch variant
+     fills the column with equal-width chips, like the stepper strip. */
+  .diagram-compare__tabs {
+    display: flex;
+    justify-content: flex-start;
+    gap: var(--space-1);
+  }
+
+  .diagram-compare__tabs--stretch {
+    display: grid;
+    grid-template-columns: repeat(var(--diagram-views, 2), 1fr);
+  }
+
+  /* Chip styling mirrors .diagram-stepper__tab; consolidate into a shared
+     chip class if a third control joins the family. */
+  .diagram-compare__tab {
+    display: flex;
+    justify-content: center;
+    align-items: baseline;
+    min-width: var(--size-16);
+    cursor: pointer;
+    padding: var(--space-1) var(--space-2);
+    font-family: var(--font-sans);
+    font-size: var(--text-sm);
+    letter-spacing: var(--tracking-body);
+    color: var(--muted);
+    border: var(--border-hairline) solid var(--rule);
+    border-radius: var(--space-1);
+    transition:
+      color var(--transition-fast),
+      border-color var(--transition-fast);
+  }
+
+  .diagram-compare__lbl {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .diagram-compare__tab:hover {
+    color: var(--fg);
+  }
+
+  .diagram-compare__tab:has(input:checked) {
+    color: var(--emphasis);
+    border-color: var(--fg);
+  }
+
+  .diagram-compare__tab:has(input:focus-visible) {
+    outline: var(--outline-width) solid var(--highlight);
+    outline-offset: var(--outline-offset-tight);
+  }
+
+  .diagram-compare__panel {
+    display: none;
+    margin-top: var(--space-4);
+  }
+
+  .diagram-compare:has(.diagram-compare__tab[data-view="0"] input:checked)
+    .diagram-compare__panel[data-view="0"],
+  .diagram-compare:has(.diagram-compare__tab[data-view="1"] input:checked)
+    .diagram-compare__panel[data-view="1"],
+  .diagram-compare:has(.diagram-compare__tab[data-view="2"] input:checked)
+    .diagram-compare__panel[data-view="2"],
+  .diagram-compare:has(.diagram-compare__tab[data-view="3"] input:checked)
+    .diagram-compare__panel[data-view="3"] {
+    display: block;
+  }
+
+  .diagram-compare__note {
+    margin-top: var(--space-3);
+  }
+
+  .diagram-compare__caption {
+    margin-top: var(--space-3);
+  }
+
   /* Per-step caption: reserved height so stepping never reflows the page. */
   .diagram-stepper__caption {
     margin-top: var(--space-4);
@@ -389,7 +511,8 @@
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .diagram-stepper__tab {
+    .diagram-stepper__tab,
+    .diagram-compare__tab {
       transition: none;
     }
   }

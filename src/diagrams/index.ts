@@ -6,6 +6,7 @@
  * definitions — dimensions, steps, and copy come from here, nowhere else.
  */
 
+export {ledger} from "./ledger";
 export {migration} from "./migration";
-export {oneShotPipeline} from "./one-shot-pipeline";
+export {agenticPipeline, oneShotPipeline} from "./pipeline";
 export {verifyLoop} from "./verify-loop";

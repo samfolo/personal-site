@@ -1,0 +1,146 @@
+---
+/**
+ * ComparedDiagram
+ *
+ * Figure shell for alternative views of one system: a CSS-only chip
+ * control (radios inside their labels — no client JavaScript) switches
+ * which view's diagram and note are visible. The sibling of
+ * SteppedDiagram — a stepper walks one scene through time; a comparison
+ * holds alternatives of the same figure side by side. Every view is real
+ * DOM rendered at build time, so the whole comparison is crawlable and
+ * re-themes through CSS custom properties.
+ */
+import type {DiagramDef} from "../../lib/diagrams";
+import {renderDiagram} from "../../lib/diagrams";
+
+/**
+ * The switching CSS supports up to this many views.
+ */
+const MAX_VIEWS = 4;
+
+/**
+ * One selectable view of the figure.
+ */
+interface View {
+  /**
+   * Chip label.
+   */
+  tab: string;
+
+  /**
+   * The view's diagram definition.
+   */
+  of: DiagramDef;
+
+  /**
+   * Per-view note under the diagram (HTML allowed).
+   */
+  note?: string;
+}
+
+interface Props {
+  /**
+   * Figure-unique id, namespacing the radio group and the description.
+   */
+  id: string;
+
+  /**
+   * The views, in chip order.
+   */
+  views: View[];
+
+  /**
+   * Shared figure caption below the per-view note.
+   */
+  caption?: string;
+
+  /**
+   * Stretch the chips to fill the column at equal widths, like the
+   * stepper strip. By default they hug their labels and sit left.
+   */
+  stretch?: boolean;
+
+  /**
+   * Overlay the module grid — a development aid for composing on the grid.
+   */
+  debugGrid?: boolean;
+}
+
+const {id, views, caption, stretch = false, debugGrid = false} = Astro.props;
+
+if (!Astro.slots.has("description")) {
+  throw new Error(
+    `ComparedDiagram "${id}": a description slot is required — the full text alternative for assistive tech and crawlers.`
+  );
+}
+if (views.length < 2 || views.length > MAX_VIEWS) {
+  throw new Error(
+    `ComparedDiagram "${id}": a comparison holds 2–${MAX_VIEWS} views; got ${views.length}.`
+  );
+}
+const [firstWidth, firstHeight] = views[0]?.of.size ?? [0, 0];
+for (const view of views) {
+  const [width, height] = view.of.size;
+  if (width !== firstWidth || height !== firstHeight) {
+    throw new Error(
+      `ComparedDiagram "${id}": views must share one logical size so switching never reflows the figure — "${view.of.id}" is ${width}×${height}, expected ${firstWidth}×${firstHeight}.`
+    );
+  }
+}
+
+const descId = `${id}-desc`;
+const radioName = `${id}-view`;
+---
+
+<figure
+  class="not-prose diagram-figure diagram-compare"
+  style={`--diagram-views: ${views.length}`}
+>
+  <div
+    class:list={[
+      "diagram-compare__tabs",
+      stretch && "diagram-compare__tabs--stretch",
+    ]}
+    role="presentation"
+  >
+    {
+      views.map((view, index) => (
+        <label class="diagram-compare__tab" data-view={index}>
+          <input
+            class="diagram-compare__radio"
+            type="radio"
+            name={radioName}
+            checked={index === 0}
+          />
+          <span class="diagram-compare__lbl">{view.tab}</span>
+        </label>
+      ))
+    }
+  </div>
+
+  {
+    views.map((view, index) => (
+      <div class="diagram-compare__panel" data-view={index}>
+        <Fragment
+          set:html={renderDiagram(view.of, {describedBy: descId, debugGrid})}
+        />
+        {view.note && (
+          <p
+            class="diagram-caption diagram-compare__note"
+            set:html={view.note}
+          />
+        )}
+      </div>
+    ))
+  }
+
+  {
+    caption !== undefined && (
+      <figcaption class="diagram-caption diagram-compare__caption">
+        {caption}
+      </figcaption>
+    )
+  }
+
+  <div class="diagram-desc" id={descId}><slot name="description" /></div>
+</figure>
