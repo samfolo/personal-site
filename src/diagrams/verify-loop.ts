@@ -65,7 +65,7 @@ export const verifyLoop = defineDiagram({
       ink: "fg",
       label: "hands off",
       labelStyle: "label",
-      labelAt: {x: submit.x + submit.w / 2 + 8, y: submit.y + submit.h + 24},
+      labelAt: {x: submit.cx + 8, y: submit.y + submit.h + 24},
     });
     d.edge(review, verdict);
     d.edge(verdict, graph, {label: "pass", labelStyle: "label"});

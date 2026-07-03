@@ -41,6 +41,7 @@ import type {
   Point,
   ProfileStatus,
   TextAnchor,
+  TextItem,
 } from "./types";
 
 /**
@@ -402,15 +403,23 @@ const STATUS_BADGES: Record<ProfileStatus, CornerBadge> = {
   superseded: {kind: "badge", text: "superseded", tone: "muted"},
 };
 
+/**
+ * The active card's tracked highlight label, above its top-right corner.
+ * Built as data so the scene's measure pass can guard it — the one piece
+ * of freestanding text a primitive emits rather than the scene.
+ */
+export const activeLabelItem = (card: CardShape): TextItem => ({
+  voice: "label",
+  text: "active",
+  x: card.x + card.w,
+  y: card.y - 8,
+  anchor: "end",
+  ink: "highlight",
+  centred: true,
+});
+
 const renderActiveLabel = (card: CardShape): string =>
-  renderTrackedLabel({
-    text: "active",
-    x: card.x + card.w,
-    y: card.y - 8,
-    anchor: "end",
-    ink: "highlight",
-    centred: true,
-  });
+  renderTrackedLabel(activeLabelItem(card));
 
 /**
  * Render a profile card (a start-aligned container carrying its lifecycle

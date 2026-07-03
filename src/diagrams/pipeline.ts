@@ -11,7 +11,7 @@
  */
 
 import {defineDiagram} from "../lib/diagrams";
-import type {Scene, ShapeHandle} from "../lib/diagrams";
+import type {Scene} from "../lib/diagrams";
 
 /**
  * Centre line of the main row (text, extract, relate, graph).
@@ -86,13 +86,12 @@ const declareSkeleton = (d: Scene, v: Variant): void => {
   d.edge(relate, graph);
 
   // Annotations centre on the shapes they describe, by handle.
-  const middle = (shape: ShapeHandle): number => shape.x + shape.w / 2;
-  const stack = middle(triage[0] ?? extract);
+  const stack = (triage[0] ?? extract).cx;
   d.text(v.fanLabel, {x: stack, y: FAN_LABEL_Y, anchor: "middle"});
   d.note(v.total, {corner: "ne", ink: "highlight"});
-  d.text(v.extractCost, {x: middle(extract), y: ROW_COST_Y, anchor: "middle"});
+  d.text(v.extractCost, {x: extract.cx, y: ROW_COST_Y, anchor: "middle"});
   d.text(v.triageCost, {x: stack, y: TRIAGE_COST_Y, anchor: "middle"});
-  d.text(v.relateCost, {x: middle(relate), y: ROW_COST_Y, anchor: "middle"});
+  d.text(v.relateCost, {x: relate.cx, y: ROW_COST_Y, anchor: "middle"});
 };
 
 export const oneShotPipeline = defineDiagram({

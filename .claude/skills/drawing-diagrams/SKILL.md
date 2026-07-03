@@ -59,8 +59,11 @@ What the SDK owns; compose with it, never around it:
   their container affords, so spacing stays balanced at any size. Never
   nudge text with magic offsets in a scene.
 - **Guards.** Copy that would overflow its frame fails the build with the
-  measurement in the error. Fix the composition or the copy; never soften
-  a guard.
+  measurement in the error, and the freestanding text layer is measured
+  the same way — text leaving the canvas, overlapping a shape, crossing an
+  edge, or colliding with other text fails with the geometry. Fix the
+  composition or the copy; never soften a guard. The guards catch
+  crossings, not crowding — near-misses are still found by eyes.
 - **Refusal as robustness.** No text wrapping, no auto-layout, no runtime
   dependencies. Diagrams carry labels, not paragraphs.
 
