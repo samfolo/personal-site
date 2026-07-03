@@ -4,10 +4,9 @@
  * The figure for "Nano-dollars": a credit lot is consumed by signed ledger
  * entries, and the lot's remaining balance is a fold over those entries —
  * drawn dashed, outside both records, because it is never stored. Faithful
- * to the billing engine's data-model overview (the corrected design: no
- * mutable remaining column anywhere; account-scoped stamps like
- * balance_after are deliberately omitted so nothing reads as a stored
- * remainder).
+ * to the billing engine's data-model overview: no stored remainder exists
+ * anywhere in the schema, and account-scoped stamps like balance_after are
+ * deliberately omitted so nothing reads as one.
  */
 
 import {defineDiagram} from "../lib/diagrams";

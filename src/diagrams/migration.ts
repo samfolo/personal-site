@@ -1,11 +1,10 @@
 /**
- * Zero-downtime embedding migration — SDK re-implementation
+ * Zero-downtime embedding migration
  *
- * The seven-step walk-through from "Keeping system-shaped promises",
- * re-declared against the diagram SDK with the same geometry, copy, and
- * semantics as scripts/diagrams/migration.ts: reads and writes ride the
- * active profile while a reindex worker fills the new one; there is no
- * dual-write, and the drain happens at the flip under a brief lock.
+ * The seven-step walk-through from "Keeping system-shaped promises":
+ * reads and writes ride the active profile while a reindex worker fills
+ * the new one; there is no dual-write, and the drain happens at the flip
+ * under a brief lock.
  *
  * Each step is one object — control chip, caption title and note, and the
  * scene overlay travel together.
@@ -15,7 +14,7 @@ import {defineSteppedDiagram} from "../lib/diagrams";
 import type {ProfileStatus, Scene} from "../lib/diagrams";
 
 /**
- * Vertical rhythm unit shared by both columns (the canvas original's X).
+ * Vertical rhythm unit shared by both columns.
  */
 const UNIT = 28;
 

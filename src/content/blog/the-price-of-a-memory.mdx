@@ -7,12 +7,7 @@ draft: false
 ---
 
 import {TribalLogoLockup} from "../../components/typography";
-import {
-  ComparedDiagram,
-  Diagram,
-  PipelineComparison,
-  VerifyLoop,
-} from "../../components/blog";
+import {ComparedDiagram, Diagram} from "../../components/blog";
 import {agenticPipeline, oneShotPipeline, verifyLoop} from "../../diagrams";
 
 Software is one of the best businesses anyone has worked out how to run. You build the thing once and serve it to ten people or ten million for roughly the same effort – the quality you put in scales out at almost no marginal cost. That is most of why the companies investors chase are software companies and not hardware ones: the unit economics are a gift physical products never get.
@@ -44,10 +39,6 @@ For knowledge, that's a poor fit, because the connection you most want is usuall
 I gave the agentic stages tools and let them look around. Instead of working from a fixed set pasted into the prompt, each can run its own searches, read a claim in full, and walk a claim's neighbourhood to see what it already touches; the relation stage can reach across project boundaries entirely. They retrieve as they reason, not once up front, so when a search misses they can phrase another, follow a thread, and go find the node nobody put on the table. The contradiction buried elsewhere in the graph surfaces. A connection into another project's knowledge was always the goal; the single pass just couldn't reach it.
 
 That does not come cheap. For a page of text that becomes six candidate claims, the single-pass path is eight calls, each one and done; the agentic path is fifteen-odd durable threads, most of them running several turns, each result checked by a separate reviewer – roughly an order of magnitude more inference for the same page, and several times the wall-clock: an ingest that used to finish in about a minute now takes three or four. Run flat out on a cheap cloud model, it adds up to a few pounds an hour – which, for reading notes, is a lot.
-
-<PipelineComparison />
-
-{/* VISUAL DIFF STAGING — canvas above, SDK below. Remove one before merging. */}
 
 <ComparedDiagram
   id="ingestion-pipelines"
@@ -93,10 +84,6 @@ What makes losing prediction survivable is that I didn't lose knowing. The sourc
 Having an agent check its own work is an idea I'd been playing with before Tribal. The project before this one was called Sigil – an experiment in generative UI – and it was where I first tried to build [reflexion](https://arxiv.org/abs/2303.11366): letting the model look at its own output and judge it before anything downstream trusted it. I hadn't read the paper then; I came to it afterwards. It's the canonical write-up if you want the idea properly. That first attempt was crude. Closer to a year on, I've found better shapes for it.
 
 The one I reach for now runs the check as a sidecar. When a thread is ready to submit, it doesn't get to commit straight away. A separate sub-agent spins up beside it with fresh context – a stand-in for fresh eyes – and reads the proposed result cold, against the rubric that actually matters: is this supported, is it the right kind of connection, is it real. Pass, and the work goes through. Fail, and it bounces back to the thread with the critique, and the thread tries again.
-
-<VerifyLoop />
-
-{/* VISUAL DIFF STAGING — canvas above, SDK below. Remove one before merging. */}
 
 <Diagram
   of={verifyLoop}

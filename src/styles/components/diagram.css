@@ -1,22 +1,22 @@
 /**
  * Diagram shell and SVG vocabulary
  *
- * Shared conventions for the blog's diagram components, both engines:
+ * Shared conventions for the blog's diagram figures:
  *
- * - The figure shell (margin, caption typography, visually-hidden text
- *   description) used by canvas and SVG figures alike.
+ * - The figure shell: margin, caption typography, and the visually-hidden
+ *   text description every figure carries.
  * - The `.d-*` vocabulary for the SVG diagram SDK (src/lib/diagrams): all
  *   paint routes through the six semantic colour tokens and the typography
  *   tokens, which is what makes every figure re-theme with zero JavaScript.
  *   Font sizes resolve to SVG user units, so type scales with the figure —
  *   treat-as-image on mobile, unchanged.
- * - The stepper control for walk-through figures: radios inside chip
- *   labels, scene and caption visibility switched entirely in CSS.
+ * - The stepper and comparison controls: radios inside chip labels, scene
+ *   and caption visibility switched entirely in CSS.
  */
 
 @layer components {
   /* ==========================================================
-     Figure shell (shared by canvas and SVG figures)
+     Figure shell (shared by every figure)
      ========================================================== */
 
   /* Outer figure shell. */
@@ -104,7 +104,7 @@
      line. Emphasis (the live element) is an emphasised frame, never a
      status; dim marks superseded elements. 12px is the deliberate
      diagram-only step between --text-xs and --text-sm, for dense
-     annotations (mirrors the canvas engine). */
+     annotations. */
   .d-box rect.frame {
     fill: var(--bg);
     stroke: var(--rule);
@@ -195,7 +195,7 @@
   }
 
   /* Tracked uppercase label — names of places and states. Tracking is baked
-     into the text by the SDK, matching the canvas engine's drawLabel. */
+     into the text by the SDK. */
   .d-label {
     fill: var(--muted);
     font-family: var(--font-sans);

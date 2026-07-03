@@ -25,9 +25,7 @@ SDK's vocabulary.
 - `/dev/diagrams` — dev-only preview of every registered figure, with a
   module-grid overlay and theme pinning via query params.
 
-The SDK is the site's only diagram engine. Anything else diagram-shaped in
-the tree predates it, is frozen with the posts it serves, and must never be
-built upon or extended.
+The SDK is the site's only diagram engine.
 
 ## The Responsibility of a Diagram
 

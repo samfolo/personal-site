@@ -1,5 +1,5 @@
 /**
- * Ingestion pipelines — faithful ports of the canvas pair
+ * Ingestion pipelines
  *
  * Two views of ingestion sharing one skeleton: extract fans out to one
  * triage unit per candidate, the units converge on a single relate unit,

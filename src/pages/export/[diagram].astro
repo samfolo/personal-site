@@ -2,46 +2,62 @@
 /**
  * Diagram export surface (DEV ONLY)
  *
- * A chrome-less, theme-pinned page that renders ONE diagram on a solid
+ * A chrome-less, theme-pinned page that renders ONE SDK diagram on a solid
  * background, sized to an arbitrary output frame, for screenshotting into a
- * static figure that travels to platforms which can't run the canvas (LinkedIn,
- * Substack, X). Not the article — just the figure, on a controlled surface, so
- * it reads as a designed image rather than a screenshot of the site.
+ * static figure that travels to platforms which can't run the live page
+ * (LinkedIn, Substack, X). Not the article — just the figure, on a
+ * controlled surface, so it reads as a designed image rather than a
+ * screenshot of the site.
  *
- * The frame is fully parameterised so it adapts to whatever dimensions a
- * platform wants WITHOUT code changes. The diagram itself is determined by a
- * single number — its render width — because the engine scales the whole
- * logical space (fonts included) to fit; there is no separate font knob. The
- * query params only size the frame the diagram is fitted into.
+ * Diagrams are addressed by their registry id; stepped diagrams take a
+ * `step` and render that step's scene with a static chip strip above it,
+ * so an assembled GIF carries its own progress indicator.
  *
- *   /export/migration?step=3             (tight: frame wraps the diagram)
- *   /export/pipeline?view=agentic&w=1600
- *   /export/verify-loop?w=1200&h=630     (card: exact 1200×630, centred)
+ *   /export/ledger?w=1200
+ *   /export/pipeline-agentic?w=1600&theme=steel
+ *   /export/migration?step=3            (chip strip marks the active step)
+ *   /export/verify-loop?w=1200&h=630    (card: exact 1200×630, centred)
  *
  * Params: w (output width px), pad (uniform margin px), h (OPTIONAL — when
- * given, makes an exact w×h card with the diagram contained and centred; when
- * omitted, the frame wraps the diagram tightly with uniform padding, no slack),
- * theme (pinned palette, default charcoal), step (migration 0–6), view
- * (pipeline oneshot|agentic). Device pixel ratio is the screenshot tool's job
- * (Playwright deviceScaleFactor), not a param.
+ * given, makes an exact w×h card with the diagram contained and centred;
+ * when omitted, the frame wraps the diagram tightly with uniform padding),
+ * theme (pinned palette, default charcoal), step (stepped diagrams only).
+ * Device pixel ratio is the screenshot tool's job (Playwright
+ * deviceScaleFactor), not a param.
  *
  * Returns 404 in production — run it against `npm run dev` + Playwright.
  */
 import "../../styles/global.css";
 
+import {renderDiagram} from "../../lib/diagrams";
+import type {DiagramDef, Scene, SteppedDiagramDef} from "../../lib/diagrams";
+import {
+  agenticPipeline,
+  ledger,
+  migration,
+  oneShotPipeline,
+  verifyLoop,
+} from "../../diagrams";
+
 export const prerender = false;
 
-// Diagram logical aspect ratios — mirror each script's {width, height}. If a
-// diagram's logical dimensions change, update the matching entry here.
-const ASPECT: Record<string, number> = {
-  migration: 672 / 320,
-  pipeline: 800 / 240,
-  "verify-loop": 820 / 300,
-};
+const STATIC_DIAGRAMS: Record<string, DiagramDef> = Object.fromEntries(
+  [agenticPipeline, ledger, oneShotPipeline, verifyLoop].map((def) => [
+    def.id,
+    def,
+  ])
+);
+const STEPPED_DIAGRAMS: Record<string, SteppedDiagramDef> = Object.fromEntries(
+  [migration].map((def) => [def.id, def])
+);
 
 const {diagram} = Astro.params;
 
-if (import.meta.env.PROD || !diagram || !(diagram in ASPECT)) {
+if (
+  import.meta.env.PROD ||
+  !diagram ||
+  !(diagram in STATIC_DIAGRAMS || diagram in STEPPED_DIAGRAMS)
+) {
   return new Response("Not found", {status: 404});
 }
 
@@ -59,41 +75,58 @@ const num = (key: string, fallback: number): number => {
 
 const w = clampInt(num("w", 1200), 16, 4096);
 const pad = clampInt(num("pad", 64), 0, 1024);
-const step = clampInt(num("step", 0), 0, 6);
 const theme = q.get("theme") ?? "charcoal";
-const view = q.get("view") === "agentic" ? "agentic" : "oneshot";
+
+// Resolve the definition: a static diagram renders as-is; a stepped one
+// renders the requested step's scene (base + step) as a one-off static
+// definition, with the chip strip carrying the step state.
+const stepped = STEPPED_DIAGRAMS[diagram];
+const step = stepped
+  ? clampInt(num("step", 0), 0, stepped.steps.length - 1)
+  : 0;
+const def: DiagramDef = stepped
+  ? {
+      id: stepped.id,
+      size: stepped.size,
+      ariaLabel: stepped.ariaLabel,
+      scene: (d: Scene) => {
+        stepped.base?.(d);
+        stepped.steps[step]?.scene(d);
+      },
+    }
+  : (STATIC_DIAGRAMS[diagram] as DiagramDef);
+
+const svg = renderDiagram(def);
+const [logicalW, logicalH] = def.size;
+const ar = logicalW / logicalH;
 
 // An explicit `h` switches to fixed-card mode: the diagram is contained and
-// centred in an exact w×h frame (for a platform that wants set dimensions).
-// With no `h`, the frame wraps the diagram tightly with uniform padding.
+// centred in an exact w×h frame. With no `h`, the frame wraps the diagram
+// tightly with uniform padding.
 const hRaw = q.get("h");
 const h =
   hRaw !== null && hRaw.trim() !== "" && Number.isFinite(Number(hRaw))
     ? clampInt(Number(hRaw), 16, 4096)
     : null;
 
-const ar = ASPECT[diagram];
 let cw: number;
-let ch: number;
-let frameH: number;
 if (h !== null) {
-  // Fixed card: contain the diagram inside the padded w×h frame.
   const availW = Math.max(1, w - 2 * pad);
   const availH = Math.max(1, h - 2 * pad);
   cw = availW;
-  ch = cw / ar;
-  if (ch > availH) {
-    ch = availH;
-    cw = ch * ar;
+  if (cw / ar > availH) {
+    cw = availH * ar;
   }
-  frameH = h;
 } else {
-  // Tight: the diagram at (w − 2·pad), the frame wrapping it with uniform pad.
   cw = Math.max(1, w - 2 * pad);
-  ch = cw / ar;
-  frameH = Math.round(ch + 2 * pad);
 }
-const canvasStyle = `width:${Math.round(cw)}px;height:${Math.round(ch)}px`;
+
+const frameStyle =
+  h !== null
+    ? `width:${w}px;height:${h}px`
+    : stepped
+      ? `width:${w}px;padding:${pad}px`
+      : `width:${w}px;height:${Math.round(cw / ar + 2 * pad)}px`;
 ---
 
 <!doctype html>
@@ -137,48 +170,80 @@ const canvasStyle = `width:${Math.round(cw)}px;height:${Math.round(ch)}px`;
         overflow: hidden;
       }
 
-      .export-frame figure {
-        margin: 0;
-        line-height: 0;
+      .export-frame svg {
+        display: block;
+        height: auto;
+        width: 100%;
       }
 
-      .export-frame canvas {
-        display: block;
+      /* Stepped exports stack a static chip strip above the scene, sized up
+         to sit alongside the scaled figure, so an assembled GIF carries its
+         own progress indicator. */
+      .export-stepped {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+      }
+
+      .export-tabs {
+        display: grid;
+        grid-template-columns: repeat(var(--export-steps, 7), 1fr);
+        gap: 8px;
+      }
+
+      .export-tab {
+        display: flex;
+        justify-content: center;
+        align-items: baseline;
+        gap: 8px;
+        padding: 16px;
+        font-family: var(--font-sans);
+        font-size: 28px;
+        color: var(--muted);
+        border: 1px solid var(--rule);
+        border-radius: 8px;
+      }
+
+      .export-tab-index {
+        font-family: var(--font-mono);
+        font-size: 20px;
+        color: var(--muted);
+      }
+
+      .export-tab.is-active {
+        color: var(--emphasis);
+        border-color: var(--fg);
+      }
+
+      .export-tab.is-active .export-tab-index {
+        color: var(--emphasis);
       }
     </style>
   </head>
   <body>
-    <div class="export-frame" style={`width:${w}px;height:${frameH}px`}>
-      <figure>
-        {
-          diagram === "migration" && (
-            <>
-              <input
-                type="radio"
-                name="migration-step"
-                data-step={step}
-                checked
-                hidden
-              />
-              <canvas data-diagram="migration" style={canvasStyle} />
-            </>
-          )
-        }
-        {
-          diagram === "pipeline" && (
-            <canvas data-diagram={`pipeline-${view}`} style={canvasStyle} />
-          )
-        }
-        {
-          diagram === "verify-loop" && (
-            <canvas data-diagram="verify-loop" style={canvasStyle} />
-          )
-        }
-      </figure>
+    <div class="export-frame" style={frameStyle}>
+      {
+        stepped ? (
+          <div
+            class="export-stepped"
+            style={`width:${Math.round(cw)}px;--export-steps:${stepped.steps.length}`}
+          >
+            <div class="export-tabs">
+              {stepped.steps.map((s, i) => (
+                <div class={`export-tab${i === step ? " is-active" : ""}`}>
+                  <span class="export-tab-index">{i + 1}</span>
+                  <span class="export-tab-label">{s.tab}</span>
+                </div>
+              ))}
+            </div>
+            <Fragment set:html={svg} />
+          </div>
+        ) : (
+          <div style={`width:${Math.round(cw)}px`}>
+            <Fragment set:html={svg} />
+          </div>
+        )
+      }
     </div>
-
-    <script src="../../scripts/diagrams/migration.ts"></script>
-    <script src="../../scripts/diagrams/pipeline.ts"></script>
-    <script src="../../scripts/diagrams/verify-loop.ts"></script>
   </body>
 </html>

@@ -66,10 +66,10 @@ const LABEL_GLYPH_WIDTHS: Record<string, number> = {
 const LABEL_GLYPH_FALLBACK = 7.5;
 
 /**
- * Widen text the way the canvas engine's drawLabel does: uppercase, with a
- * space between every character. Word gaps become space–NBSP–space — SVG
- * collapses runs of ordinary whitespace, so the middle space must be a
- * non-breaking one to survive rendering.
+ * Widen label text: uppercase, with a space between every character. Word
+ * gaps become space–NBSP–space — SVG collapses runs of ordinary
+ * whitespace, so the middle space must be a non-breaking one to survive
+ * rendering.
  */
 export const track = (text: string): string =>
   text
