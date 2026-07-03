@@ -43,7 +43,10 @@ export const verifyLoop = defineDiagram({
     const verifier = d.lane({centreY: VERIFIER_Y});
     const review = verifier.node("review", {under: submit});
     const verdict = verifier.node("verdict", {x: d.col(8), span: 1.5});
-    d.boundary([review, verdict], {label: "verifier · separate thread"});
+    // The label stays short so the fail edge's drop, south out of verdict,
+    // never crosses it; "separate" is carried by the caption and the
+    // figure's text description.
+    d.boundary([review, verdict], {label: "verifier thread"});
 
     // The graph sits outside the boundary: a pass leaves the verifier —
     // that crossing is the commit.
