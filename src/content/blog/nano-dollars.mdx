@@ -1,0 +1,209 @@
+---
+title: "Nano-dollars"
+description: "On taking full advantage of the pace these models offer without losing the entry point for your own judgement – dictation to get intent out, diagrams to take systems in, and a nano-dollar column that had no business existing."
+publishDate: 2026-07-06
+tags: ["Engineering", "AI", "Workflow", "Architecture", "Tooling"]
+draft: true
+---
+
+import {Diagram} from "../../components/blog";
+import {ledger} from "../../diagrams";
+
+I've never been able to build as fast as I have recently. I can have an
+idea in the morning, tear it to shreds by the afternoon, rebuild it by the
+evening, and be holding it in my hands before the day is out. Last week it
+was a diagram engine for this site – sketched in the morning, working by
+the afternoon, and redrawing every figure on the blog by dinner.
+
+I don't seem to be alone in this; the bridge between idea and execution has
+collapsed, and ideas that would typically die in the shower are now running
+in the background.
+
+Something feels lost in all of it, though. Everything is urgent at the
+moment; we build quickly and understand less of what we build, because
+underneath the speed sits a kind of turbulence – no guarantee that any of
+this stays available to us in the same shape, or that it won't simply be
+taken away. It already has been, once.
+
+One day in June I woke up to a new tier of model
+– Fable 5 – and suddenly I was building more quickly, at higher quality,
+than I'd ever experienced. Three days later it was gone; an
+order from the government of a country I didn't live in, with not much
+public explanation. A gift taken from everyone, everywhere. It stayed that
+way for 19 days. However good these tools get, I don't own them – and
+letting a dependency grow on something that can vanish overnight doesn't
+feel safe.
+
+The fear underneath is specific: build at this pace without holding the
+shape of the system in your own head, and you can end up with something
+technically correct in _some_ configuration – just not one you understand
+innately, and not the way you would have built it. When it goes
+wrong, and the tool you used to create it isn't there – a rate limit, a
+price change, a directive landing late on a Friday afternoon – you're left
+holding a system you can't maintain. Worse, I think, than never having
+built it at all. That might be an exaggeration, but it's where the
+conviction comes from. I won't speak for anyone else, though I suspect
+something like it sits underneath the reluctance I see in other engineers:
+not fear of the tools, but fear of becoming dependent enough on something
+moving so fast you lose sight of the entry point for your own judgement and
+taste.
+
+I want everything this technology can give... I'm not willing to hand over
+my judgement to get it.
+
+The model came back on the 1st of July, and subscriptions carry it for six
+days before the meter starts running. I had a roadmap already, written
+tentatively, and a choice about how to spend the window. The models I can
+always reach are more than capable of execution; planning the load-bearing
+parts of a system is different – the parts that handle money, the parts
+that don't get to be wrong – and there I want something that can think a
+little deeper and spar a little harder. I'm spending the six days on
+architecture: hardening plans that were sketches a week ago, while the
+sharpest tool I've ever used is on hand to disagree with me. When the wave
+passes on the 7th, the value stays; the plans keep their shape, whatever
+model and whatever pace come next. I don't walk away with nothing.
+
+## The bottleneck moved
+
+The current wave of models can produce a coherent, complex design faster
+than I can read it. My first instinct was to read harder – more carefully,
+more suspiciously, line by line, trying to catch the machine out in a lie.
+Every time the models improve, it becomes a little more painfully true:
+reading harder does not scale. The bottleneck in this way of working is no
+longer generation; it's comprehension, and the verification that depends on
+it. Every hour the models save writing things down gets spent again, with
+interest, working out whether what they wrote is what I meant.
+
+After trying and failing to slow the machine down to my reading speed –
+then trying and failing to read faster – it occurred to me that the
+representation of the work was the part I could actually lean on: change
+the shape the work arrives in, and there's always an entry point for my
+judgement.
+
+## Directions of travel
+
+Getting intent out of my head, I dictate. I was reluctant when I first
+discovered it – it sounded like betraying my own craft. Code was meant to
+be written letter by letter; I was supposed to type it... that was the
+point, that's how you make sure it's correct. I tried it anyway, on a whim,
+at an old job, and saw the value immediately: bigger ideas made it out of
+my head intact. It felt natural in a way I hadn't expected – almost like
+breathing – as though this had been the correct configuration all along,
+and typing was a method I'd been making do with, not knowing there was a
+better way.
+
+When I eventually looked into it, the research agreed: speech is [roughly
+three times faster than typing](https://doi.org/10.1145/3161187), a claim I
+could vouch for the moment I read it. These days I use [Wispr
+Flow](https://wisprflow.ai/), and the speed is the least of it. Typing has
+friction, and friction quietly edits you: you leave things out, you stop
+mid-thought to fix a sentence, you second-guess a tangent that was carrying
+real context and cut it before it reaches the page. Dictation only feeds
+forward; it costs you some noise, and in exchange the reasoning arrives
+whole – including the parts you didn't yet know were the point.
+
+Taking information in is the opposite story. Audio is a poor medium for
+absorption: you can't skim it, you can't jump back to the thing you
+half-caught without ceremony, and by the middle of anything long you're
+losing the beginning. Text is better – eyes are the stronger sense, and text
+carries landmarks that tell you where the ideas live.
+
+Past a certain size, though, even text stops working; when an agent hands
+me a design document that runs to hundreds of lines – invariants argued
+for, edge cases hardened through its own adversarial review – I can read
+every word and still fail to hold the system in my head.
+
+Diagrams are where absorption actually happens for me, and none of this is
+my invention – engineers have been dealing in boxes and arrows for as long
+as there have been systems too big to hold whole. We've confidently built
+large, durable, production-grade systems – the foundations of society,
+really – on exactly this, for decades. A diagram is how engineers lean on
+each other's expertise without reading each other's code: a shared
+vocabulary for intent, cheap to iterate on, with the implementation details
+below it delegated to people who can be trusted with a contract. What's
+changed is only who's on the other end of the delegation. Reason the intent
+out at the level of the diagram, and the code underneath can be handed to an
+agent the way a lead hands work to their team.
+
+The reading speed comes from what sits underneath. Years of building data
+models by hand left me with a vocabulary I no longer have to think about:
+what a normalised schema looks like, where the foreign keys belong, which
+indexes a query pattern will eventually demand. The same for how services
+talk to each other, and what a reactive framework is doing under the hood.
+With those fundamentals in place, an architecture diagram stops being a
+picture and becomes a sentence you read at a glance – intent included.
+
+## Nano-dollars
+
+Here's what that looks like in practice, on the system in front of me now.
+
+I'm designing a billing engine at the moment – how you price AI-powered
+tools is an essay of its own, but the short version is that I need a usage
+ledger. The agent does the sweeping recon and its own adversarial review,
+and comes back with a long, hardened design document. I ask for the
+architecture as [Mermaid](https://mermaid.js.org/) diagrams in a plain HTML
+file: flowcharts, entity-relationship diagrams, colour-coded, and openable
+statelessly in a browser. I dictate what I want changed or explained; the
+model updates the notation and regenerates the view; I interrogate the
+picture. When I need depth on one facet – how rate cards behave at runtime,
+say – I ask for that view alone, as micro or as macro as the question needs.
+I iterate at the level of the architecture, not the level of the markdown.
+
+Walking the data model this way is where taste gets its say. I check the
+things I've been burned by: whether the foreign keys are all there, which
+indexes exist, whether a user journey can actually be walked across the
+tables. (A pet peeve from years of front-end work: back-end teams designing
+data models with no thought for the screens that will consume them.
+Somewhere in your schema, there had better be a display name.)
+
+On one of those walks, the ledger design had a column holding the remaining
+nano-dollars of a credit lot. I have a fintech background, and the instinct
+arrived before the reasoning did: a financial system wants a single source
+of truth, and a stored remainder is a second one. Sooner or later a debit
+lands in the ledger and the write that updates the remainder fails, and now
+the system disagrees with itself about money. The fix was to derive the
+remainder from the ledger and never store it – the same instinct I wrote
+about [last time](/blog/keeping-system-shaped-promises): derive the truth,
+rather than keep a second copy that can drift.
+
+<Diagram
+  of={ledger}
+  caption="A simplified vignette of the billing engine – a credit lot and the entries that consume it. The remainder is derived, never stored, so it can't drift."
+>
+  <Fragment slot="description">
+    Two database records side by side. The credit_lot record holds an id, a
+    source, an immutable amount in nanodollars, and an expiry. The ledger_entry
+    record holds an id, a lock-assigned sequence, an entry type, a signed amount
+    in nanodollars, and a lot_id foreign key; one lot is consumed by many
+    entries. Below the entries, drawn dashed and badged as derived, sits the
+    remaining balance – the sum of the lot's signed entries, marked never
+    stored. There is no remaining column on the lot itself.
+  </Fragment>
+</Diagram>
+
+Buried in a wall of markdown, that column would have sailed past me. On the
+diagram, it was a glance. Had I accepted the design wholesale, I'd have
+shipped a system I never truly inspected – an architecture decision nobody
+interrogated, sitting under real money. Inference isn't going to help you
+relitigate a misconfigured billing ledger.
+
+## Inference won't do your backfills
+
+Building at pace changes the economics of mistakes, and it changes them
+unevenly. The cost of building the wrong thing has collapsed – a bad
+prototype costs an afternoon now, and going back to zero is cheap right up
+until it isn't. Once people are in the system, once pricing is set a certain
+way, once a user has been modelled a certain way in the schema, the wrong
+shape has gravity. Inference isn't going to do your backfills. It isn't
+going to run your database migrations, or stand in for your disaster
+recovery. It helps you build the system; it doesn't absorb the consequences
+of building the wrong one.
+
+Which is why the fundamentals aren't nostalgia. They're the judgement that
+decides what gets built, exercised at the one altitude where I can still
+keep up. To build fast, you have to build correctly – correctness is what
+keeps a system cheap to change at the speed everything else now moves.
+
+The model is back, for now. I want everything it can give – at pace, on the
+hard parts, with my hands on the shape of the system the whole way through.
+If it disappears again, what I've built will still be mine to maintain.
