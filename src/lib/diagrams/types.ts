@@ -42,10 +42,15 @@ export type Corner = "ne" | "nw" | "se" | "sw";
 export type TextAnchor = "start" | "middle" | "end";
 
 /**
- * Voice of an edge label: plain mono annotation, or a tracked uppercase
- * label for names of places and states.
+ * Voice of a piece of text: a tracked uppercase label (names of places and
+ * states) or a plain mono annotation (data).
  */
-export type EdgeLabelStyle = "text" | "label";
+export type TextVoice = "label" | "text";
+
+/**
+ * Voice of an edge label — the same two voices.
+ */
+export type EdgeLabelStyle = TextVoice;
 
 /**
  * How an edge travels: `auto` routes orthogonally (straight when aligned,
@@ -137,6 +142,60 @@ export interface ShapeHandle extends Frame {
    * Scene-unique identifier.
    */
   id: string;
+
+  /**
+   * Horizontal centre (`x + w / 2`), derived at registration so scenes and
+   * routing never recompute it.
+   */
+  cx: number;
+
+  /**
+   * Vertical centre (`y + h / 2`), derived at registration.
+   */
+  cy: number;
+}
+
+/**
+ * A placed piece of freestanding text — everything the renderer and the
+ * measure pass need to know about it. Every text a scene emits outside a
+ * shape's frame travels through this shape, which is what lets measuring
+ * and guarding cover the whole text layer by construction.
+ */
+export interface TextItem {
+  /**
+   * Voice: tracked label or mono annotation.
+   */
+  voice: TextVoice;
+
+  /**
+   * Text content (tracking applied at render for the label voice).
+   */
+  text: string;
+
+  /**
+   * Anchor x.
+   */
+  x: number;
+
+  /**
+   * Baseline y (or vertical centre when `centred`).
+   */
+  y: number;
+
+  /**
+   * Text anchor.
+   */
+  anchor: TextAnchor;
+
+  /**
+   * Ink role.
+   */
+  ink?: Ink;
+
+  /**
+   * Centre vertically on `y` instead of treating it as the baseline.
+   */
+  centred: boolean;
 }
 
 /**

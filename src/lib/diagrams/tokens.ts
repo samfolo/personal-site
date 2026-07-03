@@ -170,9 +170,11 @@ export const TEXT_SIZE_PRIMARY = 13;
 export const TEXT_SIZE_SECONDARY = 12;
 
 /**
- * How far a lane's tracked label sits above the lane's centre line.
+ * Rise of a lane's tracked label above the top edge of the lane's nodes
+ * (three grid units) — anchored to the edge the label clears, so a taller
+ * lane never crowds it.
  */
-export const LANE_LABEL_RISE = 44;
+export const LANE_LABEL_RISE = 24;
 
 /**
  * Horizontal padding a boundary extends beyond its children — half a module,

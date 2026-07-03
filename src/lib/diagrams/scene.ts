@@ -14,8 +14,10 @@
  * routing) are a deliberate non-goal until a figure demands them.
  */
 
+import {guardTextLayer} from "./bounds";
 import {measureMono} from "./metrics";
 import {
+  activeLabelItem,
   containerMinHeight,
   entityHeight,
   renderActor,
@@ -77,6 +79,7 @@ import type {
   ShapeHandle,
   SideAnchor,
   TextAnchor,
+  TextItem,
 } from "./types";
 
 /**
@@ -454,10 +457,20 @@ interface LaneState {
   label?: string;
   centreY: number;
   h: number;
-  firstNodeX?: number;
+  /**
+   * Left edge of the lane's leftmost node — the label's anchor, whatever
+   * order the nodes were declared in.
+   */
+  labelX?: number;
 }
 
 interface BoundaryItem {
+  /**
+   * The boundary's handle id — the measure pass excludes boundary frames
+   * from collision, since text inside a boundary's region is normal
+   * composition.
+   */
+  id: string;
   frame: Frame;
   label?: string;
 }
@@ -466,6 +479,8 @@ interface BoundaryItem {
  * A deferred render call. Shapes retain as thunks over their shape objects
  * (so per-step mutation like `status()` is reflected at render), and adding
  * a new mark costs one scene method plus its emitter — no renderer changes.
+ * Freestanding text retains as {@link TextItem} data instead, so the
+ * measure pass can see it.
  */
 type RenderThunk = () => string;
 
@@ -477,7 +492,7 @@ interface SceneState {
   shapes: RenderThunk[];
   cards: Map<string, CardShape>;
   edges: EdgeItem[];
-  texts: RenderThunk[];
+  texts: TextItem[];
   lanes: LaneState[];
 }
 
@@ -513,11 +528,28 @@ export const createScene = (width: number, height: number): SceneBuild => {
     lanes: [],
   };
 
+  // Every shape must lie inside the canvas — a frame that runs off the
+  // viewBox clips silently, so it fails the build with the extents instead.
   const register = (id: string, frame: Frame): ShapeHandle => {
     if (state.handles.has(id)) {
       throw new Error(`diagram scene: duplicate shape id "${id}"`);
     }
-    const handle = {id, ...frame};
+    if (
+      frame.x < 0 ||
+      frame.y < 0 ||
+      frame.x + frame.w > width ||
+      frame.y + frame.h > height
+    ) {
+      throw new Error(
+        `diagram scene: "${id}" spans x ${frame.x}–${frame.x + frame.w}, y ${frame.y}–${frame.y + frame.h} — outside the ${width}×${height} canvas`
+      );
+    }
+    const handle = {
+      id,
+      ...frame,
+      cx: frame.x + frame.w / 2,
+      cy: frame.y + frame.h / 2,
+    };
     state.handles.set(id, handle);
     return handle;
   };
@@ -571,8 +603,8 @@ export const createScene = (width: number, height: number): SceneBuild => {
     if (y === undefined) {
       throw new Error(`diagram scene: node "${id}" needs \`y\` outside a lane`);
     }
-    if (lane && lane.firstNodeX === undefined) {
-      lane.firstNodeX = x;
+    if (lane) {
+      lane.labelX = Math.min(lane.labelX ?? Infinity, x);
     }
     guardWidth(id, label, TEXT_SIZE_PRIMARY, w);
     const shape: NodeShape = {x, y, w, h, label, variant};
@@ -713,11 +745,9 @@ export const createScene = (width: number, height: number): SceneBuild => {
       const bottom =
         Math.max(...children.map((c) => c.y + c.h)) + BOUNDARY_PAD_Y;
       const frame = {x: left, y: top, w: right - left, h: bottom - top};
-      state.boundaries.push({frame, label: options.label});
-      return register(
-        options.label ?? `boundary-${state.boundaries.length}`,
-        frame
-      );
+      const id = options.label ?? `boundary-${state.boundaries.length + 1}`;
+      state.boundaries.push({id, frame, label: options.label});
+      return register(id, frame);
     },
 
     edge(from, to, options = {}) {
@@ -725,44 +755,41 @@ export const createScene = (width: number, height: number): SceneBuild => {
     },
 
     label(text, options) {
-      state.texts.push(() =>
-        renderTrackedLabel({
-          text,
-          x: options.x,
-          y: options.y,
-          anchor: options.anchor,
-          ink: options.ink,
-          centred: true,
-        })
-      );
+      state.texts.push({
+        voice: "label",
+        text,
+        x: options.x,
+        y: options.y,
+        anchor: options.anchor ?? "start",
+        ink: options.ink,
+        centred: true,
+      });
     },
 
     text(text, options) {
-      state.texts.push(() =>
-        renderAnnotation({
-          text,
-          x: options.x,
-          y: options.y,
-          anchor: options.anchor,
-          ink: options.ink,
-          centred: true,
-        })
-      );
+      state.texts.push({
+        voice: "text",
+        text,
+        x: options.x,
+        y: options.y,
+        anchor: options.anchor ?? "start",
+        ink: options.ink,
+        centred: true,
+      });
     },
 
     note(text, options) {
       const isEast = options.corner === "ne" || options.corner === "se";
       const isTop = options.corner === "ne" || options.corner === "nw";
-      state.texts.push(() =>
-        renderAnnotation({
-          text,
-          x: isEast ? width - NOTE_INSET : NOTE_INSET,
-          y: isTop ? NOTE_TOP_Y : height - NOTE_BOTTOM_RISE,
-          anchor: isEast ? "end" : "start",
-          ink: options.ink,
-          centred: true,
-        })
-      );
+      state.texts.push({
+        voice: "text",
+        text,
+        x: isEast ? width - NOTE_INSET : NOTE_INSET,
+        y: isTop ? NOTE_TOP_Y : height - NOTE_BOTTOM_RISE,
+        anchor: isEast ? "end" : "start",
+        ink: options.ink,
+        centred: true,
+      });
     },
   };
 
@@ -772,6 +799,8 @@ export const createScene = (width: number, height: number): SceneBuild => {
 type Side = "north" | "south" | "east" | "west";
 
 interface ResolvedEdge {
+  from: string;
+  to: string;
   points: Point[];
   ink: Ink;
   dash: boolean;
@@ -790,9 +819,6 @@ const sideAnchorY = (shape: Frame, anchor: SideAnchor): number => {
   }
   return shape.y + shape.h / 2;
 };
-
-const centreX = (shape: Frame): number => shape.x + shape.w / 2;
-const centreY = (shape: Frame): number => shape.y + shape.h / 2;
 
 /**
  * Spread bookkeeping: how many centre-anchored edges already attach to a
@@ -844,6 +870,8 @@ const resolveEdge = (
     labelAt: Point,
     labelAnchor: TextAnchor
   ): ResolvedEdge => ({
+    from: edge.from,
+    to: edge.to,
     points,
     ink,
     dash,
@@ -859,8 +887,8 @@ const resolveEdge = (
   // centre — the wrap that lets a downstream verdict feed the start of a
   // thread without crossing anything between them.
   if (route === "return") {
-    const headsWest = centreX(target) < centreX(source);
-    const sx = centreX(source);
+    const headsWest = target.cx < source.cx;
+    const sx = source.cx;
     const sourceBottom = source.y + source.h;
     const railY = height - RETURN_RAIL_RISE;
     if (railY < sourceBottom + ELBOW_RADIUS * 2) {
@@ -872,7 +900,7 @@ const resolveEdge = (
       ? target.x - RETURN_INSET
       : target.x + target.w + RETURN_INSET;
     const tx = headsWest ? target.x : target.x + target.w;
-    const ty = centreY(target);
+    const ty = target.cy;
     return finish(
       [
         {x: sx, y: sourceBottom},
@@ -890,7 +918,7 @@ const resolveEdge = (
   // treatment. Several can share an anchor and diverge, so they skip the
   // spread bookkeeping.
   if (route === "direct") {
-    const headsEast = centreX(source) < centreX(target);
+    const headsEast = source.cx < target.cx;
     const start = {
       x: headsEast ? source.x + source.w : source.x,
       y: sideAnchorY(source, exit),
@@ -907,12 +935,9 @@ const resolveEdge = (
   }
 
   // Vertically aligned shapes connect with a straight vertical edge.
-  if (
-    via === undefined &&
-    Math.abs(centreX(source) - centreX(target)) < EPSILON
-  ) {
-    const x = centreX(source);
-    const goesDown = centreY(source) < centreY(target);
+  if (via === undefined && Math.abs(source.cx - target.cx) < EPSILON) {
+    const x = source.cx;
+    const goesDown = source.cy < target.cy;
     const sy = goesDown ? source.y + source.h : source.y;
     const ty = goesDown ? target.y : target.y + target.h;
     return finish(
@@ -925,7 +950,7 @@ const resolveEdge = (
     );
   }
 
-  const goesEast = centreX(source) < centreX(target);
+  const goesEast = source.cx < target.cx;
   const sourceEdgeX = goesEast ? source.x + source.w : source.x;
   const sy =
     sideAnchorY(source, exit) +
@@ -969,7 +994,7 @@ const resolveEdge = (
 
   // A bend inside the target's horizontal span enters vertically instead.
   if (bendX > target.x && bendX < target.x + target.w) {
-    const fromBelow = sy > centreY(target);
+    const fromBelow = sy > target.cy;
     const endY = fromBelow ? target.y + target.h : target.y;
     return finish(
       [
@@ -982,7 +1007,7 @@ const resolveEdge = (
     );
   }
 
-  const enteringEast = bendX > centreX(target);
+  const enteringEast = bendX > target.cx;
   const ty =
     targetEnterY +
     spreadOffset(
@@ -1004,35 +1029,62 @@ const resolveEdge = (
   );
 };
 
-const renderBoundaryItem = ({frame, label}: BoundaryItem): string => {
+/**
+ * Every freestanding text renders through this one dispatch, whichever
+ * feature placed it — the same items the measure pass guards, so a text
+ * cannot render unguarded.
+ */
+const renderTextItem = (item: TextItem): string =>
+  item.voice === "label" ? renderTrackedLabel(item) : renderAnnotation(item);
+
+const boundaryLabelItem = ({frame, label}: BoundaryItem): TextItem | null => {
   if (label === undefined) {
-    return renderBoundary(frame);
+    return null;
   }
-  const labelMarkup = renderTrackedLabel({
+  return {
+    voice: "label",
     text: label,
     x: frame.x,
     y: frame.y + frame.h + BOUNDARY_LABEL_DROP,
-  });
-  return renderBoundary(frame) + labelMarkup;
+    anchor: "start",
+    centred: false,
+  };
 };
 
-const renderEdgeLabel = (resolved: ResolvedEdge, label: string): string => {
-  const placed = {
-    text: label,
+const laneLabelItem = (lane: LaneState): TextItem | null => {
+  if (lane.label === undefined) {
+    return null;
+  }
+  return {
+    voice: "label",
+    text: lane.label,
+    x: lane.labelX ?? MODULE / 2,
+    y: lane.centreY - lane.h / 2 - LANE_LABEL_RISE,
+    anchor: "start",
+    centred: false,
+  };
+};
+
+const edgeLabelItem = (resolved: ResolvedEdge): TextItem | null => {
+  if (resolved.label === undefined) {
+    return null;
+  }
+  return {
+    voice: resolved.labelStyle,
+    text: resolved.label,
     x: resolved.labelAt.x,
     y: resolved.labelAt.y,
     anchor: resolved.labelAnchor,
     centred: true,
   };
-  if (resolved.labelStyle === "label") {
-    return renderTrackedLabel(placed);
-  }
-  return renderAnnotation(placed);
 };
 
 /**
  * Render a scene's collected items in paint order: boundaries beneath
- * everything, then shapes, then edges, then text.
+ * everything, then shapes, then edges, then text. Before anything is
+ * emitted, the measure pass checks the whole text layer against the
+ * canvas, the shape frames (boundaries excepted — text inside a boundary's
+ * region is normal), the resolved edge paths, and each other.
  */
 export const renderSceneBody = (
   state: SceneState,
@@ -1040,40 +1092,61 @@ export const renderSceneBody = (
 ): string => {
   const usage: SideUsage = new Map();
 
-  const boundaries = state.boundaries.map(renderBoundaryItem).join("");
+  const resolvedEdges = state.edges.map((edge) =>
+    resolveEdge(edge, state.handles, usage, state.height)
+  );
+
+  const boundaryLabels = state.boundaries.map(boundaryLabelItem);
+  const edgeLabels = resolvedEdges.map(edgeLabelItem);
+  const laneLabels = state.lanes.map(laneLabelItem);
+  // Active-card labels render inside the card's thunk but sit above its
+  // frame, so they join the guarded layer here.
+  const activeLabels = [...state.cards.values()]
+    .filter((card) => card.active)
+    .map(activeLabelItem);
+  const defined = (item: TextItem | null): item is TextItem => item !== null;
+  const boundaryIds = new Set(state.boundaries.map((b) => b.id));
+  guardTextLayer(
+    [
+      ...boundaryLabels.filter(defined),
+      ...edgeLabels.filter(defined),
+      ...laneLabels.filter(defined),
+      ...activeLabels,
+      ...state.texts,
+    ],
+    resolvedEdges,
+    [...state.handles.values()].filter((h) => !boundaryIds.has(h.id)),
+    state.width,
+    state.height
+  );
+
+  const boundaries = state.boundaries
+    .map((item, index) => {
+      const label = boundaryLabels[index];
+      return renderBoundary(item.frame) + (label ? renderTextItem(label) : "");
+    })
+    .join("");
 
   const shapes = state.shapes.map((render) => render()).join("");
 
-  const edges = state.edges
-    .map((edge) => {
-      const resolved = resolveEdge(edge, state.handles, usage, state.height);
+  const edges = resolvedEdges
+    .map((resolved, index) => {
       const stroke = renderEdge({
         points: resolved.points,
         ink: resolved.ink,
         dash: resolved.dash,
         diagramId,
       });
-      if (!resolved.label) {
-        return stroke;
-      }
-      return stroke + renderEdgeLabel(resolved, resolved.label);
+      const label = edgeLabels[index];
+      return label ? stroke + renderTextItem(label) : stroke;
     })
     .join("");
 
-  const laneLabels = state.lanes
-    .filter((lane) => lane.label !== undefined)
-    .map((lane) =>
-      renderTrackedLabel({
-        text: lane.label ?? "",
-        x: lane.firstNodeX ?? MODULE / 2,
-        y: lane.centreY - LANE_LABEL_RISE,
-      })
-    )
-    .join("");
+  const lanes = laneLabels.filter(defined).map(renderTextItem).join("");
 
-  const texts = state.texts.map((render) => render()).join("");
+  const texts = state.texts.map(renderTextItem).join("");
 
-  return boundaries + shapes + edges + laneLabels + texts;
+  return boundaries + shapes + edges + lanes + texts;
 };
 
 /**

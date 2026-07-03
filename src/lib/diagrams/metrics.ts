@@ -61,11 +61,6 @@ const LABEL_GLYPH_WIDTHS: Record<string, number> = {
 };
 
 /**
- * Fallback advance for glyphs missing from the table.
- */
-const LABEL_GLYPH_FALLBACK = 7.5;
-
-/**
  * Widen label text: uppercase, with a space between every character. Word
  * gaps become space–NBSP–space — SVG collapses runs of ordinary
  * whitespace, so the middle space must be a non-breaking one to survive
@@ -79,17 +74,22 @@ export const track = (text: string): string =>
     .join(" ");
 
 /**
- * Measure an already-tracked label string in viewBox pixels.
+ * Measure an already-tracked label string in viewBox pixels. A glyph
+ * missing from the table fails the build — sizing that can't be measured
+ * can't be guarded, so the table extends rather than the measurement
+ * guessing.
  */
 export const measureTracked = (tracked: string): number =>
   Math.round(
-    tracked
-      .split("")
-      .reduce(
-        (width, glyph) =>
-          width + (LABEL_GLYPH_WIDTHS[glyph] ?? LABEL_GLYPH_FALLBACK),
-        0
-      )
+    tracked.split("").reduce((width, glyph) => {
+      const advance = LABEL_GLYPH_WIDTHS[glyph];
+      if (advance === undefined) {
+        throw new Error(
+          `diagram metrics: no advance width for glyph "${glyph}" — add it to the tracked-label table`
+        );
+      }
+      return width + advance;
+    }, 0)
   );
 
 /**
