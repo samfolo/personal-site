@@ -7,7 +7,8 @@ draft: false
 ---
 
 import {TribalLogoLockup} from "../../components/typography";
-import {MigrationWalkthrough} from "../../components/blog";
+import {SteppedDiagram} from "../../components/blog";
+import {migration} from "../../diagrams";
 
 Some tools are built to live inside a system someone else is already running and, as such, need to take on its shape rather than impose one of their own. To build one well, I think, you have to honour something about these systems: their shape is a response, not a design. It answers requirements that arrived without warning, and the realities of building the thing over time – people come and go, customers come and go, priorities shift. Once a product is in motion it can only turn; it rarely gets the chance to stop and walk back to the starting line. So whatever you hand someone has to meet a system that's already moving, already bent into a shape neither of you would have chosen from scratch.
 
@@ -47,7 +48,26 @@ The alternative, and the better option, is to never introduce it to begin with. 
 
 Once I knew I could trust the shape of the migration, I could shift my focus to the hard parts. The new profile is built off to the side while the old one stays live, and "going live" is nothing more than that derived answer changing – the instant the new profile becomes the most recent finished one. Here is the whole arc:
 
-<MigrationWalkthrough />
+<SteppedDiagram of={migration}>
+  <Fragment slot="description">
+    A seven-step diagram of a zero-downtime embedding migration. Throughout,
+    reads and writes are served by the active profile – profile A, the older
+    model text-embedding-3-small at 768 dimensions – while a background reindex
+    worker fills a new profile, profile B, the newer model embeddinggemma; the
+    system never dual-writes. The steps: (1) Steady state – one active profile
+    serves every read and write. (2) Kickoff – an empty new profile B is
+    created. (3) List – the worker enumerates the items that do not yet have a
+    B-embedding. (4) Backfill – the worker re-embeds the corpus into B, while
+    new writes keep landing only in A and so keep reappearing on the worker's
+    list, a target that moves as the system is used. (5) Index – B's search
+    index is built. (6) Reconcile and flip – under a brief lock the last
+    in-flight writes drain, any stragglers are embedded, and the new profile is
+    marked finished. (7) After – because the active profile is derived as the
+    most recent finished profile, that single state change makes B live; reads
+    were never interrupted and the old profile is later retired. Reads never
+    pause; writes pause only momentarily during the final flip.
+  </Fragment>
+</SteppedDiagram>
 
 ## Chasing a moving target
 

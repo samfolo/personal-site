@@ -7,7 +7,13 @@ draft: false
 ---
 
 import {TribalLogoLockup} from "../../components/typography";
-import {PipelineComparison, VerifyLoop} from "../../components/blog";
+import {
+  ComparedDiagram,
+  Diagram,
+  PipelineComparison,
+  VerifyLoop,
+} from "../../components/blog";
+import {agenticPipeline, oneShotPipeline, verifyLoop} from "../../diagrams";
 
 Software is one of the best businesses anyone has worked out how to run. You build the thing once and serve it to ten people or ten million for roughly the same effort – the quality you put in scales out at almost no marginal cost. That is most of why the companies investors chase are software companies and not hardware ones: the unit economics are a gift physical products never get.
 
@@ -41,6 +47,37 @@ That does not come cheap. For a page of text that becomes six candidate claims, 
 
 <PipelineComparison />
 
+{/* VISUAL DIFF STAGING — canvas above, SDK below. Remove one before merging. */}
+
+<ComparedDiagram
+  id="ingestion-pipelines"
+  caption="Ingestion, one-shot versus agentic – and what each costs."
+  views={[
+    {
+      tab: "One-shot",
+      of: oneShotPipeline,
+      note: "Triage still fans out to one task per candidate – but each stage is a single call, so the bill stays close to the number of candidates.",
+    },
+    {
+      tab: "Agentic",
+      of: agenticPipeline,
+      note: "The same fan-out – but each triage and relate unit is a durable thread: a loop of up to 25 turns, then a verifier (up to 2 tries). That is where the order-of-magnitude more inference goes.",
+    },
+  ]}
+>
+  <Fragment slot="description">
+    Two views of the ingestion pipeline, selectable with a one-shot / agentic
+    tab. Both share the same shape: text enters an extract stage, which fans out
+    to one triage task per candidate claim; the tasks converge on a single
+    relate stage before the knowledge graph. In the one-shot view each stage is
+    a single model call, so for six candidates the run is roughly eight calls.
+    In the agentic view each triage and relate unit is instead a durable thread
+    – a tool-using loop of up to 25 turns followed by a fresh-context verifier
+    of up to two tries – which is where the order-of-magnitude increase in
+    inference goes.
+  </Fragment>
+</ComparedDiagram>
+
 The money is the smaller half. The real thing I gave up is the ability to say beforehand what the system will do. The single pass I could reason about. This I can only watch. I traded something I understood for something I have to trust, and trust is an uncomfortable word to write about your own infrastructure.
 
 ## Backing the trade
@@ -58,6 +95,21 @@ Having an agent check its own work is an idea I'd been playing with before Triba
 The one I reach for now runs the check as a sidecar. When a thread is ready to submit, it doesn't get to commit straight away. A separate sub-agent spins up beside it with fresh context – a stand-in for fresh eyes – and reads the proposed result cold, against the rubric that actually matters: is this supported, is it the right kind of connection, is it real. Pass, and the work goes through. Fail, and it bounces back to the thread with the critique, and the thread tries again.
 
 <VerifyLoop />
+
+{/* VISUAL DIFF STAGING — canvas above, SDK below. Remove one before merging. */}
+
+<Diagram
+  of={verifyLoop}
+  caption="The main thread hands off to a separate verifier; a pass commits, a fail returns the critique to the thread."
+>
+  <Fragment slot="description">
+    The main thread runs a sequence of steps – search, read, reason, submit.
+    Submitting hands off to a separate verifier thread that runs with fresh
+    context, reviews the proposed result against a rubric, and reaches a
+    verdict: a pass commits the result to the knowledge graph; a fail returns
+    the critique to the main thread, which tries again.
+  </Fragment>
+</Diagram>
 
 It's a small, almost boring loop, and it's most of what separates a result I'll commit to the graph from one I merely hoped was right. (There's a whole post in validation alone; I keep nearly writing it.)
 
