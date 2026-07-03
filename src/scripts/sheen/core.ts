@@ -55,11 +55,13 @@ export const splitIntoChars = (
   const chars: HTMLSpanElement[] = [];
   element.innerHTML = "";
 
-  // Split by spaces, keeping track of words and spaces
-  const words = text.split(/( )/);
+  // Split by whitespace runs, keeping track of words and spaces. Source
+  // line breaks inside an element arrive as \n in textContent; as in HTML
+  // rendering, a whitespace run collapses to a single space.
+  const words = text.split(/(\s+)/);
 
   for (const word of words) {
-    if (word === " ") {
+    if (/^\s+$/.test(word)) {
       // Spaces between words
       const spaceSpan = document.createElement("span");
       spaceSpan.className = CHAR_CLASS;
