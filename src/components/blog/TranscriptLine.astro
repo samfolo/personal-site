@@ -1,0 +1,57 @@
+---
+/**
+ * TranscriptLine
+ *
+ * A single attributed line of dialogue, quoted verbatim from a working
+ * transcript and styled like a log entry: the speaker and an optional
+ * timestamp as an uppercase label, the line beneath it in mono. Sits in
+ * prose flow and manages its own vertical rhythm (not-prose).
+ *
+ * @example
+ * <TranscriptLine speaker="Claude" timestamp="22 Feb 2026">
+ *   Do you see it?
+ * </TranscriptLine>
+ */
+import {Overline} from "../typography";
+
+interface Props {
+  /**
+   * Who said the line, as it should appear in the label.
+   */
+  speaker: string;
+
+  /**
+   * When the line was said, rendered after the speaker. Free text so
+   * the precision can match what the source records — never more.
+   */
+  timestamp?: string;
+}
+
+const {speaker, timestamp} = Astro.props;
+---
+
+<figure class="not-prose transcript-line">
+  <figcaption class="transcript-line__label">
+    <Overline>{speaker}{timestamp ? `, ${timestamp}` : ""}</Overline>
+  </figcaption>
+  <blockquote class="transcript-line__quote"><slot /></blockquote>
+</figure>
+
+<style>
+  .transcript-line {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    margin-top: var(--space-5);
+    margin-bottom: var(--space-5);
+    padding-left: var(--space-4);
+  }
+
+  .transcript-line__quote {
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    line-height: var(--leading-24);
+    color: var(--fg);
+  }
+</style>

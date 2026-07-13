@@ -1,0 +1,85 @@
+---
+title: "Worse than hallucination"
+description: "A design that survived every review lost its most basic column to a routine merge – two removals, each justified by the other. On omission as the quiet failure mode of consolidation, true statements that carry no information, and the kept history that let the story be told at all."
+publishDate: 2026-07-13
+tags: ["Engineering", "AI", "Agents", "Memory", "Design"]
+draft: false
+---
+
+import {TranscriptLine} from "../../components/blog";
+import {TribalLogoLockup} from "../../components/typography";
+
+Memory is an abyss of a problem. I've spent a good part of the year building <TribalLogoLockup />, a system whose whole job is to remember, and every layer finished so far has opened onto another one below it. The layer I'm circling at the moment is consolidation: what a system should do when it knows too much.
+
+A knowledge graph can't be allowed to grow without constraint. It's a storage problem and, more urgently, a search problem – past a certain size, ten claims that each hold a piece of the truth are worse than one that holds it whole, and every read pays for the clutter. The field seems to be converging on the same remedy: consolidate. Fold the near-duplicates into one node and keep the graph lean enough to be worth asking. Put that way, it sounds obvious; the subtlety is in what a merge does to the facts it touches.
+
+Every now and then I catch myself believing I've had a novel idea, and the reflex is to go looking – arXiv, a search engine, anywhere – for whoever had it first. Usually somebody has: there are papers on the exact problem, benchmarks, whole leaderboards. Strangely, it never feels like being late to a party; the papers validate the problem, and they leave me wondering how a whole school of thought stayed invisible to me until I stepped close enough to need it.
+
+Memory has been the strongest dose of that so far. One paper found me at the right moment – [a study of hallucination in agent memory systems](https://arxiv.org/abs/2511.03506) – and in its taxonomy of failures sat a quiet one: omission. Summarisation is an inherently lossy process: sometimes the information you care about falls through the cracks, and it has been surprising to see this happen far more often than fabricating the truth, or misrepresenting what survives.
+
+I didn't need a benchmark to believe that one. My first thought on reading it wasn't that these models can't be trusted with memory; it was February – me on the other side of the same operation, and a mistake I still don't quite know how to assign.
+
+## February
+
+Back then, Tribal was a design and nothing else. I remember the friction that pushed me to start it far better than the day I decided to. By February I was simply in the throes: hours on the couch or pacing the living room, bouncing the idea back and forth until the shape of it was out of my head and pinned down as faithfully as I could manage alone.
+
+I knew that was never going to be enough, though. Trust is the thing I worry about most in systems like this – slow to build, quick to break – and a memory system gets read and written by many actors at once. Concurrency there can't be an afterthought: get it wrong and you ship something that works for a while, earns people's confidence, and then fails spectacularly with everything they trusted it to hold. A couple of years ago I found the models could harden a design further than my own pedantry ever managed – into invariants I wouldn't have known to ask about. The proposals came back stronger than mine and occasionally stranger, so I put models on either side of the argument, one proposing, one refuting, while I judged what I could follow and admitted what went over my head. There was some resigning in that. What I kept was the part no tool had – why the system existed, what it needed to become – the way you trust specialists to do their jobs excellently while you keep to the broader brush strokes.
+
+Eventually the reviews stopped saying anything new. There are diminishing returns in that kind of loop – ask a model to find fault and it will always find something, so past a certain point you're no longer buying scrutiny, you're buying reassurance – and I'd stopped well past that point. What was left was a schema, a server document, the surface the tools would present, and a feeling: the design was finished in the way that makes you want to show it to someone. I was days from writing, proudly, about how thorough it had been.
+
+With one milestone closed and the write path next, I asked for a readiness check – a routine pass over the documents for anything still ambiguous enough to hurt once it hardened into code. The answer opened with a question I wasn't expecting.
+
+<TranscriptLine speaker="Claude" timestamp="22 Feb 2026">
+  Where does the raw ingest content live? There's no raw_input or content column
+  on the jobs table... This isn't a minor oversight.
+</TranscriptLine>
+
+Everything the system will ever know starts as raw input – text somebody hands it. The design had a home for everything that text would become, but surprisingly, none for the text itself. Most of what the check flagged was ordinary incompleteness, the kind you fix by writing the missing paragraph; this gap had a stranger shape.
+
+I pushed back, and the confidence behind it had history. I'd watched the review produce edge cases I wouldn't have found in a million years, then watched them validate as real, critical holes. A process that keeps saving you teaches you to stop double-checking it. There was no version of events in which I'd greenlit implementation with a gap like this still open – so rather than question the design, I decided the finding itself must be wrong: somewhere in the documents was a decision we'd made, and the check was simply failing to find it.
+
+<TranscriptLine speaker="Me" timestamp="22 Feb 2026">
+  Maybe I've missed this, maybe I've misunderstood. But it doesn't sound like
+  something that we would have overlooked.
+</TranscriptLine>
+
+Rereading that line now, I can hear the certainty doing my thinking for me.
+
+The re-trace closed every door I held open. The job row had no such column; the task payload was gone; the last field I hoped might be quietly holding the text was, by the design's own words, opaque – nothing was allowed to depend on it, and everything depended on the raw input.
+
+I conceded, and went looking for the mistake in the only place that seemed plausible: me. Perhaps I'd misread a recommendation months back and ruled out storing raw input deliberately. Perhaps there'd been a privacy concern I'd applied too broadly. I had trusted the process enough to stop watching the details – the details were what the process was supposed to be for.
+
+## Do you see it?
+
+There was one way to settle it. Every design session lived in the searchable history, and I set the model loose on the whole trail with a simple brief: find where the raw input entered the design, and find where it left.
+
+It entered on the 5th of February. Explicitly, in several places at once: a `raw_input` field on the job record, the same content in the payload handed to extraction, a line of flow that read _store raw input, create job, enqueue extraction task_.
+
+It left on the 8th, during a session spent consolidating three design documents into agreement – an operation I'd have called safe, though I remember treating it like surgery. I thought I'd been careful. I thought I'd read everything, and everything had seemed plausible; beyond that, I trusted the process to have taken care of this type of thing. The newest document's schema was treated as the ground truth – the anchor I was supposed to be able to forget, and reach for whenever I needed reminding that everything had been worked out.
+
+Two edits did the damage, each with its own recorded rationale: the `raw_input` column was removed from the job, because _the content is accessible via the extraction task payload_; the payload was removed from the task, because _task payloads are derived from job data, not stored as a blob on the task row_. The model laid the two rationales side by side and asked me the question I've been turning over since.
+
+<TranscriptLine speaker="Claude" timestamp="22 Feb 2026">
+  Do you see it? Each was removed because the other was supposed to hold the
+  data.
+</TranscriptLine>
+
+The first edit pointed at the payload; the second pointed back at the job; by the end of the session, neither pointed at anything that existed. Six days later a migration wrote the gap into the database, where it sat inside a design I would have defended to anyone.
+
+That night I lay on my bed with goosebumps. Some of it was straightforward awe – I'd watched a mistake get excavated out of weeks of history in minutes, rationale by rationale, dated and quoted. The rest was harder to place, and it's the part that stayed: the investigator and the consolidator were the same kind of tool. There was nothing careless to catch in the session that merged those documents; it held a picture of the design that was internally consistent and factually wrong, and it made every document agree with the picture. The thing that found the hole was the thing that had made it.
+
+## Spain and Germany
+
+A day or two later I was walking home with someone from an old job, trying to explain why it had unsettled me more than an ordinary bug would, and the shape of it arrived mid-sentence. If someone told you they were in Germany, then later told you they were in Spain, you'd know at once that something was wrong: the statements collide, and the collision is the alarm. If they told you they were not in Germany and not in Spain, both could be true – nothing collides, no alarm sounds, and between them the statements tell you nothing about where they are, because those were never the only two options. Contradiction has a direction. The additive kind announces itself. The subtractive kind composes – quietly, consistently, and carrying no information at all.
+
+The consolidated schema was built entirely from true negative statements. The raw input is not on the job row: true. It is not stored on the task: also true. Review is a machine for checking statements, and every statement on the page passed, because nothing on the page was false. The only question that fails is _then where is it?_ – and nothing on a page of true statements prompts anyone to ask. Absence composes without contradiction.
+
+## The same operation
+
+The design wasn't fundamentally broken. The documents were amended the same day, and [the fix merged the next morning](https://github.com/tribal-memory/tribal/pull/48/files#diff-3d636bff8c1841612feb53741f96142832579993ed7e4ccd7fba54a1ecf261e6R1-R8) – a new migration rather than a quiet edit to the shipped one, because rewriting history felt worse than admitting to it – and the checking changed shape. The gap in the process had been a missing kind of verification: not _review the statements_ but _trace the data_ – take every piece of information the system accepts and follow it to the place it rests, a conservation law for the design. Removals now carry a record of where the data goes instead, so two rationales can't point at each other without someone noticing. I hold all of this honestly: they're checklists. They narrow the gap without closing it, because the underlying problem – reasoning globally over documents too large to hold in one context – is not one I've solved.
+
+Which is what the paper handed back to me, months later. The failure mode it measures in agents consolidating their own memory is the one I walked into by hand: merge two records, assume each fact is safe because the other copy holds it, and lose the fact both assumptions pointed at. A half-truth dismissed in both nodes survives in neither. Reading it felt less like learning something new than being handed the incident report for something that had already happened to me.
+
+Here is where the assignment gets difficult. The tempting reading is that models can't be trusted with an operation like this; that isn't the reading I came away with. Strictly, the mistake wasn't mine – the model of the day held the wrong picture and made the edits – but the trust was mine, and so was the missing check: I'd delegated the merge with no verification that could notice an absence, which left nobody, human or machine, positioned to catch one. The failure mode itself is a deeply human one. People have been losing facts while reconciling documents for as long as there have been two documents to reconcile; I'd have been capable of this mistake with a pen.
+
+The part I keep returning to is why the story can be told at all. Every fact in this post – the date the column entered the design, the session that removed it, the two rationales pointing at each other – exists because the history was kept and could be searched. The consolidated documents were wrong by omission; the trail of how they got that way was not. I'm thinking about consolidation now for a system whose whole job is to remember, and I carry February into every part of it: the merge is where a memory dies quietly, and the history is how you find out it ever lived.

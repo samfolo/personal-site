@@ -7,3 +7,4 @@ export {PostNav} from "./PostNav";
 export type {PostNavLink} from "./PostNav";
 export {default as PostTags} from "./PostTags.astro";
 export {default as SteppedDiagram} from "./SteppedDiagram.astro";
+export {default as TranscriptLine} from "./TranscriptLine.astro";
