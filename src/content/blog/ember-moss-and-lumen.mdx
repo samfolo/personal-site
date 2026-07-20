@@ -15,6 +15,24 @@ The current reality is a desktop client for <TribalLogoLockup />, and doing it p
 
 All the while, the field around agents keeps moving at a pace I mostly catch in my peripheral vision. Orchestration, swarms, negotiation – interesting work lands weekly, and I want to try all of it. Mostly I don't: the memory problem takes what I have, and chasing every novel pattern is how you end up with a broad but shallow understanding of the landscape and no depth of your own to bring to the table. Call it discipline; meaningful work means staying with a problem far past the point it turns boring. Held too long, though, discipline curdles into tunnel vision, and I'd started to feel too close to the problem to see it cleanly. With the refactor grinding away in the background, I gave myself a day – five, maybe six hours in the end – to look at something else entirely.
 
+<MediaFigure
+  src="/blog/ember-moss-lumen/observatory-fullplayer.gif"
+  posterSrc="/blog/ember-moss-lumen/observatory-fullplayer-poster.png"
+  alt="The replay player: three pixel-art agents clearing a room while their shared plan and messages update below"
+  width={1080}
+  height={923}
+  caption="A flash-forward to where the day ends up – the observatory, the hardest room the agents cleared, replayed with the team's committed plan and messages alongside. The rest of this post is how we got here."
+>
+  <Fragment slot="description">
+    An animated recording of the full replay player. In the world view, Ember
+    and Lumen hold the Tide and Crown controls to keep the two-person Zenith
+    lock open while Moss carries the cobalt lens through the exit; beneath the
+    world, the shared plan panel shows the committed plan and the team bus shows
+    the agents' actual negotiation messages updating as the run progresses,
+    ending with all three agents at the exit and the objective complete.
+  </Fragment>
+</MediaFigure>
+
 The "something else" was art. Not generated images or video – I wanted to know what it would take to build artwork _out of agents_: small model-backed creatures inhabiting a shared world, navigating it, making sense of it, negotiating with one another. Conway's Game of Life and cellular automata have had a hold on me for years, and the question that finally drove me to action was a version of them with minds inside: what shape does an agent have to take to exist as a cell in a piece like that?
 
 The first attempt ran entirely in the browser – Gemma 4, through Transformers.js, at four to six tokens a second. It could produce atmosphere and little else; the model became the bottleneck long before the artwork became interesting enough to deserve one. I switched to a cloud model and kept the question.
