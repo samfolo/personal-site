@@ -26,6 +26,7 @@ export default defineConfig({
   integrations: [mdx()],
 
   markdown: {
+    smartypants: false,
     rehypePlugins: [rehypeHeadingAnchors, rehypeCodeBlocks],
     shikiConfig: {
       theme: customCssVariablesTheme,

@@ -2,6 +2,7 @@ export {default as BlogList} from "./BlogList.astro";
 export {default as BlogListItem} from "./BlogListItem.astro";
 export {default as ComparedDiagram} from "./ComparedDiagram.astro";
 export {default as Diagram} from "./Diagram.astro";
+export {default as MediaFigure} from "./MediaFigure.astro";
 export {default as PostMeta} from "./PostMeta.astro";
 export {PostNav} from "./PostNav";
 export type {PostNavLink} from "./PostNav";

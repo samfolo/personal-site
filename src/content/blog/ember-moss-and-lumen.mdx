@@ -1,0 +1,172 @@
+---
+title: "Experiment I: Ember, Moss and Lumen"
+description: "Three embodied agents, a hidden escape room, and a run that ended standing on the answer – on the gap between keeping history and holding beliefs, a door that wouldn't stay open, and the kinds of memory a transcript can't give you."
+publishDate: 2026-07-20
+tags: ["AI", "Agents", "Memory", "Collaboration", "Art", "Experiment"]
+draft: false
+---
+
+import {MediaFigure} from "../../components/blog";
+import {TribalLogoLockup} from "../../components/typography";
+
+I have now been deep in [the memory problem](/blog/worse-than-hallucination) for the better part of a year. The first ninety percent moved at pace, ideas out of my head and working in days; the last ten is taking its own ninety, as the realities of taking a system like this to production arrive one at a time.
+
+The current reality is a desktop client for <TribalLogoLockup />, and doing it properly meant reshaping the network contracts between the Swift client and the binary so that there is exactly one way to call the tools – agents and humans getting the same experience, no privileged side door. Consequential, overdue, and almost entirely mechanical.
+
+All the while, the field around agents keeps moving at a pace I mostly catch in my peripheral vision. Orchestration, swarms, negotiation – interesting work lands weekly, and I want to try all of it. Mostly I don't: the memory problem takes what I have, and chasing every novel pattern is how you end up with a broad but shallow understanding of the landscape and no depth of your own to bring to the table. Call it discipline; meaningful work means staying with a problem far past the point it turns boring. Held too long, though, discipline curdles into tunnel vision, and I'd started to feel too close to the problem to see it cleanly. With the refactor grinding away in the background, I gave myself a day – five, maybe six hours in the end – to look at something else entirely.
+
+The "something else" was art. Not generated images or video – I wanted to know what it would take to build artwork _out of agents_: small model-backed creatures inhabiting a shared world, navigating it, making sense of it, negotiating with one another. Conway's Game of Life and cellular automata have had a hold on me for years, and the question that finally drove me to action was a version of them with minds inside: what shape does an agent have to take to exist as a cell in a piece like that?
+
+The first attempt ran entirely in the browser – Gemma 4, through Transformers.js, at four to six tokens a second. It could produce atmosphere and little else; the model became the bottleneck long before the artwork became interesting enough to deserve one. I switched to a cloud model and kept the question.
+
+## The world said...
+
+Two agents is already a strange object: two separate internal narratives that have to share one world. Mine were called Ember and Moss. My first thought was to let them talk to each other directly, and it lasted about as long as first thoughts do. If Ember speaks while Moss is mid-deliberation, where do the words go? Instinct said inboxes – a mailbox per agent, messages held until the recipient is ready, a shape anyone who has brushed against the actor model will recognise. The world needed a voice of its own too: a door opening is news, and news has to reach every mind it concerns, so alongside addressed messages came broadcast. Follow that thread far enough – messages as facts, delivered exactly once, replayable from the start – and you arrive at event sourcing whether or not you set out for it. None of the architecture came off a shelf; each piece went in to fix a flaw the last version had just shown me.
+
+Habit did the rest. Years of debugging systems I couldn't see have left me incapable of building one I can't watch, so from the first hour every event – speech, movement, tool calls, world changes – landed in an append-only journal. The journal is the reason this post can be told with receipts rather than recollection.
+
+Underneath sits an agent runtime of the sort I've [written about before](/blog/the-price-of-a-memory): one persistent thread per agent, so every turn opens on the same three questions – what just happened, what can I currently perceive, has anyone said anything I need to answer? On top of it sat one property I wasn't willing to trade: any agent may propose a plan, and every agent is free to consent or refuse; nobody gets moved like a chess piece.
+
+Somewhere in my past I tried to implement [Raft](https://raft.github.io/), to understand how machines reach agreement. This is nothing so formal – I just needed the agents to see the world and speak to each other – but the instinct survived: agreement is something you have to design for. Tribal exists because memory has to serve many actors at once; watching several minds try to hold one shared picture of a world was never as far from home as it looked.
+
+## See no evil
+
+{/* IMAGE SLOT: Sam is making a picture of the room to open this section. */}
+
+By early afternoon the artwork had become an escape room, which turns out to be a natural setting for all of this: a long platform room, three barriers, nine pressure controls whose dependencies the room keeps to itself, and a glass token that needed to find its way to the exit on the far side of everything.
+
+<MediaFigure
+  src="/blog/ember-moss-lumen/relay-handoff.gif"
+  posterSrc="/blog/ember-moss-lumen/relay-handoff-poster.png"
+  alt="Pixel-art replay of Ember and Moss crossing the first room"
+  width={1436}
+  height={352}
+  caption="The first room, replayed from its journal – Moss opens the Amber gate from the Alpha control, Ember takes over on the far side, and both walk out."
+>
+  <Fragment slot="description">
+    An animated replay of the simplest room. Moss stands on the Alpha control,
+    which opens the Amber gate. Ember walks through the open gate and holds the
+    Relay control on the far side to keep it open, Moss follows through, and
+    both agents walk to the exit together.
+  </Fragment>
+</MediaFigure>
+
+The agents didn't start out unequal. Early versions gave all three the same abilities, and the more I looked at that, the worse the architecture seemed: if they can all do the same things, why keep three of them? Identical minds on one runtime are really a single agent wearing three bodies. What I wanted to watch was the shape I'd been imagining in the broader sense – agents that speak a common language, something like [A2A](https://a2a-protocol.org/), while belonging to different systems entirely, each arriving with its own abilities and shortcomings, working together on a goal none of them could reach alone. That was the reasoning when I started taking capabilities away. Ember sees the whole scene and can carry nothing. Moss carries, and senses only what it touches. Lumen is a third body with its own narrow view. Nobody can finish the room alone; the room itself forces the collaboration.
+
+Adding Lumen, late in the day, turned out not to be hard at all – the foundation was already the right shape. A new agent with its own internal narrative is configuration rather than surgery on an event-sourced bus: another inbox, another thread, the same broadcasts. Take that as a pro tip if you're wondering how to drive multiple agents; the answer I can vouch for is events, and the shape that carries two carries three without complaint.
+
+The strictest constraints I designed against were epistemic. I wanted a world that describes but never explains: sensors report position and contact, never meaning; validation checks that a plan is well-formed, never that it's wise; nothing in the runtime is allowed to mark an action safe, reversible or relevant. A hidden room only measures something while it stays hidden – let the scaffolding start explaining, and you're benchmarking the scaffolding.
+
+## The door that wouldn't stay open
+
+Time was the first wall that genuinely interested me. A cloud model deliberates in seconds while the world moves in ticks, so every plan arrived slightly after the world it was written for. Time of capture versus time of use – a database problem if you squint, and under it an epistemic one: everything an agent knows was true a moment ago.
+
+The door made it concrete. As the rooms grew I introduced more scenarios, and one of them tied a door to a moving platform: the platform presses a control, and the door stays open exactly as long as the control stays pressed. The agents couldn't get their heads around it. Each turn handed them a still photograph; in some the door stood open, in others shut, and nothing in a single frame carries the relationship between door and platform. They kept walking at doors that had already closed behind a platform that had long moved on. I had half-assumed they would simply get it, from enough doors and platforms somewhere in the training data; the fault was mine, though – I hadn't designed the room empathetically enough for the capabilities I'd actually given them. More coordinates were never going to fix it. What did was a new tool: let an agent pick an entity and watch it change across a series of epochs – a flipbook instead of a photograph. For the flipbook to mean anything, the world underneath had to be versioned, so that cause could be ordered against effect and speed could be read out of positions across versions.
+
+<MediaFigure
+  src="/blog/ember-moss-lumen/threshold-door.gif"
+  posterSrc="/blog/ember-moss-lumen/threshold-door-poster.png"
+  alt="Pixel-art replay of a gate opening and closing with a moving pressure plate"
+  width={1436}
+  height={352}
+  caption="The Cinder gate rises and falls with the Drift plate. Moss collects the brass key while Ember walks out to meet the moving plate and rides it – waits compressed four-fold, positions real throughout."
+>
+  <Fragment slot="description">
+    An animated replay of the threshold room. A pressure plate called Drift
+    slides back and forth along a rail, and the Cinder gate opens only while the
+    plate is pressed; the gate visibly opens and closes several times as the
+    plate travels. Moss walks to the brass key and picks it up. Ember walks
+    toward the moving plate, meets it mid-track, boards it, and rides it while
+    it continues to move.
+  </Fragment>
+</MediaFigure>
+
+The other half of the fix was to stop asking a language model to steer. Robotics arrived at this split a long time ago – a planner that thinks slowly about what is worth doing, and a controller that keeps the machine moving while it thinks – and that is essentially where I took the idea from. I gave the agents actuators and a small language for driving them: move here, hold this, wait for that condition, hand off when it's met. It seemed only fair. A model chooses the goals, the hypotheses, and the program; a simple interpreter inside each agent – no grammar, no recursive descent, just instructions it knows how to execute – runs it at world speed, tick by tick, with no model anywhere in the loop and no agent able to actuate another. It's [in the repo](https://github.com/samfolo/ember-moss-lumen) if you want to see it. You can hand a teammate a plan, never a push. The program doubled as a blueprint to agree on: once everyone had committed, nobody needed to consult anybody, because each agent knew what it had to do and when. Six hours in is no place to declare any of this solved, but the shape held for the rest of the day: language decides; the interpreter drives.
+
+If I had to point at one thing in the whole experiment and call it memory in the proper sense, it would be the flipbook: less a bigger context than a different representation of time, playing something like the role of episodic memory. That axis was never really in scope for Tribal – Tribal is semantic memory first – and I knew it was important, and I knew it wasn't simple, the combination that makes a thing easy to postpone. Watching agents try to reason about a world in motion made the case better than any design document could: it is genuinely fascinating how valuable that kind of information is to an agent, and how little of it survives in a snapshot. I've come away suspecting semantic memory is unlikely to be as useful without the temporal axis underneath it, and I'm considering how that might affect the underlying data model.
+
+## Knowledge nobody owns
+
+The early runs were rough. The first runtime produced, over and over, a pair of sentences I've grown fond of – "Ember will wait." "Moss will wait." – the two of them blissfully unproductive, each waiting for the other to act. Agents drifted between first and third person, repeated malformed plans, missed messages addressed directly to them. Most of the runtime above exists because of this stretch; identity and delivery stopped being philosophical the moment I had to debug them.
+
+That became the rhythm of the day: hit a ceiling, find the missing piece of architecture, watch the team climb a little higher. Independent threads and addressed delivery got them talking; the flipbook let them finally see the door and the platform as one mechanism; each change bought real progress, and each new room surfaced the next thing the architecture didn't have.
+
+_Blind A_ surfaced the biggest one. Earlier rooms had arrived with names and descriptions, and somewhere in the logs I realised the models could see them – metadata hinting at exactly what a room existed to test. It wasn't really a fair challenge, so I stripped the hints out of everything that reaches an agent's context window and generated three anonymised scenarios: _Blind A_, _Blind B_ and _Blind C_. The team went in completely unaware of how any of it was supposed to be solved. Early in the run the team did something genuinely good: they stepped off one of the first barrier's three buttons, watched the barrier close, and correctly concluded that button was needed. Then they over-reached, deciding all three buttons were needed – something nothing they'd seen actually showed. The other two agents agreed, because agreeing was all my assessment step really asked of them. Two quick tests would have exposed the truth (the room wanted two of the buttons; the third was a decoy), but nobody proposed them, and once the wrong belief settled in, real progress stopped: the team began producing plans that changed nothing in the world while describing themselves as new.
+
+<MediaFigure
+  src="/blog/ember-moss-lumen/blinda-standing.gif"
+  posterSrc="/blog/ember-moss-lumen/blinda-standing-poster.png"
+  alt="Pixel-art replay of three agents holding three buttons while a barrier stands open"
+  width={1436}
+  height={352}
+  caption={
+    'The standstill, six-fold compressed – Barrier I stands open while all three keep holding their buttons. The plan of record at this moment: "Maintain all three holds until Mica reaches x=900."'
+  }
+>
+  <Fragment slot="description">
+    An animated replay of the Blind A stalemate. Ember, Moss and Lumen each
+    stand on one of the first three buttons – Kestrel, Nacre and Vale – and
+    Barrier I stands open ahead of them. Occasionally an agent steps off and
+    back on to re-commit its hold, but nobody walks through the open barrier and
+    nobody tries releasing a single button to test whether it is actually
+    needed. The run later ends with its call budget exhausted, everyone still in
+    place.
+  </Fragment>
+</MediaFigure>
+
+Anyone who has worked with agents for long enough knows what a plan does: it transforms the experience, and it drastically improves the odds of success. With that promise in mind, I rebuilt planning around the failure. A plan became an experiment – competing hypotheses, predictions that could disagree with each other, an assessment step that behaves like review rather than assent.
+
+<MediaFigure
+  src="/blog/ember-moss-lumen/observatory-finale.gif"
+  posterSrc="/blog/ember-moss-lumen/observatory-finale-poster.png"
+  alt="Pixel-art replay of three agents finishing the observatory room"
+  width={1436}
+  height={352}
+  caption="The observatory – the hardest room the day cleared. Ember on Tide and Lumen on Crown hold the two-person Zenith lock open while Moss carries the cobalt lens through the exit."
+>
+  <Fragment slot="description">
+    An animated replay of the observatory room's ending. Ember and Lumen walk to
+    the Tide and Crown controls and hold both down, which opens the Zenith lock
+    – a gate that needs two agents pressing at once. While they hold, Moss
+    carries the cobalt lens through the open lock and out of the exit door; the
+    lock latches, and Ember and Lumen follow Moss out.
+  </Fragment>
+</MediaFigure>
+
+The rerun cleared the old ceiling convincingly. The team corrected the bad inference and opened the first barrier, and Lumen – stuck on the far side of a gate with nothing useful to do – explored the final stretch alone and came back with the fact that mattered: two of its three buttons, held down together, open the last barrier. Then the run spent its ending standing on the answer. With the last barrier open and both buttons held, the team sent both holders walking for the exit; the door shut behind the first step. They restored the opening, citing the exact experiment that had established it, and proposed the same walk again in smaller steps. The door shut again – and the runtime recorded the step as expected, because both bodies had moved exactly as planned. A journal holding everything any of them had ever seen, 39 million input tokens of deliberation (most of them, mercifully, answered from cache), and the closing cycles went to rediscovering a fact the system had never lost.
+
+{/* DIAGRAM SLOT (hero): stepped walkthrough of the final gate, drawn from the trace. Steps roughly: (1) Flint + Quill held, Barrier III open; (2) both holders ordered toward the exit; (3) controls released, door closed; (4) opening restored, experiment cited; (5) same walk proposed in smaller increments; (6) closed again. Real positions/step data to come from the exported relay-events traces. */}
+
+## Five kinds of remembering
+
+The easy reading is that the agents lacked memory, and the easy reading is wrong. They had a persistent thread each, addressed event delivery, the journal, and a ledger of experiments with evidence attached. Everything was remembered. What failed sat in the joints between kinds of remembering.
+
+The trace pulls those joints apart cleanly. A fact was established but never promoted into a mechanism: _Flint and Quill open the barrier_ (the randomly generated names of the two final buttons) made it into the ledger; _the barrier stays open only while both are held_ existed nowhere an agent would meet it at planning time. A mechanism, where one was understood, was never held as an invariant – nothing in any working picture said _this must stay true while we cross_. Invariants never became procedure – no agent owned _wait for the door, then go_, so one lucky, perfectly timed crossing mid-run was recorded with the same confidence as a designed one.
+
+Above all of it, the shared hypothesis map ate itself: the agents named their hypotheses `h1` and `h2`, each new experiment overwrote the last one's beliefs, and a team that had accumulated facts about three barriers held an active causal model of exactly one – whichever it had thought about most recently.
+
+{/* DIAGRAM SLOT (second): the memory stack as destination – journal → episodic → semantic → working → procedural, each layer annotated with the observed failure that forced it. Conceptual, not architectural. */}
+
+Laid out, it's a stack, and every layer was earned by a failure I can point to in the trace. A journal answers _what exactly happened_. Episodic memory answers _what did we try before, and what followed_. Semantic memory answers _what do we believe about how this world works, and on what evidence_. Working memory answers _what matters right now_ – the bottleneck, the commitment, the invariant that must survive the next step. Procedural memory answers _how do I do this reliably, at world speed, without deliberating_. Retrieval-augmented generation – the thing "memory" tends to mean at the moment – lives in the second layer, with a reach into the third on a good day. My agents spent their final cycles demonstrating what the layers above it are for.
+
+This is why I describe memory as infrastructure – control flow. It decides what gets retrieved, what stays active, who is responsible for keeping a truth true, and which actions may run without waking the expensive mind. A transcript, however complete, decides none of that.
+
+I set out to spend a day away from the memory problem, and it took about five hours for the day to walk me back. Every wall the agents hit was one I'd already met from the other side of Tribal – facts that never become beliefs, beliefs that fall out of the working set, knowledge nobody owns – rendered small enough, in a toy room, to watch happen end to end. The distance did what distance is for; some shapes you can only see from outside your own codebase.
+
+Safe to say the experiment wasn't a success: Ember, Moss and Lumen never made it through all of the rooms, and I've put it all to the side for now. What the day bought was a clearer sight of the problem, and renewed enthusiasm for the space. The situation I least want in real life is the one I spent five hours watching – teams of agents re-deriving, thrashing, circling problems that would be trivial, or would never exist, with access to a memory system. If the three of them earn a comeback, it will be as a demonstration: does handing a team like that a real memory system materially improve the collaboration? That's what I'm building for. For now, it's back to building.
+
+<MediaFigure
+  src="/blog/ember-moss-lumen/quorum-crossing.gif"
+  posterSrc="/blog/ember-moss-lumen/quorum-crossing-poster.png"
+  alt="Pixel-art replay of three agents solving the quorum lock together"
+  width={1436}
+  height={352}
+  caption="The quorum lock, start to finish – Sun and Moon held down, the Beacon gate latched behind Lumen's crossing, everyone out."
+>
+  <Fragment slot="description">
+    An animated replay of the quorum room, complete. Ember and Moss hold the Sun
+    and Moon controls at the same time, which opens the Beacon gate. Lumen walks
+    through and the gate latches permanently behind it. Ember and Moss release
+    their controls and all three agents walk to the exit.
+  </Fragment>
+</MediaFigure>

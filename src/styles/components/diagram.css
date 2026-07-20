@@ -53,6 +53,13 @@
     height: auto;
   }
 
+  /* Captured media inside a figure: full column width, intrinsic ratio. */
+  .diagram-media {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
   /* Caption under a static SDK figure. */
   .diagram-figure__note {
     margin-top: var(--space-3);
