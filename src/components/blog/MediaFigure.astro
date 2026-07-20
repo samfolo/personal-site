@@ -1,0 +1,83 @@
+---
+/**
+ * MediaFigure
+ *
+ * Figure shell for captured media – animated replays and screenshots exported
+ * from a real system. Follows the shared figure conventions from Diagram: the
+ * `.diagram-figure` margin, a muted caption, and the required visually-hidden
+ * text description that gives assistive tech and non-rendering crawlers a
+ * full account of the figure. Honours `prefers-reduced-motion` by swapping
+ * the animation for a still poster.
+ */
+interface Props {
+  /**
+   * Path to the animated media, served from `public/`.
+   */
+  src: string;
+
+  /**
+   * Still poster shown when the viewer prefers reduced motion.
+   */
+  posterSrc: string;
+
+  /**
+   * Concise alternative text for the image element.
+   */
+  alt: string;
+
+  /**
+   * Intrinsic pixel width, to reserve layout space before load.
+   */
+  width: number;
+
+  /**
+   * Intrinsic pixel height, to reserve layout space before load.
+   */
+  height: number;
+
+  /**
+   * Muted one-line figure caption. For richer captions use the caption
+   * slot instead.
+   */
+  caption?: string;
+}
+
+const {src, posterSrc, alt, width, height, caption} = Astro.props;
+
+if (!Astro.slots.has("description")) {
+  throw new Error(
+    `MediaFigure "${src}": a description slot is required — the full text alternative for assistive tech and crawlers.`
+  );
+}
+
+const descId = `${src
+  .split("/")
+  .at(-1)
+  ?.replace(/\.[a-z0-9]+$/i, "")}-desc`;
+const hasCaption = caption !== undefined || Astro.slots.has("caption");
+---
+
+<figure class="not-prose diagram-figure">
+  <picture>
+    <source media="(prefers-reduced-motion: reduce)" srcset={posterSrc} />
+    <img
+      class="diagram-media"
+      src={src}
+      alt={alt}
+      width={width}
+      height={height}
+      loading="lazy"
+      decoding="async"
+      aria-describedby={descId}
+    />
+  </picture>
+  {
+    hasCaption && (
+      <figcaption class="diagram-caption diagram-figure__note">
+        {caption}
+        <slot name="caption" />
+      </figcaption>
+    )
+  }
+  <div class="diagram-desc" id={descId}><slot name="description" /></div>
+</figure>
