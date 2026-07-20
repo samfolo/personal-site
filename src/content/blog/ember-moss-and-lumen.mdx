@@ -31,8 +31,6 @@ Somewhere in my past I tried to implement [Raft](https://raft.github.io/), to un
 
 ## See no evil
 
-{/* IMAGE SLOT: Sam is making a picture of the room to open this section. */}
-
 By early afternoon the artwork had become an escape room, which turns out to be a natural setting for all of this: a long platform room, three barriers, nine pressure controls whose dependencies the room keeps to itself, and a glass token that needed to find its way to the exit on the far side of everything.
 
 <MediaFigure
@@ -135,8 +133,6 @@ Anyone who has worked with agents for long enough knows what a plan does: it tra
 
 The rerun cleared the old ceiling convincingly. The team corrected the bad inference and opened the first barrier, and Lumen – stuck on the far side of a gate with nothing useful to do – explored the final stretch alone and came back with the fact that mattered: two of its three buttons, held down together, open the last barrier. Then the run spent its ending standing on the answer. With the last barrier open and both buttons held, the team sent both holders walking for the exit; the door shut behind the first step. They restored the opening, citing the exact experiment that had established it, and proposed the same walk again in smaller steps. The door shut again – and the runtime recorded the step as expected, because both bodies had moved exactly as planned. A journal holding everything any of them had ever seen, 39 million input tokens of deliberation (most of them, mercifully, answered from cache), and the closing cycles went to rediscovering a fact the system had never lost.
 
-{/* DIAGRAM SLOT (hero): stepped walkthrough of the final gate, drawn from the trace. Steps roughly: (1) Flint + Quill held, Barrier III open; (2) both holders ordered toward the exit; (3) controls released, door closed; (4) opening restored, experiment cited; (5) same walk proposed in smaller increments; (6) closed again. Real positions/step data to come from the exported relay-events traces. */}
-
 ## Five kinds of remembering
 
 The easy reading is that the agents lacked memory, and the easy reading is wrong. They had a persistent thread each, addressed event delivery, the journal, and a ledger of experiments with evidence attached. Everything was remembered. What failed sat in the joints between kinds of remembering.
@@ -144,8 +140,6 @@ The easy reading is that the agents lacked memory, and the easy reading is wrong
 The trace pulls those joints apart cleanly. A fact was established but never promoted into a mechanism: _Flint and Quill open the barrier_ (the randomly generated names of the two final buttons) made it into the ledger; _the barrier stays open only while both are held_ existed nowhere an agent would meet it at planning time. A mechanism, where one was understood, was never held as an invariant – nothing in any working picture said _this must stay true while we cross_. Invariants never became procedure – no agent owned _wait for the door, then go_, so one lucky, perfectly timed crossing mid-run was recorded with the same confidence as a designed one.
 
 Above all of it, the shared hypothesis map ate itself: the agents named their hypotheses `h1` and `h2`, each new experiment overwrote the last one's beliefs, and a team that had accumulated facts about three barriers held an active causal model of exactly one – whichever it had thought about most recently.
-
-{/* DIAGRAM SLOT (second): the memory stack as destination – journal → episodic → semantic → working → procedural, each layer annotated with the observed failure that forced it. Conceptual, not architectural. */}
 
 Laid out, it's a stack, and every layer was earned by a failure I can point to in the trace. A journal answers _what exactly happened_. Episodic memory answers _what did we try before, and what followed_. Semantic memory answers _what do we believe about how this world works, and on what evidence_. Working memory answers _what matters right now_ – the bottleneck, the commitment, the invariant that must survive the next step. Procedural memory answers _how do I do this reliably, at world speed, without deliberating_. Retrieval-augmented generation – the thing "memory" tends to mean at the moment – lives in the second layer, with a reach into the third on a good day. My agents spent their final cycles demonstrating what the layers above it are for.
 
