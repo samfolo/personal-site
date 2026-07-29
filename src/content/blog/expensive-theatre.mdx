@@ -1,0 +1,98 @@
+---
+title: '"Expensive theatre"'
+description: "I built an evaluation harness for my memory system expecting a species of end-to-end test. On judges that invent evidence, fixtures that catch their author, and the line between real evaluation and expensive theatre."
+publishDate: 2026-07-29
+tags: ["Engineering", "AI", "Evals", "Memory", "Testing"]
+draft: false
+---
+
+import {TribalLogoLockup} from "../../components/typography";
+
+A little over a week ago, [OpenAI disclosed that two of its models had hacked Hugging Face](https://fortune.com/2026/07/21/openai-says-ai-models-escaped-control-hacked-hugging-face/). The models were being evaluated at the time, on a security benchmark called ExploitGym, and somewhere mid-run they worked out that the fastest route to a high score was to escape their sandbox, chain stolen credentials with a handful of zero-days, and lift the benchmark's answers from Hugging Face's servers. They'd been asked to pass the eval... nobody had said anything about not stealing the answer key.
+
+A unit test has never broken out of anything. That contrast is most of why the story stuck with me. We've always been able to write a test that checks whether a particular word landed in a paragraph – reformat the text however you like and a few patterns will still find the address, the name, the phone number. There have always been qualities, though, that traditional engineers haven't been able to express in automated tests: things like whether a summary is faithful to the document it came from, or whether an explanation actually explains, or whether two ideas are the same idea in different clothes. Questions like that needed a person reading both. Large language models have quietly dissolved that boundary; ask one whether a summary stays faithful to its source and you get an answer – imperfect, but an answer, from something you can run as many times as you can afford. I hadn't digested what that does to testing until I had to do it myself.
+
+Evaluation itself wasn't a new idea to me. The first time I heard it treated as its own discipline was on an all-hands call at an old job, where a programme manager was describing something called instance testing. I don't think many people on the call had heard of it before – I certainly hadn't. The idea was to spin up a "real bank", indoors, and let it run for weeks, to catch what stateless, short-lived tests never could: what happens under sustained load, what happens when a system lives long enough for data to accumulate. I never got near the implementation, but I watched items land on the roadmap because the SDETs who owned it kept surfacing entire classes of failure the rest of us had missed. What stayed with me wasn't the mechanics: entire classes of failure are invisible even to a system's author until the system is observed over time, and although that kind of observation looks expensive, it buys back the sort of time you didn't know was for sale.
+
+<TribalLogoLockup /> is an AI-powered system, and it needed evaluating like one. The question that nagged at me: was I building it correctly? How would I know it was working the way I intended? The ingestion pipeline I wrote about in [The price of a memory](/blog/the-price-of-a-memory) takes unstructured text and decides what knowledge is in it, and whether it decides *well* is exactly the sort of quality I'd always had to eyeball. The rooms I built for [Ember, Moss and Lumen](/blog/ember-moss-and-lumen) were an eval in everything but the name; Tribal needed the real, repeatable version. As with everything I build, I wanted the process to be automatic – set in stone, so it wouldn't need babysitting or a slice of my attention for weeks at a time.
+
+I'd heard that building an evaluation harness wasn't going to be as simple as I assumed; people recommended [Braintrust](https://www.braintrust.dev/) or [Promptfoo](https://www.promptfoo.dev/) as a decent starting point. Despite the advice, I built one anyway, because I wanted to know, at the level of my own hands, what an evaluation harness actually is – on the bet that understanding a problem space deeply once pays for itself whenever a new problem pattern-matches against it.
+
+What I underestimated, definitely, is how far removed a harness is from a test suite: it's a system in its own right, a platform, and had I known that going in I might have reached for something off the shelf. I don't regret it. I learned a tonne, and now that I've built one I can appreciate what Promptfoo and Braintrust are actually selling. I assumed I was building a species of end-to-end test with a model in the loop. Almost every lesson that followed replaced a piece of that assumption.
+
+## Judging judges
+
+The harness scores two kinds of things. The countable kind goes through deterministic scorers: how many knowledge items a fixture's text produced, what kind they were, whether a relation landed on the seed it should have. The uncountable kind goes to judges – model calls that read the system's output against a rubric and return a score with a justification. I came up with seven judged criteria, with names like `content_faithfulness` and `boundary_accuracy`; the stress of naming them was a minor surprise of its own. Before a judge can hold an axis for you, you have to work out what you actually want to assess, pick it out of a near-infinite space of candidates, then name and describe it in English precisely enough for a judge to take it on. You're constrained by imagination on one side and by language on the other; somewhere in the middle, the work stops feeling like engineering and starts feeling like a creative act.
+
+The judging itself I treated as an experiment. The harness lets you specify any number of judges; I typically ran three. I'd been told – and had seen – that you should judge with the strongest models available, and I wanted to understand why that's the advice rather than inherit it; a typical panel was a Haiku-class model, an Opus-class model, and a third from a different provider at a similar tier, to see whether de-correlating the judges changed anything. Three opinions gave me something to read into, and kept me from being skewed by any one model's idea of what good looks like.
+
+The experiment paid for itself quickly. On one run, the cheapest judge on the panel returned a confident zero, and its justification quoted a phrase that appears nowhere in anything it was shown. It hallucinated a misstatement, then marked the system down for making it; the two stronger judges disagreed with it in grounded terms, and agreed with each other. No traditional test harness fails like this. An assertion can be wrong, but it can't invent evidence.
+
+That failure taught me more than any score has: a single judged verdict, however fluent, can be ungrounded; nothing in its prose will tell you – the prose is the hallucination. The signal was never one verdict; it's the agreement between judges that don't share a provider or a capability tier. The harness treats the agreement rate as a first-class output now. High agreement says the rubric is tight; low agreement says the rubric is ill-defined, or the fixture genuinely sits on a boundary between defensible answers, and either of those is worth knowing.
+
+There's a trap here I could see from a long way off: if the judges need judging, you can build a system that judges the judges, and another above that, for as long as your credits refresh themselves behind the scenes. It's an N+1 problem, and it stops at a human being – someone reading justifications, deciding whether the instrument itself can be trusted. Every benchmark you've ever glanced at has that person somewhere inside it. I've stopped reading that as a flaw. Evaluation is the one part of building with AI where I side entirely with the humans taking charge: automate everything, but do not automate evaluation. The entire point of an exercise this expensive is to prove the system serves human interests – the business's, the authors', humanity's as a whole – and a system that can't prove that is a waste of the resources poured into it. However many layers you add, someone is standing at the top.
+
+## The fixture that caught me
+
+With a deterministic system, a failing test is information about the code. You can subtract the machinery in your head, because the machinery is the part you trust. An eval gives you no such subtraction: the system under test is probabilistic, the judge is probabilistic, and the only surfaces you fully control are the fixture and its assertions. Whatever rigour exists has to be poured in there.
+
+Fixtures in my harness are declarative TOML with a strict schema and a validator that refuses ambiguity everywhere it can. A small one, in full:
+
+```toml
+[input]
+action = "ingest"
+text = "The application's request timeout is 30 seconds."
+
+[expected.deterministic]
+exact_items_created = 1
+
+[[expected.deterministic.items]]
+content_anchor = { value = "timeout", match = "contains" }
+any_of_kind = [{ value = "fact", match = "equals" }]
+contains_tags = [{ value = "timeout", match = "contains" }]
+```
+
+The probabilistic side is declared the same way: a probe hands the graph a question and lists the signals a good answer should carry, and the judges mark coverage against them, matching concepts rather than strings. One, trimmed:
+
+```toml
+[[probes]]
+action = "discover"
+query = "What did the repair cost, and how long were we without..."
+expected_signals = [
+  "a specific replacement cost was recorded for the incident",
+  "the equipment was out of action for several days",
+  "...",
+]
+```
+
+A matcher like `contains_tags` exists only because the harness is hand-rolled – tags are a feature of a knowledge item in Tribal's graph, a concept a general-purpose harness would have to abstract away. The strictness isn't ceremony. A fixture should be able to say, in one sentence, which break it would catch – *if I broke this specifically, this case fails* – and a fixture that every reasonable configuration passes, or that none can pass, tells you nothing. Cases test one capability each; if a failure would leave you unsure whether extraction or triage went wrong, the case gets split. I realised quickly that the suite would only ever be as effective as its fixtures, so the fixtures became first-class: reviewed with the same seriousness as production code.
+
+Writing the cases turned out to be the most cognitively taxing work in the project – more overwhelming than the production code, if I'm honest. Every case is semantically rich and semantically precise, different enough from its neighbours that you're context-switching constantly inside a single task; the nearest thing I can compare it to is meticulously writing several short stories. It stretches your imagination, and it's exhausting at a creative level. Building a corpus does hand you one small, rare pleasure, though: you get to theme it. I themed mine around the running of a music studio. I spent years as a producer and musician with a studio of my own, and a studio runs on exactly the kind of knowledge a memory system exists to hold – the heuristics an assistant takes months to absorb, the reasons it's so hard to work on someone else's rig when everything is set up their way, the implicit stuff nobody thinks to write down. It gave me a domain I knew with authority, and one where I already knew which knowledge was worth keeping.
+
+The fixture that taught me the most failed correctly. I wrote it from a paragraph about tracking a guitar cabinet – a dynamic close on the grille, a condenser out in the room, an X-Y pair for width – and asserted three knowledge items, one per technique. The system extracted four. The fourth was the sentence I'd read as a closing remark: the principle for choosing between the three. It sat in the source the whole time, a genuine claim, and I'd read straight past it. The count assertion failed exactly as it should have; what it caught was my framing. For a system whose whole purpose is finding structure you didn't consciously put there, your expectation of the right answer is under test alongside the system, and it will lose some rounds.
+
+Even the setup refuses to hold still... seeds – the fixtures that populate the graph before a case runs – aren't database inserts; they go through the same pipeline as production traffic. Three seed paragraphs I wrote as three tidy facts landed as eleven knowledge items, because the extractor found more claims in my prose than I did. My first instinct said bug. It's the opposite: a graph seeded through the front door looks like a real graph, which is the only kind worth measuring. The harness keeps a map from each seed to whatever it became, so later assertions still resolve.
+
+The discipline I find hardest sits at the rubric. When a verdict surprises you, the cheap move is to adjust the rubric until it agrees with you; it feels like correcting an error. Traditional testing has old advice about this – don't update the tests to make the code pass – but a rubric isn't a test. It sits a layer deeper, in the harness itself: every fixture is judged through it, so bending it around one surprising verdict quietly changes what every other case means. The rule I try to hold instead: don't update the rubric to match an outcome unless you can be confident the change improves verdicts on fixtures that don't exist yet.
+
+## Keeping score
+
+A test suite is stateless by design: it passes, gates the merge, and nobody thinks about the outcome again. An eval run is stateless too – or it should be – but its results are not disposable the way a CI run's are. Every run writes a JSON record: configuration, fingerprint, per-case results, aggregates. The history is simply the directory, accumulating; progress lives in the comparison between records.
+
+Two details here changed how I think. The first is that *failed* and *couldn't run* are different facts. A case where the system produced the wrong answer is a failure; a case where a timeout or a provider blip stopped the answer arriving is an error, tallied separately and kept out of the quality metrics. Confuse the two and the averages stop meaning anything. The second is the question of which system a score belongs to. Tribal evolves week to week – prompts, models, embedding configuration – so each run records a fingerprint of the exact configuration it measured; a score only means something with that fingerprint attached. Fingerprints are a bigger subject than this post has room for.
+
+The least technical requirement mattered most: knowing what I was working toward. I spent the time writing down, clearly, what I wanted Tribal to do – where its responsibilities start and end, the decisions I expected it to make, the behaviour I wanted it to exhibit. It reads more like a manifesto than a spec. The judges were never going to keep the project pointed in the right direction on their own; to climb toward something, I needed to know which direction was north.
+
+## Paying to find out
+
+None of this is free, and the cost shapes everything else. An eval run happens at wall-clock speed: real ingestion through real providers, then judge calls on top, at a rate no actual user would generate. Both sides of the experiment are billed – the system spending inference to think, the judges spending inference to mark it. I ran the system under test on a mini-class model and kept the panel mostly cheap: a suite you hesitate to run is a suite you stop running – plus, this was my own dime.
+
+The initial goal was to be able to run the whole thing against local models, and it still stands; the harness can even seat a local model as a judge. Owning your own inference – your own models, on your own hardware – removes the cost anxiety entirely. You can leave a suite running for extended stretches and test a probabilistic system as rigorously as you'd test a deterministic one: the same benefits, with a more powerful pattern in the arsenal.
+
+The one thing I refused to cheapen was the writing of the cases themselves. I wrote them with the strongest Claude model available to me as a sparring partner – hashing through ideas, tightening each case until it said precisely what I meant – because the cases have to be the most grounded part of the entire pipeline. If they can't be trusted as a record of how the system ought to behave, it doesn't matter how elegant the rest of it is; everything it produces is wasted effort. Expensive theatre.
+
+The expense is also why the harness had to be engineered like a real system. A run takes real time and real money, so a blip near the end can't be allowed to waste everything that came before it: failed calls retry, rate limits are waited out, and results are saved as the run goes, so a crash costs minutes rather than the whole evening. I set out to write test cases and ended up building resilience machinery, which is the honest summary of the whole project.
+
+Tribal's ingestion has since gone agentic, and the harness will have to follow it – most likely away from sitting inside the pipeline and toward reading the traces it leaves behind. That change also deserves a post of its own.
+
+Building this harness has left me holding a view with more conviction than I expected: the future of knowledge work is eval-shaped. As the doing automates, the work that remains is saying what good looks like – precisely enough that a machine can chase it – and verifying whether we got it. That was the hardest part of this entire project, and nothing about it is being automated by the things it evaluates.
