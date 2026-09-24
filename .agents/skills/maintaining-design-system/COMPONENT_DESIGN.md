@@ -8,8 +8,8 @@ Components live in `src/components/`, grouped by semantic category:
 
 ```
 components/
-├── blog/           # Blog-specific (BlogList, PostMeta)
-├── chrome/         # Page frame (FixedHeader, FixedFooter)
+├── blog/           # Blog-specific: listings, post metadata, figure shells
+├── chrome/         # Persistent page frame (header, footer)
 ├── hero/           # Home page hero section
 ├── navigation/     # Site navigation
 ├── seo/            # Meta tags, structured data
@@ -17,7 +17,7 @@ components/
 └── typography/     # Text primitives
 ```
 
-Each directory has an `index.ts` barrel export containing exports only, never implementation.
+Each directory has an `index.ts` barrel export containing exports only, never implementation. A component with its own types or parts gets a sub-directory with its own barrel.
 
 ## Composability
 
@@ -30,7 +30,7 @@ BlogList.astro      → renders list container
 BlogListItem.astro  → renders individual item with props
 ```
 
-Benefits: items become independently testable, reusable, and styleable. The pattern applies throughout—Hero/HeroWordMark, Nav/NavLink.
+Benefits: items become independently testable, reusable, and styleable. The pattern applies throughout—a section and its parts, a nav and its links.
 
 When designing props:
 

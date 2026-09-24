@@ -23,7 +23,7 @@ Keep meta content in sync with visible content. The description in meta tags mus
 
 Titles under 60 characters display fully in search results. Descriptions under 160 characters avoid truncation. These are soft limits—clarity matters more than hitting a number, but brevity helps.
 
-Title format is consistent: `Page Title | Sam Folorunsho` for pages, post title alone for blog posts.
+Title format is consistent: `Page Title | Sam Folorunsho`, blog posts included.
 
 Single H1 per page. Logical heading hierarchy (H2, H3, H4) aids both accessibility and SEO. Don't skip levels.
 
@@ -33,47 +33,47 @@ Advanced SEO concerns—Core Web Vitals, mobile-friendliness, page speed—are h
 
 ## Meta Tags
 
-The SEO component (`src/components/seo/SEO.astro`) injects meta tags via the Base layout. Props flow from page to component:
+The SEO component (`src/components/seo/SEO/`) renders meta tags from the Base layout; pages pass their SEO props through Base. The props interface and its JSDoc are the reference—read them rather than a copy here. Two contracts matter:
 
-| Prop | Type | Default | Notes |
-|------|------|---------|-------|
-| `title` | string | required | Page title |
-| `description` | string | SITE.description | Under 160 characters |
-| `ogImage` | string | `/og/default.png` | Open Graph image path |
-| `ogType` | `website` \| `article` | `website` | Use `article` for blog posts |
-| `publishDate` | Date | — | Required for articles |
-| `updatedDate` | Date | — | Optional, updates `article:modified_time` |
-| `tags` | string[] | `[]` | Rendered as `article:tag` meta |
+- Blog posts render as `ogType: "article"` with publish date, optional updated date, and tags, which become `article:*` meta.
+- Anything omitted falls back to site defaults (`SITE` config, the default OG image).
 
-Generated tags include Open Graph (Facebook, LinkedIn), Twitter Cards, article metadata for blog posts, and RSS discovery.
+Generated tags include Open Graph, Twitter Cards, article metadata for blog posts, canonical URL, and RSS discovery.
 
 ## Structured Data
 
-JSON-LD structured data (`src/components/seo/JSONLD.astro`) provides machine-readable context:
+JSON-LD structured data (`src/components/seo/JSONLD.astro`) provides machine-readable context. Each page opts in by rendering `<JSONLD slot="head" type="…" />` with the schema that describes it—Base does not add one globally:
 
-**WebSite schema** — Applied to all pages via Base layout. Includes site name, URL, description, author details.
+| Page | Schema |
+|------|--------|
+| Home | `WebSite` |
+| About | `ProfilePage`, the home of the `Person` entity |
+| Blog index | `Blog` |
+| Blog post (Post layout) | `BlogPosting` |
+| Other static pages | `WebPage` |
 
-**Article schema** — Applied to blog posts via Post layout. Includes headline, description, dates, author, keywords.
-
-Both schemas follow schema.org conventions. Author information pulls from `SITE.author` in config.
+The schemas form one graph: they reference the site, the person, and the blog by stable `@id`s (from `SITE` config) rather than repeating them. When adding a page, pick the matching type and let it link into the graph; add a new type to `JSONLD.astro` only when none fits.
 
 ## OG Image Generation
 
-Open Graph images are generated dynamically at request time.
+Open Graph images and other brand images are generated dynamically at request time.
 
 **Endpoint:** `src/pages/og/[...slug].png.ts`
 
 **Library:** `src/lib/og/` using satori (JSX to SVG) and @resvg/resvg-js (SVG to PNG)
 
 **Routes:**
-- `/og/default.png` — Site default image
-- `/og/blog/[slug].png` — Blog post images with title and date
+- `/og/default.png` — Site default card
+- `/og/blog/[slug].png` — Blog post card with title and date
+- `/og/banner/[slug].png` — Wider banner for syndicated articles and cover headers
+- `/og/x-header.png`, `/og/linkedin.png` — Profile banners (brand assets, not content)
 
-**Features:**
-- 1200×630px PNG output
-- Theme colours selected deterministically from title hash
-- Switzer Variable font loaded at runtime
-- One-year cache with `immutable` directive
+**Contracts:**
+- Output sizes are named variants in `OG_DIMENSIONS` (`src/lib/og/template.ts`), never free-form width/height. A new platform is a new variant with its own dimensions and safe zone.
+- A post's theme colours are chosen deterministically from its title, so the same post always gets the same image.
+- Drafts 404 in production, like their pages.
+- Content images are cached for a year with `immutable`.
+- Brand assets are kept out of search: `X-Robots-Tag: noindex` plus a `robots.txt` disallow. Social cards stay indexable.
 
 **Testing OG images:**
 
@@ -83,7 +83,6 @@ After creating or modifying content, verify OG images render correctly:
 2. External validators:
    - [OpenGraph.xyz](https://www.opengraph.xyz/)
    - [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/)
-   - [Twitter Card Validator](https://cards-dev.twitter.com/validator)
    - [LinkedIn Post Inspector](https://www.linkedin.com/post-inspector/)
 
 Check that title displays without truncation, colours are correct, and no rendering errors appear.
@@ -109,32 +108,13 @@ The sitemap (`src/pages/sitemap.xml.ts`) combines automatic and manual sources.
 
 **Blog posts:** Automatic. Pulled from content collection with `lastmod` from publish/update date.
 
-**Static pages:** Manual. Must add new pages to the `pages` array:
+**Static pages:** Manual. Add every new public page to the static list in `sitemap.xml.ts`, including each tab of a tabbed page. This is easy to forget.
 
-```typescript
-const pages = [
-  {url: "", changefreq: "weekly", priority: "1.0"},
-  {url: "blog", changefreq: "weekly", priority: "0.9"},
-  {url: "about", changefreq: "monthly", priority: "0.8"},
-  {url: "uses", changefreq: "monthly", priority: "0.6"},
-  // Add new static pages here
-];
-```
-
-When adding a static page, always update the sitemap. This is easy to forget.
+**Never listed:** dev-only routes (`/dev/*`, `/export/*`), which 404 in production, and generated assets under `/og/`.
 
 ## robots.txt
 
-Simple configuration at `public/robots.txt`:
-
-```
-User-agent: *
-Allow: /
-
-Sitemap: https://samfolorunsho.com/sitemap.xml
-```
-
-Allows all crawlers and points to sitemap. Rarely needs modification.
+`public/robots.txt` allows all crawlers, points to the sitemap, and disallows only the brand-asset images that aren't content. Rarely needs modification; when a new non-content asset route appears, disallow it here too.
 
 ## llms.txt
 
@@ -167,7 +147,7 @@ No manual intervention needed unless creating duplicate content (rare).
 - [ ] Frontmatter is complete (title, description, publishDate, tags)
 - [ ] (Automatic) RSS feed includes post
 - [ ] (Automatic) Sitemap includes post with lastmod
-- [ ] (Automatic) Article JSON-LD generated
+- [ ] (Automatic) BlogPosting JSON-LD generated
 - [ ] (Automatic) OG image generated from title
 - [ ] Verify OG image renders correctly
 
@@ -175,6 +155,7 @@ No manual intervention needed unless creating duplicate content (rare).
 
 - [ ] SEO component receives proper title and description
 - [ ] Title follows format: `Page Title | Sam Folorunsho`
+- [ ] Page renders the matching JSON-LD type
 - [ ] Page added to sitemap with appropriate priority
 - [ ] Page added to llms.txt if significant
 - [ ] Canonical URL is correct

@@ -6,7 +6,7 @@ Source code for my personal site—a portfolio, blog, and space for creative exp
 
 This project is developed and maintained with assistance from Claude Code. Project-level configuration exists in the `.claude/` directory.
 
-See [CLAUDE.md](./CLAUDE.md) for development guidance and available skills.
+See [AGENTS.md](./AGENTS.md) for development guidance and available skills.
 
 ## Prerequisites
 
