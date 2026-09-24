@@ -7,7 +7,7 @@
  * spreading, label placement — and renders classed SVG that re-themes
  * through the design system's semantic tokens with zero client JavaScript.
  *
- * Authoring guidance: `.claude/skills/drawing-diagrams/SKILL.md`. This
+ * Authoring guidance: `.agents/skills/drawing-diagrams/SKILL.md`. This
  * module's JSDoc is the API reference; the scenes in `src/diagrams/` are
  * the exemplars.
  */

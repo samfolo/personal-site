@@ -1,6 +1,6 @@
 ---
 name: coding-standards
-description: Code standards for the site. Consult when implementing features, reviewing code, refactoring, or answering questions about project conventions. Extends CLAUDE.md with type discipline, naming conventions, Astro patterns, and review checklists.
+description: Code standards for the site. Consult when implementing features, reviewing code, refactoring, or answering questions about project conventions. Extends AGENTS.md with type discipline, naming conventions, Astro patterns, and review checklists.
 ---
 
 # Code Standards
@@ -19,7 +19,7 @@ Preferences yield to functional reasons—if there's genuine technical need for 
 
 This is a personal project. Make clean breaking changes freely; no deprecation warnings, no backwards compatibility concerns. Ship working software over polished infrastructure.
 
-ESLint handles mechanical enforcement. These standards cover judgment calls—decisions requiring understanding of intent, not just syntax.
+ESLint and Prettier handle mechanical enforcement—`eslint.config.mjs` and `.prettierrc` are the source of truth for syntax-level rules (quotes, brace spacing, declaration style, file naming, import order). These standards cover judgment calls—decisions requiring understanding of intent, not just syntax.
 
 Earn your complexity. Every abstraction, type, comment, file, and function should justify its existence. Question whether each addition clarifies intent or reduces duplication significantly; if not, inline it or delete it.
 
@@ -66,9 +66,9 @@ interface PostMeta {
 }
 
 /**
- * Theme options for the site.
+ * Theme options for the site, derived from the canonical ordering.
  */
-type Theme = 'steel' | 'purple' | 'charcoal' | 'teal';
+type Theme = (typeof THEME_ORDER)[number];
 
 /**
  * Function that formats a date for display.
@@ -88,6 +88,8 @@ type UnionType<Data, Err = Error> =
   | SuccessVariant<Data> // {status: 'success'; data: Data}
   | ErrorVariant<Err>;   // {status: 'error'; error: Err}
 ```
+
+Derive types from their source of truth rather than restating values—a hand-written union drifts the moment the source changes.
 
 Generic type parameters use descriptive names: `Data`, `Err`, `Output`—never single letters. Use `Err` rather than `Error` to avoid shadowing the built-in.
 
@@ -177,7 +179,7 @@ Plural for arrays, singular for items: `const posts: Post[]` and `for (const pos
 
 Arrow functions for standalone functions—no traditional `function` declarations. ES6 imports only—no `require()`. Async/await only—no `.then()` chains.
 
-No spaces in curly braces: `{useState}`, `{key: 'value'}`.
+No spaces in curly braces: `{useState}`, `{key: "value"}`. Double quotes for strings.
 
 No single-line blocks—always use braces on separate lines:
 
@@ -210,7 +212,7 @@ const READING_SPEED_WPM = 200;
 /**
  * Default theme for the site.
  */
-const DEFAULT_THEME = 'steel';
+const DEFAULT_THEME = "steel";
 
 const readingTime = Math.ceil(wordCount / READING_SPEED_WPM);
 ```
@@ -231,7 +233,7 @@ Each `let` is a variable whose value you must trace; each `const` is a value you
 Destructure with defaults rather than applying defaults after extraction:
 
 ```typescript
-const {size = 'md', theme = 'steel'} = props;
+const {size = "md", theme = "steel"} = props;
 ```
 
 ## JSDoc
@@ -266,24 +268,29 @@ Keep documentation concise and precise. Never reference specific values that mig
 
 ## File Organisation
 
-Components live in semantic directories within `src/components/`:
+Everything gets its proper place. The top level of `src/`:
 
 ```
-components/
-├── blog/           # Blog-specific components
-├── chrome/         # Persistent page frame (header, footer)
-├── hero/           # Home page hero section
-├── navigation/     # Site navigation
-├── seo/            # SEO and structured data
-├── theme/          # Theme switching
-└── typography/     # Text primitives
+src/
+├── components/     # UI, in semantic directories (blog, chrome, hero, navigation, seo, theme, typography)
+├── config/         # Site-wide constants and canonical orderings (themes, navigation, cache)
+├── content/        # Content collections: blog, pages, uses
+├── diagrams/       # Blog figure scenes and their registry
+├── layouts/        # Page shells
+├── lib/            # Self-contained subsystems: diagram SDK, OG generation, Shiki theme, theme palette
+├── pages/          # Routes, including generated assets (og, rss, sitemap) and dev-only tooling
+├── plugins/        # Rehype plugins
+├── scripts/        # Client-side behaviour
+├── styles/         # Tokens, layers, component stylesheets
+├── types/          # Types shared across concerns
+└── utils/          # Small pure helpers
 ```
 
-Each directory has an `index.ts` barrel export containing exports only, never implementation:
+Components can nest a sub-directory when they carry their own types or parts. Every component directory has an `index.ts` barrel export containing exports only, never implementation:
 
 ```typescript
-export {default as BlogList} from './BlogList.astro';
-export {default as BlogListItem} from './BlogListItem.astro';
+export {default as BlogList} from "./BlogList.astro";
+export {default as BlogListItem} from "./BlogListItem.astro";
 ```
 
 ### File Naming
@@ -293,7 +300,7 @@ export {default as BlogListItem} from './BlogListItem.astro';
 | Components | PascalCase.astro | `BlogList.astro` |
 | Utilities | kebab-case.ts | `format-date.ts` |
 | Config | kebab-case.ts | `navigation.ts` |
-| Types | types.ts | `types.ts` |
+| Types | `types.ts` beside its component; kebab-case.ts in `src/types/` when shared | `json-ld.ts` |
 | Scripts | kebab-case.ts | `scroll-header.ts` |
 
 ### Imports
@@ -301,8 +308,8 @@ export {default as BlogListItem} from './BlogListItem.astro';
 Separate `import type` onto its own line:
 
 ```typescript
-import type {Theme} from '../config/themes';
-import {THEME_ORDER, THEME_LABELS} from '../config/themes';
+import type {Theme} from "../config/themes";
+import {THEME_ORDER, THEME_LABELS} from "../config/themes";
 ```
 
 Prefer relative imports within component directories. Use `../` for cross-directory imports within `src/`.
@@ -317,7 +324,7 @@ The official Astro documentation MCP server (`astro-docs`) is configured in this
 
 ### Component Format
 
-Prefer `.astro` files for components. Astro's template syntax is sufficient for most scenarios. Use React islands only when component state or interactivity genuinely requires it.
+Components are `.astro` files. The site has no UI-framework integration—Astro templates plus module scripts cover everything so far. Add one only when component state or interactivity genuinely requires it.
 
 ### Script Loading
 
@@ -341,7 +348,7 @@ Use module scripts (no `is:inline`) for everything else:
 
 <!-- Non-critical: bundled, deferred -->
 <script>
-  import "../scripts/scroll-header.ts";
+  import "../scripts/example.ts";
 </script>
 ```
 
@@ -359,15 +366,17 @@ Avoid `:global()` for general styling—use design tokens instead.
 
 ### Content Collections
 
-Content collections are the source of truth for blog content. Schema defined in `src/content.config.ts`.
+Content collections are the source of truth for content—blog posts, standalone pages, and the uses entries. Schemas live in `src/content.config.ts`.
 
-Query with `getCollection()`, filter drafts by environment:
+Drafts are visible in development and hidden in production. Pages and routes filter by environment:
 
 ```typescript
 const posts = await getCollection("blog", ({data}) =>
   import.meta.env.PROD ? !data.draft : true
 );
 ```
+
+Syndication surfaces (RSS, sitemap) exclude drafts unconditionally—they describe the published site, whatever the environment.
 
 ### Slots
 
@@ -387,7 +396,7 @@ Use named slots for layout flexibility:
 
 ### View Transitions
 
-Components using `transition:persist` (e.g. FixedHeader, FixedFooter) require scripts to reinitialise after view transitions via the `astro:after-swap` event.
+Components using `transition:persist` (the persistent page chrome—site header and footer) require scripts to reinitialise after view transitions via the `astro:after-swap` event.
 
 ## Code Review
 

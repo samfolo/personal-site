@@ -1,0 +1,21 @@
+[mcp_servers.astro-docs]
+url = "https://mcp.docs.astro.build/mcp"
+
+[mcp_servers.gcloud]
+command = "npx"
+args = [
+    "-y",
+    "@google-cloud/gcloud-mcp",
+]
+
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp"
+bearer_token_env_var = "GITHUB_PAT"
+
+[mcp_servers.playwright]
+command = "npx"
+args = [
+    "@playwright/mcp@latest",
+    "--config",
+    "./mcp/playwright.config.json",
+]

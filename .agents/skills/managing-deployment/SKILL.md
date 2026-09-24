@@ -59,7 +59,7 @@ Fix all errors before pushing.
 ### ESLint Errors
 
 ```bash
-npm run lint --fix
+npm run lint -- --fix
 ```
 
 ### Missing Dependencies
@@ -97,7 +97,7 @@ Production (main branch):
 Preview (other branches):
 - Tagged revision with no traffic
 - Accessible via tag URL: `https://{tag}---{service-name}-{hash}.run.app` (service name from workflow `env` section)
-- Branch names are sanitised for Cloud Run (lowercase, alphanumeric + hyphens)
+- Branch names are sanitised into valid Cloud Run revision tags: lowercased, reduced to alphanumerics and hyphens, prefixed when they don't start with a letter, and truncated to fit Cloud Run's length limit. The workflow step is the reference.
 
 ## Cloud Run Configuration
 
@@ -121,16 +121,16 @@ If deployment fails with authentication errors, these secrets may need regenerat
 
 ## Checking Deployment Status
 
-With gcloud MCP (`mcp__gcloud__run_gcloud_command`):
+Through the gcloud MCP server, or the `gcloud` CLI directly:
 - `gcloud run services describe` — service status and URL
 - `gcloud run revisions list` — list revisions
 - `gcloud run services logs read` — view logs
 
 Region and service name are in the workflow's `env` section.
 
-With GitHub MCP:
-- `mcp__github__list_commits` — verify what's been pushed
-- `mcp__github__pull_request_read` with `get_status` — check PR CI state
+Through the GitHub MCP server, or the `gh` CLI: recent commits, and PR / workflow-run status.
+
+The GitHub MCP server authenticates with a `GITHUB_PAT` environment variable. If it fails to connect, check that the variable is set and valid; the `gh` CLI works regardless.
 
 ## Modifying the Workflow
 

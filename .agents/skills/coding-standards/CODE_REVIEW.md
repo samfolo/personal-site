@@ -16,12 +16,12 @@ Present findings with file paths and line numbers. Use `×` for violations that 
 
 ```
 × Magic number in timeout
-  src/scripts/scroll-header.ts:45
+  src/scripts/<file>.ts:<line>
   Current: setTimeout(fn, 300)
   Required: Extract to named constant
 
 ⓘ Consider extracting shared animation config
-  src/components/hero/Boids.astro:78-95
+  src/components/<dir>/<Component>.astro:<start>-<end>
   Same easing values appear in multiple places
 
 ✓ Good use of centralised theme config
@@ -72,7 +72,7 @@ Flag these issues:
 - Hydration issues from SSR lifecycle misunderstanding
 - Framework workarounds due to ignorance of existing affordances
 - `:global()` used without justification or scoping
-- React patterns forced where Astro templates suffice
+- Client-framework patterns forced where Astro templates suffice
 
 **Accessibility**
 - Missing ARIA attributes on interactive elements

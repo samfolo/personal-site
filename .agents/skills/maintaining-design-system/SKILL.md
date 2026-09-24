@@ -75,6 +75,8 @@ This cascade ensures:
 
 Why: Tailwind utilities have high specificity within their layer. Prose styles need to override both the typography plugin defaults and base styles without fighting `!important` or specificity hacks. Unlayered styles win over layered styles regardless of specificity, giving prose full control over article typography.
 
+`src/styles/components/shiki.css` is also unlayered: its code-block rules override the typography plugin's `pre` styling inside `.prose`. Other component stylesheets (e.g. `diagram.css`) sit in `@layer components`. Leave a stylesheet unlayered only when it must beat prose.
+
 ## Theme System
 
 Four themes: steel (default), purple, charcoal, teal. Theme class applied to `<html>`:
@@ -104,7 +106,7 @@ Theme colours appear in multiple locations. When modifying any theme colour, upd
 |----------|---------|--------|
 | `src/styles/tokens/colours.css` | Primary token definitions | OKLCH |
 | `src/styles/components/shiki.css` | Syntax highlighting overrides | OKLCH |
-| `src/lib/theme/palette.ts` | OG images, meta theme-color | Hex |
+| `src/lib/theme/palette.ts` | Consumers that can't read CSS variables (OG images, meta theme-color) | OKLCH, converted to hex |
 | `public/sf-[theme].ico` | Per-theme favicon | Binary |
 | `public/rss/styles.xsl` | RSS feed styling (steel only) | Hex |
 
@@ -129,16 +131,7 @@ Minor third ratio (1.2) with 8px-aligned line heights. Defined in `src/styles/to
 
 ### Typography Components
 
-For UI elements—headers, navigation, metadata, labels. Located in `src/components/typography/`:
-
-| Component | Purpose | Default Colour |
-|-----------|---------|----------------|
-| `Overline` | Uppercase labels, section headers | muted |
-| `Caption` | Dates, metadata, supporting text | muted |
-| `Body` | Taglines, descriptions | muted |
-| `SheenText` | Interactive text with hover animation | fg |
-
-All accept `tag`, `color`, and spread attributes.
+For UI elements—labels, metadata, supporting copy, navigation headings, interactive text, and brand marks. They live in `src/components/typography/`, with shared prop types in its `types.ts`. Reach for an existing primitive before styling text ad hoc; add a new primitive only when a text role recurs across components.
 
 ### Prose Styling
 
@@ -163,21 +156,9 @@ Some libraries don't support CSS custom properties, requiring hardcoded values.
 
 ### Satori (OG Images)
 
-`src/lib/og/` generates Open Graph images. Satori renders JSX to SVG but doesn't support CSS variables. Colours must be hex values, defined in `src/lib/theme/palette.ts`:
+`src/lib/og/` generates Open Graph images and profile banners. Satori renders markup to SVG but doesn't support CSS variables, so it reads concrete colours from `src/lib/theme/palette.ts`, which restates each theme's OKLCH values and converts them to hex.
 
-```typescript
-export const THEME_COLOURS: Record<Theme, ThemeColours> = {
-  steel: {
-    bg: oklchToHex(...),
-    fg: oklchToHex(...),
-    muted: oklchToHex(...),
-    rule: oklchToHex(...),
-  },
-  // ... other themes
-};
-```
-
-The OKLCH values here must match those in `colours.css`. When theme colours change, update both files.
+The OKLCH values in `palette.ts` must match those in `colours.css`. When theme colours change, update both files.
 
 ### Favicons
 
@@ -201,7 +182,7 @@ Per-theme favicons (`public/sf-*.ico`) are static binary files. No programmatic 
 
 - [ ] Update `src/styles/tokens/colours.css`
 - [ ] Update `src/styles/components/shiki.css` if affects syntax tokens
-- [ ] Update `src/lib/theme/palette.ts` with hex equivalents
+- [ ] Update `src/lib/theme/palette.ts` with the matching OKLCH values
 - [ ] Update favicon if brand colour changes
 - [ ] Update RSS XSL if steel theme changes (optional)
 - [ ] Test OG image generation at `/og/default.png`
