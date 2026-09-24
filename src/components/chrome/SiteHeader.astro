@@ -51,7 +51,9 @@ const initialState = isHomePage ? "hero" : "scrolled";
       <Nav links={NAV_LINKS} aria-label="Main navigation" />
     </div>
 
-    {/* Right section: Theme switcher (size animates via CSS custom property) */}
+    {
+      /* Right section: Theme switcher (size animates via CSS custom property) */
+    }
     <div class="site-header-right">
       <ThemeSwitcher />
     </div>
@@ -113,14 +115,33 @@ const initialState = isHomePage ? "hero" : "scrolled";
      State A: Hero Visible (transparent, full-width)
      ========================================================================== */
 
+  /*
+   * The transparent header must not swallow clicks meant for the page beneath
+   * it: the header box ignores the pointer, and only the visible switcher opts
+   * back in. The hidden logo/nav inherit `none`.
+   */
+  .site-header[data-state="hero"] {
+    pointer-events: none;
+  }
+
+  .site-header[data-state="hero"] .site-header-right {
+    pointer-events: auto;
+  }
+
   .site-header[data-state="hero"] .site-header-bg {
     opacity: 0;
   }
 
+  /*
+   * `visibility` takes the hidden logo/nav out of the tab order. It flips only
+   * once the fade-out completes, so the fade itself stays visible.
+   */
   .site-header[data-state="hero"] .site-header-left {
     opacity: 0;
-    pointer-events: none;
-    transition: opacity var(--transition-fast);
+    visibility: hidden;
+    transition:
+      opacity var(--transition-fast),
+      visibility 0s linear var(--duration-fast);
   }
 
   /* Theme switcher at large size, positioned at viewport edge */
@@ -142,9 +163,11 @@ const initialState = isHomePage ? "hero" : "scrolled";
 
   .site-header[data-state="scrolled"] .site-header-left {
     opacity: 1;
-    pointer-events: auto;
-    /* Staggered fade-in: starts after --duration-fast delay */
-    transition: opacity var(--duration-fast) var(--ease-default) var(--duration-fast);
+    visibility: visible;
+    /* Staggered fade-in: starts after --duration-fast delay, visible from its first frame */
+    transition:
+      opacity var(--duration-fast) var(--ease-default) var(--duration-fast),
+      visibility 0s linear var(--duration-fast);
   }
 
   /* Theme switcher at small size */
