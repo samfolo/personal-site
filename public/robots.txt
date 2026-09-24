@@ -1,4 +1,6 @@
 User-agent: *
 Allow: /
+Disallow: /og/x-header.png
+Disallow: /og/linkedin.png
 
 Sitemap: https://samfolorunsho.com/sitemap.xml

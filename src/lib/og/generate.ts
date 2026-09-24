@@ -22,7 +22,7 @@ export const generateOgImage = async (
   options: OgTemplateOptions
 ): Promise<Buffer> => {
   const template = createOgTemplate(options);
-  const {width, height} = OG_DIMENSIONS[options.variant ?? "og"];
+  const {width, height, scale} = OG_DIMENSIONS[options.variant ?? "og"];
 
   const svg = await satori(template, {
     width,
@@ -30,11 +30,12 @@ export const generateOgImage = async (
     fonts: FONTS,
   });
 
-  // Convert SVG to PNG using resvg-js
+  // Convert SVG to PNG using resvg-js. `scale` rasterises above the logical
+  // width for retina sharpness (the SVG is vector, so it upscales cleanly).
   const resvg = new Resvg(svg, {
     fitTo: {
       mode: "width",
-      value: width,
+      value: width * scale,
     },
   });
 
